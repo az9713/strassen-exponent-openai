@@ -1,0 +1,702 @@
+<section id="s15">
+<h2>15. Incidence expansion <span class="pg">pp. 56–58</span></h2>
+<p class="role"><b>Role in the chain.</b> This is the last section of Part I of the paper (the heading "Part II" is printed on p. 59). It receives the price formula for sphere tensors (Theorem 14.1 in <a class="secref" href="#s14">§14</a>) and the fusion expansion (Proposition 13.1 in <a class="secref" href="#s13">§13</a>). It delivers one inequality, (15.1), which bounds how strongly the points on the secant lines of a planar point configuration can pull a common center when the points are placed in a spectral metric space. Its two consumers are Corollary 15.2 in this section and Lemma 17.1 in <a class="secref" href="#s17">§17</a>; Lemma 17.1 is the only place where the sphere-tensor results of <a class="secref" href="#s13">§13</a>–<a class="secref" href="#s14">§14</a> enter the sorting argument of <a class="secref" href="#s17">§17</a>–<a class="secref" href="#s18">§18</a>. (That argument also uses the general price theory of <a class="secref" href="#s3">§3</a> and <a class="secref" href="#s5">§5</a>.)</p>
+
+<p>Throughout this section $F$ is a field, and all statements that carry the tag <span class="tag paper">paper</span> are conditional on the hypothesis $\omega_F \lt 9/4$, where $\omega_F$ is the exponent of matrix multiplication over $F$. The paper's final result is that this hypothesis is false, so every conditional statement here describes a situation that the paper later shows cannot occur. The statements are used inside a proof by contradiction.</p>
+
+<h3 id="s15-0">The identity that the section generalizes (unnumbered introduction, p. 56)</h3>
+
+<div class="def" id="def-15-secant"><b>Definition (secants).</b> <span class="pg">p. 56</span> <span class="tag paper">paper</span> Let $S$ be a finite set of distinct points of an affine plane. A <em>secant</em> is a line that contains at least two points of $S$. The set of secants is $\mathcal L$, and $t_i$ is the number of secants through the point $i\in S$.</div>
+
+<p>The paper starts from an identity for real labels. If $v_i\in\mathbb R$ for $i\in S$ and $\sum_{i\in S} v_i=0$, then</p>
+$$\sum_{L\in\mathcal L}\Bigl|\sum_{i\in S\cap L}v_i\Bigr|^2=\sum_{i\in S}(t_i-1)\,|v_i|^2 .$$
+
+<div class="fill"><b>Gap fill — the two-line computation, and the Hilbert-space version.</b> <span class="tag filled">filled here</span>
+Expand each square. The term $v_i^2$ appears once for each secant through $i$, so $t_i$ times. For $i\ne j$ the product $v_iv_j$ appears once as an ordered pair, because exactly one line passes through two distinct points and that line is a secant. Hence the left side is $\sum_i t_i v_i^2+\sum_{i\ne j}v_iv_j$. The second sum is $(\sum_i v_i)^2-\sum_i v_i^2=-\sum_i v_i^2$ by the centering hypothesis. This gives the identity.
+<br><br>
+The same computation holds for vectors $v_i$ in a real Hilbert space with $\sum_i v_i=0$, with $|\cdot|$ the norm and products replaced by inner products. So in a Hilbert space the relation between "secant sums" and "point norms" is an equality. Theorem 15.1 below asserts the inequality "$\le$" for a replacement of the secant sum that makes sense in a metric space without linear structure.
+</div>
+
+<h3 id="s15-1">15.1 An inequality for secant lines</h3>
+
+<p>The objects of this subsection are the following. Readers who arrive here directly need four notions from earlier sections; each is restated in one sentence.</p>
+
+<ul>
+<li>A <em>spectral space over $F$</em> (<a class="secref" href="#s3">§3</a>) is a metric space $(X,d)$ in which every nonzero tensor over $F$, with its legs placed at finitely many points ("sites") of $X$, has a real number called its <em>price</em> $H$. Prices do not increase under local linear maps, add under tensor product, and the price of a wire of dimension $q$ between sites $a,b$ is $d(a,b)\log q$.</li>
+<li>A complete metric space is <em>CAT(0)</em> if every pair $a,b$ has a midpoint $m$ with $d(o,m)^2\le\tfrac12 d(o,a)^2+\tfrac12 d(o,b)^2-\tfrac14 d(a,b)^2$ for every point $o$. Hilbert spaces and metric trees are examples. In such a space geodesics are unique, and every finitely supported probability measure has a unique <em>barycenter</em>, the minimizer of the mean squared distance.</li>
+<li>The <em>Alexandrov angle</em> $\angle_o(x,y)\in[0,\pi]$ between the geodesics from $o$ to $x$ and from $o$ to $y$ is the limit, as two points move toward $o$ along the two geodesics, of the Euclidean comparison angle at $o$. In a Hilbert space it is the usual angle.</li>
+<li>The <em>transport bound</em> (3.1) of <a class="secref" href="#s3">§3</a>: moving a leg of dimension $q$ from site $x$ to site $y$ changes the price by at most $d(x,y)\log q$.</li>
+</ul>
+
+<div class="def" id="def-15-K"><b>Definition (weighted configuration and the pull $K_C$).</b> <span class="pg">p. 56</span> <span class="tag paper">paper</span>
+Let $S\subset F^2$ be finite with $|S|\ge 2$. For each $i\in S$ choose a site $x_i$ in a complete CAT(0) spectral space $X$ over $F$ and a mass $a_i\gt 0$. Two points of $S$ may have the same site. Let $o\in X$ be the minimizer of $\sum_i a_i\,d(o,x_i)^2$ and put $r_i=d(o,x_i)$. For a subset $C\subset S$ define
+$$K_C=\sup_{y\ne o}\Bigl(\sum_{i\in C}a_i r_i\cos\angle_o(x_i,y)\Bigr)_+ ,$$
+where $y$ ranges over $X$, $(\cdot)_+$ is the positive part, and a summand with $r_i=0$ is zero. If $X$ is one point, $K_C=0$. For a secant $L$ write $K_L=K_{S\cap L}$.</div>
+
+<p>The paper gives the following interpretation. Suppose the legs belonging to $C$ have "widths" $a_ir_i$, that is, the logarithm of the dimension of leg $i$ is proportional to $a_ir_i$. Sending these legs from a common site $m$ to their destinations costs $\sum_{i\in C}a_ir_i\,d(m,x_i)$. If $m$ moves away from $o$ toward $y$ at unit speed, this cost initially changes at the rate $-\sum_{i\in C}a_ir_i\cos\angle_o(x_i,y)$ (first variation formula, stated below). So $K_C$ is the largest initial saving per unit distance that the group $C$ gains by moving its common site off $o$; the positive part accounts for the option of staying at $o$.</p>
+
+<div class="fill"><b>Gap fill — $K_C$ on a line and in a Hilbert space.</b> <span class="tag filled">filled here</span>
+Let $X=\mathbb R$. Then $o=\sum_i a_ix_i/\sum_i a_i$, and $\cos\angle_o(x_i,y)=\operatorname{sign}(x_i-o)\operatorname{sign}(y-o)$. With $v_i=a_i(x_i-o)$ one gets $\sum_i v_i=0$, $|v_i|=a_ir_i$, and $K_C=\bigl|\sum_{i\in C}v_i\bigr|$ (take $y$ on the side of $o$ where the sum is positive). More generally, in a Hilbert space $K_C=\bigl\|\sum_{i\in C}v_i\bigr\|$, because $\sum_{i\in C}a_ir_i\cos\angle_o(x_i,y)$ is the inner product of $\sum_{i\in C}v_i$ with the unit vector toward $y$. With these values, (15.1) below is the opening identity and holds with equality. In a metric tree $K_C$ can be smaller: for three unit masses at the tips of a tripod with legs of length $r$, $o$ is the branch point, $K_{\{i\}}=r$, and $K_{\{i,j\}}=0$, while the Hilbert-space value would be $r$.
+</div>
+
+<div class="thm" id="thm-15-1"><b>Theorem 15.1 (Incidence inequality).</b> <span class="pg">p. 56</span> <span class="tag paper">paper</span>
+If $F$ is algebraically closed and $\omega_F\lt 9/4$, then for every finite configuration of affine points $S\subset F^2$, weighted sites $(x_i,a_i)_{i\in S}$ in a complete CAT(0) spectral space over $F$, and secants $\mathcal L$ as above,
+$$\sum_{L\in\mathcal L}K_L^2\ \le\ \sum_{i\in S}(t_i-1)\,a_i^2r_i^2 .\tag{15.1}$$
+</div>
+
+<p>The proof has five steps. Its hinge is stated first, because the steps are otherwise hard to motivate.</p>
+
+<div class="aha"><b>AHA.</b> The points of $S$ are used twice, in two unrelated roles. As points of $F^2$ they are projected to the line $\mathbb P^1$ along a direction that depends on a parameter $s$; two projected points collide exactly when $s$ is the direction of the secant through them. As labels they index the legs of one sphere tensor whose marked points are the projections. A single nonzero rational function of $s$ on $\mathbb P^1$ has orders that sum to zero, and at each collision parameter the order of vanishing equals the excess energy of the fused legs. This degree count is linear in energy. Because the width of a fermionic leg of energy $h$ is proportional to $\sqrt h$, it becomes a bound on a sum of <em>squared</em> widths, which is the form of (15.1).</div>
+
+<div class="imp"><b>Imported — Theorem 14.1 (Sphere prices), as used here.</b> <span class="tag imported">imported</span>
+Assume $\omega_F\lt 9/4$, $F$ algebraically closed. Let $z_1,\dots,z_k\in F$ be distinct, $k\ge2$, and let $x_1,\dots,x_k$ be sites in a complete CAT(0) spectral space over $F$. Let $C(\mathbf h;\mathbf z)$ be the sphere tensor of <a class="secref" href="#s13">§13</a> with half-integer energies $h_i$; its $i$th leg is the space $V_{h_i}$, with $\log\dim V_h\le c\sqrt h$, $c=\pi/\sqrt3$ (Lemma 13.2). Put $w_N(h)=c\sqrt h/N$ (the "normalized width") and let $H_{\mathbf x}$ be the price at the placement $\mathbf x$. For positive penalties $\lambda_i$, let $o$ be the minimizer of $E=\min_o\sum_i d(o,x_i)^2/(4\lambda_i)$ and $r_i=d(o,x_i)$. Then every tuple of energies $\mathbf e=\mathbf e(N)$ that maximizes $N^{-1}H_{\mathbf x}(C(\mathbf h;\mathbf z))-\sum_i\lambda_iw_N(h_i)^2$ satisfies
+$$w_N(e_i)=\frac{r_i}{2\lambda_i}+o(1),\qquad \frac{H_{\mathbf x}(C(\mathbf e;\mathbf z))}{N}=2E+o(1)\qquad(N\to\infty).$$
+See <a class="secref" href="#s14">§14</a> for the statement with error terms and the proof.</div>
+
+<div class="imp"><b>Imported — Proposition 13.1 (Fusion), as used here.</b> <span class="tag imported">imported</span>
+Partition the marked points into clusters $J$. Write $z_i=p_J+u\,\delta_i$ for $i\in J$, with distinct centers $p_J$ and, inside each cluster, distinct offsets $\delta_i$. There are linear maps $I^J_e:\bigotimes_{i\in J}V_{h_i}\to V_e$, depending only on the offsets and the input energies, such that the Laurent expansion at $u=0$ is
+$$C(\mathbf h;\mathbf z)=\sum_{\mathbf e}u^{\sum_J e_J-\sum_i h_i}\;C(\mathbf e;\mathbf p)\circ\bigl(I^{J}_{e_J}\bigr)_J ,$$
+with finitely many terms for each power of $u$. Each summand $C(\mathbf e;\mathbf p)\circ(I^J_{e_J})_J$ is called a <em>fusion term</em>; $e_J\ge0$ is the <em>intermediate energy</em> of cluster $J$. The paper also uses homogeneity: each entry of $C(\mathbf h;\mathbf z)$ is a rational function of the positions, homogeneous of degree $-\sum_ih_i$, with poles only where two positions coincide (<a class="secref" href="#s13">§13</a>, 13.1).</div>
+
+<div class="proof">
+<p><b>Step 1: from secants to fibers of projections; (15.1) is equivalent to (15.2).</b> Write the point $i\in S$ as $(u_i,v_i)\in F^2$ and set $z_i(s)=u_is+v_i$ for $s\in F$. For $i\ne j$ the equation $z_i(s)=z_j(s)$ has the unique solution $s=-(v_i-v_j)/(u_i-u_j)$ if $u_i\ne u_j$ and no solution if $u_i=u_j$. In the second case the paper says that the pair collides at $s=\infty$, where the projection is $i\mapsto u_i$. So each pair collides at exactly one parameter of $\mathbb P^1(F)=F\cup\{\infty\}$. Let $D\subset\mathbb P^1(F)$ be the set of finite collision parameters together with $\infty$ (the point $\infty$ is included in $D$ whether or not a collision occurs there). For $\alpha\in D$ let $\mathcal P_\alpha$ be the partition of $S$ into fibers of the projection $\pi_\alpha$, where $\pi_\alpha(u,v)=u\alpha+v$ for finite $\alpha$ and $\pi_\infty(u,v)=u$. The paper states that (15.1) is equivalent to</p>
+$$\sum_{\alpha\in D}\sum_{C\in\mathcal P_\alpha}K_C^2\ \le\ (|D|-1)\sum_{i}a_i^2r_i^2 .\tag{15.2}$$
+
+<div class="fill"><b>Gap fill — why the two inequalities are equivalent.</b> <span class="tag filled">filled here</span>
+The fibers of $\pi_\alpha$ are the lines of one parallel class of $F^2$ (direction $(1,-\alpha)$ for finite $\alpha$, direction $(0,1)$ for $\alpha=\infty$), and the map from $\alpha\in\mathbb P^1(F)$ to parallel classes is a bijection. A fiber with at least two points of $S$ is $S\cap L$ for a secant $L$ of that direction, and every secant arises once, at the parameter of its direction. The $t_i$ secants through $i$ have $t_i$ different directions, all in $D$. Hence the point $i$ is a singleton fiber at exactly $|D|-t_i$ parameters of $D$. For a singleton, $K_{\{i\}}=a_ir_i$: if $r_i\gt0$ take $y=x_i$, where the cosine is $1$; if $r_i=0$ both sides are zero. Therefore
+$$\sum_{\alpha\in D}\sum_{C\in\mathcal P_\alpha}K_C^2=\sum_{L\in\mathcal L}K_L^2+\sum_{i\in S}(|D|-t_i)\,a_i^2r_i^2 .$$
+Subtracting $\sum_i(|D|-t_i)a_i^2r_i^2$ from both sides of (15.2) gives (15.1) and conversely.
+</div>
+
+<p>So it suffices to prove (15.2).</p>
+
+<p><b>Step 2: choosing the external widths.</b> Fix $s_0\in F\setminus D$; this is possible because $F$ is algebraically closed, hence infinite, and $D$ is finite. The positions $z_i(s_0)$ are distinct. Apply Theorem 14.1 with marked points $z_i(s_0)$, sites $x_i$ and penalties $\lambda_i=1/(2a_i)$. Then $\sum_id(o,x_i)^2/(4\lambda_i)=\tfrac12\sum_ia_id(o,x_i)^2$, so the minimizer is the point $o$ of the definition above, and $2E=\sum_ia_ir_i^2$. The theorem gives energies $h_i=h_i(N)$ with</p>
+$$w_N(h_i)\longrightarrow a_ir_i,\qquad \frac1N H_{\mathbf x}\bigl(C(\mathbf h;\mathbf z(s_0))\bigr)\longrightarrow P:=\sum_ia_ir_i^2 .\tag{15.3}$$
+<p>The number $P$ has a second description. Preparing the tensor at $o$ and sending leg $i$ to $x_i$ costs at most $\sum_ir_i\log\dim V_{h_i}\le N\sum_ir_iw_N(h_i)$ by the transport bound, and this is $N(P+o(1))$. So (15.3) says that the chosen sphere tensor attains, to leading order in $N$, the cost of supplying it from the barycenter $o$. This is the only place where the hypothesis $\omega_F\lt9/4$ enters the proof.</p>
+
+<p>If $P=0$ then every $r_i=0$, every $K_C=0$, and (15.2) holds. Assume $P\gt0$ and take $N$ large. The total energy $H_0=\sum_ih_i$ is $O(N^2)$, because the widths $w_N(h_i)=c\sqrt{h_i}/N$ are bounded. It is an integer: a nonzero entry of the sphere tensor requires a perfect matching of the fermionic generators, and a matched pair $\psi_m,\psi_n$ has total energy $(m+\tfrac12)+(n+\tfrac12)\in\mathbb Z$.</p>
+
+<p><b>Step 3: one functional, and a joint bound on the collision energies.</b> Write $T(s)=C(\mathbf h;\mathbf z(s))$. Its entries are rational functions of $s$ with poles only at finite collision parameters. Near a parameter $\alpha\in D$ the paper uses a local coordinate $u$ and a tensor-valued function of $u$ ("the tensor in the chart at $\alpha$"):</p>
+<ul>
+<li>finite $\alpha$: $u=s-\alpha$, and the chart tensor is $T(\alpha+u)$, with positions $z_i=\pi_\alpha(i)+u\,u_i$;</li>
+<li>$\alpha=\infty$: $u=1/s$, and the chart tensor is $C(\mathbf h;(u_i+u\,v_i)_i)$, with positions $u_i+u\,v_i$.</li>
+</ul>
+<p>In both charts the points of one fiber $C\in\mathcal P_\alpha$ share a center and have distinct offsets, so Proposition 13.1 applies with the fibers as clusters: the coefficient of $u^l$ in the chart tensor is a sum of fusion terms with intermediate energies $e_C\ge0$, $\sum_{C\in\mathcal P_\alpha}e_C=H_0+l$.</p>
+
+<div class="fill"><b>Gap fill — the chart at infinity, singleton fibers, and the derivation of (15.4).</b> <span class="tag filled">filled here</span>
+<i>Chart at infinity.</i> Since $u_i+u\,v_i=u\,(u_is+v_i)$ with $s=1/u$, homogeneity of degree $-H_0$ gives $C(\mathbf h;(u_i+uv_i)_i)=u^{-H_0}\,T(1/u)$.
+<br><br>
+<i>Singleton fibers.</i> A singleton fiber $\{i\}$ has an offset ($u_i$ or $v_i$) that is in general not zero. Proposition 13.1 states that a singleton with offset zero has the identity as fusion map; with a nonzero offset the fusion map is the translation (13.3) of <a class="secref" href="#s13">§13</a>, which has components at all energies $e_{\{i\}}\in h_i+\mathbb Z_{\ge0}$. The proof below treats singleton fibers exactly like other fibers, so this causes no change.
+<br><br>
+<i>The order count.</i> Let $\ell$ be a linear functional on the space of tensors of the format of $T(s)$ such that $f(s)=\ell(T(s))$ is not the zero function. For $\alpha\in D$ let $l_\alpha$ be the order in $u$ of the first nonzero coefficient of $\ell$ applied to the chart tensor at $\alpha$. For finite $\alpha$ this is $\operatorname{ord}_\alpha f$. At infinity, $\ell(u^{-H_0}T(1/u))=u^{-H_0}f(1/u)$, so $l_\infty=\operatorname{ord}_\infty f-H_0$. A nonzero rational function on $\mathbb P^1$ satisfies $\sum_{\beta\in\mathbb P^1}\operatorname{ord}_\beta f=0$. The function $f$ has no pole outside $D$, so the orders outside $D$ are $\ge0$ and $\sum_{\alpha\in D}\operatorname{ord}_\alpha f\le0$. Hence $\sum_{\alpha\in D}l_\alpha\le-H_0$, and
+$$\sum_{\alpha\in D}(H_0+l_\alpha)\le|D|H_0-H_0=(|D|-1)H_0 .$$
+Each summand $H_0+l_\alpha$ is the common value of $\sum_Ce_C$ for the fusion terms of the coefficient of order $l_\alpha$, and that coefficient is nonzero, so $H_0+l_\alpha\ge0$.
+</div>
+
+$$\sum_{\alpha\in D}(H_0+l_\alpha)\le(|D|-1)\,H_0 .\tag{15.4}$$
+<p>The paper stresses that the <em>same</em> functional $\ell$ is used at all $\alpha\in D$. With a different functional at each parameter, each $H_0+l_\alpha$ would only be bounded separately and no joint bound on the total intermediate energy would follow.</p>
+
+<p><b>Step 4: choosing $\ell$ so that the selected fusion terms keep the price in (15.3).</b> A fusion term is a tensor on the original legs $V_{h_i}$, so it has a price $H_{\mathbf x}$ at the placement $\mathbf x$. In every chart collect the fusion terms with $\sum_Ce_C\le(|D|-1)H_0$. Let $W$ be the linear span of the collected terms whose price is less than $H_{\mathbf x}(T(s_0))-\sqrt N$.</p>
+
+<div class="fill"><b>Gap fill — the price bound on $W$ (the one-sentence step on p. 57).</b> <span class="tag filled">filled here</span>
+<i>Count.</i> A collected term in the chart at $\alpha$ is determined by one half-integer $e_C\in[0,(|D|-1)H_0]$ per fiber. There are at most $|S|$ fibers and $|D|$ charts, and $H_0=O(N^2)$, so the number $M_N$ of collected terms is at most $|D|\,\bigl(2(|D|-1)H_0+1\bigr)^{|S|}$, a polynomial in $N$.
+<br><br>
+<i>Ordinary-sum inequality.</i> Let $\varphi$ be the spectral point behind the price, so $H=D_{\mathbf x}\log\varphi$ where $D_{\mathbf x}$ is the scale of the placement (a fixed number, independent of $N$). A sum $T_1+T_2$ of tensors in common spaces is a restriction of $T_1\oplus T_2$ (add the two blocks at every site), and $\varphi$ is additive on direct sums, so $\varphi(\sum_jT_j)\le\sum_j\varphi(T_j)$. A nonzero scalar multiple has the same price. Therefore every nonzero $\tau\in W$, written as a combination of at most $M_N$ collected terms of price below the threshold, satisfies
+$$H_{\mathbf x}(\tau)\ \lt\ H_{\mathbf x}(T(s_0))-\sqrt N+D_{\mathbf x}\log M_N=H_{\mathbf x}(T(s_0))-\sqrt N+O(\log N).$$
+For large $N$ the right side is less than $H_{\mathbf x}(T(s_0))$. Since $T(s_0)\ne0$, this proves $T(s_0)\notin W$.
+</div>
+
+<p>Choose a linear functional $\ell$ that vanishes on $W$ and is nonzero on $T(s_0)$. Then $f=\ell\circ T$ is not identically zero, and Step 3 applies. At each $\alpha\in D$, $\ell$ of the coefficient of order $l_\alpha$ is nonzero, so at least one fusion term $\tau_\alpha$ of that coefficient has $\ell(\tau_\alpha)\ne0$. By (15.4) and the nonnegativity of the summands, $\sum_Ce_C=H_0+l_\alpha\le(|D|-1)H_0$, so $\tau_\alpha$ was collected. Since $\ell(\tau_\alpha)\ne0$, $\tau_\alpha\notin W$, and therefore</p>
+$$H_{\mathbf x}(\tau_\alpha)\ \ge\ H_{\mathbf x}(T(s_0))-\sqrt N .$$
+<p>Select one such term per $\alpha\in D$, with intermediate energies $e_{\alpha,C}$. Summing $\sum_Ce_{\alpha,C}=H_0+l_\alpha$ over $\alpha$ and using (15.4), then multiplying by $c^2/N^2$ and using $w_N(e)^2=c^2e/N^2$, gives $\sum_{\alpha,C}w_N(e_{\alpha,C})^2\le(|D|-1)\sum_iw_N(h_i)^2$. The right side converges by (15.3). There are finitely many pairs $(\alpha,C)$, so along a subsequence of $N$ the widths $w_N(e_{\alpha,C})$ converge to limits $b_{\alpha,C}\ge0$ with</p>
+$$\sum_{\alpha\in D}\sum_{C\in\mathcal P_\alpha}b_{\alpha,C}^2\ \le\ (|D|-1)\sum_ia_i^2r_i^2 .$$
+
+<p><b>Step 5: the width needed by one fiber, $b_{\alpha,C}\ge K_C$.</b> Fix $\alpha\in D$, a fiber $C\in\mathcal P_\alpha$, and a point $y\ne o$. The selected term is $\tau_\alpha=C(\mathbf e;\mathbf p)\circ(I^{C'}_{e_{\alpha,C'}})_{C'}$. It can be supplied as follows. Prepare the fused tensor $C(\mathbf e;\mathbf p)$ at the single site $o$, at price zero. For each fiber $C'\ne C$ apply its fusion map at $o$ and send each external leg $i\in C'$ from $o$ to $x_i$. For the fiber $C$, carry the intermediate leg $V_{e_{\alpha,C}}$ a distance $t$ along the geodesic $[o,y]$ to a site $m=m_t$, apply the fusion map there, and send the legs $i\in C$ from $m$ to $x_i$. Applying a fusion map at a site is a local linear map, which does not increase the price. By the transport bound and $\log\dim V_h\le c\sqrt h=N\,w_N(h)$,</p>
+$$H_{\mathbf x}(\tau_\alpha)\le N\Bigl(\sum_{i\notin C}r_i\,w_N(h_i)+t\,w_N(e_{\alpha,C})+\sum_{i\in C}d(m,x_i)\,w_N(h_i)\Bigr).$$
+<p>The left side is at least $H_{\mathbf x}(T(s_0))-\sqrt N$. Divide by $N$ and let $N\to\infty$ along the subsequence, using (15.3):</p>
+$$P\ \le\ \sum_{i\notin C}a_ir_i^2+b_{\alpha,C}\,t+\sum_{i\in C}a_ir_i\,d(m_t,x_i).$$
+<p>At $t=0$ the right side equals $P$. So the right side, as a function of $t\ge0$, has a nonnegative right derivative at $t=0$.</p>
+
+<div class="imp"><b>Imported — first variation formula [12, Chapter II.3].</b> <span class="tag imported">imported</span> In a CAT(0) space, if $m_t$ is the point at distance $t$ from $o$ on the geodesic $[o,y]$ and $x\ne o$, then $\frac{d}{dt}\big|_{t=0^+}d(m_t,x)=-\cos\angle_o(x,y)$. The paper cites Bridson–Haefliger, <i>Metric spaces of non-positive curvature</i>, Chapter II.3.</div>
+
+<p>The derivative is $b_{\alpha,C}-\sum_{i\in C}a_ir_i\cos\angle_o(x_i,y)$; the terms with $r_i=0$ carry the factor $r_i$ and vanish. Hence $b_{\alpha,C}\ge\sum_{i\in C}a_ir_i\cos\angle_o(x_i,y)$ for every $y\ne o$. Also $b_{\alpha,C}\ge0$. Taking the supremum over $y$ of the positive part gives $b_{\alpha,C}\ge K_C$. Together with the bound on $\sum b_{\alpha,C}^2$ at the end of Step 4 this proves (15.2), and by Step 1 it proves (15.1).
+<span class="qed">∎</span></p>
+</div>
+
+<!-- FIGURE IDEA: left panel, a point set S in the plane with its secants colored by direction; right panel, the projective line of directions with the collision parameters D marked, and above each parameter the partition of S into fibers. An arrow from each fiber to "one fused leg of energy e_C". -->
+
+<h3 id="s15-2">15.2 The sharp local link inequality</h3>
+
+<p>The second statement specializes Theorem 15.1 to the affine plane over a finite field and rewrites it as a lower bound for the energy of an incidence graph. Some background on finite planes is needed first.</p>
+
+<div class="fill"><b>Background — finite affine planes, parallel classes, and the linear spectral gap.</b> <span class="tag filled">filled here</span>
+Let $q$ be a prime power. The affine plane $\mathbb F_q^2$ has $q^2$ points and $q^2+q$ lines. The lines fall into $q+1$ <em>parallel classes</em> (one for each direction, i.e. each point of $\mathbb P^1(\mathbb F_q)$); a class consists of $q$ disjoint lines of $q$ points each. Every point lies on exactly one line of each class, and two lines of different classes meet in exactly one point.
+<br><br>
+Retain the lines of $s$ classes. The bipartite incidence graph has $q^2$ point vertices of degree $s$, $sq$ line vertices of degree $q$, and $sq^2$ edges. Its normalized incidence operator $M$ sends a function $f$ on points to the function $(Mf)(L)=(sq)^{-1/2}\sum_{i\in L}f(i)$ on retained lines. The space of functions on points decomposes orthogonally as the constants, plus, for each of the $q+1$ classes $\mathcal C$, the $(q-1)$-dimensional space $W_{\mathcal C}$ of mean-zero functions that are constant on the lines of $\mathcal C$ (dimension check: $1+(q+1)(q-1)=q^2$). For $f\in W_{\mathcal C}$ and a line $L'$ of another class, $\sum_{i\in L'}f(i)=0$ because $L'$ meets each line of $\mathcal C$ once. Hence $M^*Mf=\tfrac1s f$ if $\mathcal C$ is retained and $Mf=0$ otherwise. The singular values of $M$ are therefore $1$ (constants), $s^{-1/2}$ (multiplicity $s(q-1)$) and $0$.
+<br><br>
+Consequence for Hilbert-space placements. Put the point vertices at vectors $x_i$ with mean $o$ and the line vertices at vectors $y_L$. With $A=q^{-2}\sum_i\|x_i-o\|^2$ and $B=(sq)^{-1}\sum_L\|y_L-o\|^2$, the mean over edges of $\langle x_i-o,y_L-o\rangle$ is at most $\sqrt{AB/s}$ in absolute value (apply the singular value bound $s^{-1/2}$ coordinatewise to the centered function $x-o$). The mean squared edge length is therefore at least $A+B-2\sqrt{AB/s}$. Corollary 15.2 states that, under the hypothesis, the same bound with the same constant holds for placements in CAT(0) spectral spaces, where no linear operator is available.
+</div>
+
+<div class="def" id="def-15-link"><b>Definition (the quantities $e$ and $V$).</b> <span class="pg">p. 58</span> <span class="tag paper">paper</span> Suppose $F\supseteq\mathbb F_q$. Take the $q^2$ points of $\mathbb F_q^2$ and the lines of $s$ parallel classes, $1\le s\le q+1$. A <em>placement</em> assigns to each point $i$ a site $x_i\in X$ and to each retained line $L$ a site $y_L\in X$. The number $e$ is the mean of $d(x_i,y_L)^2$ over the $sq^2$ incidences $i\in L$. Give each side of the graph total mass $\tfrac12$, uniformly distributed on its vertices; $V$ is the minimum over $z\in X$ of the mean squared distance from $z$ to this distribution.</div>
+
+<div class="cor" id="cor-15-2"><b>Corollary 15.2 (Affine incidence links).</b> <span class="pg">p. 58</span> <span class="tag paper">paper</span>
+Under the hypotheses of Theorem 15.1 (so $F$ is algebraically closed, $\omega_F\lt9/4$, and $X$ is a complete CAT(0) spectral space over $F$),
+$$e\ \ge\ 2\,(1-s^{-1/2})\,V .$$
+The coefficient is optimal in every target containing a nontrivial geodesic segment. Omitting one parallel class gives $s=q$ and a $q$-regular graph on $2q^2$ vertices.</div>
+
+<div class="proof">
+<p><b>The inequality.</b> Let $o$ be the barycenter of the point sites alone, with unit masses. Write $r_i=d(o,x_i)$ and $r_L=d(o,y_L)$, and</p>
+$$A=q^{-2}\sum_ir_i^2,\qquad B=(sq)^{-1}\sum_{L\ \mathrm{retained}}r_L^2 .$$
+<p>In a CAT(0) space the Alexandrov angle at $o$ is at most the Euclidean comparison angle, so the law of cosines holds as an inequality ("triangle comparison"):</p>
+$$d(x_i,y_L)^2\ \ge\ r_i^2+r_L^2-2r_ir_L\cos\angle_o(x_i,y_L),$$
+<p>with the cross term read as zero when $r_i=0$ or $r_L=0$. Sum over the $sq^2$ incidences. Each point lies on $s$ retained lines and each line carries $q$ points, so the first two terms contribute $sq^2A$ and $sq^2B$. For a fixed line $L$ with $r_L\gt0$, taking $y=y_L$ in the definition of $K_L$ (unit masses) gives $\sum_{i\in L}r_i\cos\angle_o(x_i,y_L)\le K_L$.</p>
+<p>Apply Theorem 15.1 to $S=\mathbb F_q^2\subset F^2$ with all masses one. The point $o$ is the barycenter required there. The secants of $S$ are the $q^2+q$ lines of $\mathbb F_q^2$, and $t_i=q+1$. So (15.1) reads $\sum_LK_L^2\le q\sum_ir_i^2$, the sum being over all lines, hence also over the retained lines. By the Cauchy–Schwarz inequality the mean cross term over the $sq^2$ retained incidences is at most</p>
+$$\begin{aligned}\frac{2}{sq^2}\sum_{L\ \mathrm{retained}}r_LK_L\ &\le\ \frac{2}{sq^2}\sqrt{\,q\sum_ir_i^2\cdot\sum_{L\ \mathrm{retained}}r_L^2}\\ &=\ \frac{2}{sq^2}\sqrt{q\cdot q^2A\cdot sqB}\ =\ 2\sqrt{AB/s}.\end{aligned}$$
+<p>Consequently, using $2\sqrt{AB}\le A+B$,</p>
+$$e\ \ge\ A+B-2\sqrt{AB/s}\ \ge\ (1-s^{-1/2})(A+B).$$
+<p>Evaluating the mean squared distance of the half-and-half distribution at the point $o$ gives $V\le(A+B)/2$. This proves $e\ge2(1-s^{-1/2})V$.</p>
+
+<p><b>Optimality.</b> Choose one retained class $\mathcal C_0$ and give its $q$ lines real labels $\lambda_L$ with mean zero and mean square $A\gt0$. Give each point the label of its line in $\mathcal C_0$; give the line site of $L\in\mathcal C_0$ the label $\sqrt s\,\lambda_L$ and every other line site the label $0$. Each line of $\mathcal C_0$ has $q$ points, so the point labels have mean zero and mean square $A$. The line labels have mean zero and mean square $(sq)^{-1}\sum_{L\in\mathcal C_0}s\lambda_L^2=A$, so $B=A$. A fraction $1/s$ of the edges lies in $\mathcal C_0$, and on such an edge the product of the endpoint labels is $\sqrt s\lambda_L^2$; the mean product over all edges is $A/\sqrt s$. On the real line this gives $e=A+B-2A/\sqrt s=2(1-s^{-1/2})A$ and, since both sides have mean zero, $V=(A+B)/2=A$. So $e=2(1-s^{-1/2})V$. To realize the example in $X$, map the labels by a similarity into a geodesic segment of $X$. Nearest-point projection onto the segment does not increase distances, so the minimum defining $V$ is attained on the segment and has the same value.</p>
+
+<p><b>The last sentence.</b> With $s=q$ there are $q^2$ points and $q\cdot q=q^2$ lines, and both degrees equal $q$.
+<span class="qed">∎</span></p>
+</div>
+
+<p>The paper adds a remark that matters for <a class="secref" href="#s17">§17</a>: the intermediate bound $e\ge(1-s^{-1/2})(A+B)$ refers to the barycenter $o$ of the <em>point</em> sites, not to the minimizer of $V$. Lemma 17.1 uses this form for affine planes, and applies the secant inequality (15.1) directly for projective spaces.</p>
+
+<div class="fill"><b>Gap fill — why the constant $1-s^{-1/2}$ is the relevant one.</b> <span class="tag filled">filled here</span>
+In the local-to-global arguments used in <a class="secref" href="#s17">§17</a> (Garland's method), an inequality $e\ge2\lambda V$ on a link gives a contraction factor $1/(2\lambda)$ for an energy, and the argument needs $1/(2\lambda)\lt1$, that is $\lambda\gt\tfrac12$. With $\lambda=1-s^{-1/2}$ this holds exactly when $s\gt4$. A bound with a constant smaller than $\tfrac12$ would be of no use there; the corollary gives the same constant as the linear spectral gap computed in the background box, and the optimality statement shows that no larger constant is possible.
+</div>
+</section>
+
+<section id="s16">
+<h2>16. Stable sorting under a strict square saving <span class="pg">pp. 59–60</span></h2>
+<p class="role"><b>Role in the chain.</b> This section opens Part II ("Sorting and table lookup"). It states the conditional sorting theorem (Theorem 16.1), whose proof occupies <a class="secref" href="#s17">§17</a> and <a class="secref" href="#s18">§18</a> and ends on p. 73. It proves Lemma 16.2, which converts the sorting bound into a bound for evaluating many copies of a network of tables. It receives the incidence inequality of <a class="secref" href="#s15">§15</a> (through <a class="secref" href="#s17">§17</a>) and the tagged-permutation tensor of <a class="secref" href="#s4">§4</a>. It delivers two things to Part IV: the exponent $p\in(1,2)$ of part 1 of the theorem, which enters <a class="secref" href="#s27">§27</a> as $\rho=p-1\lt1$ through Lemma 16.2, and the wide-record bound of part 2, which <a class="secref" href="#s26">§26</a> uses to sort transcripts.</p>
+
+<p>The standing objects are these. The field $k$ is the fixed finite field of <a class="secref" href="#s2">§2</a>, and $n=2^h$. A <em>trivalent network over $k$</em> (<a class="secref" href="#s2">§2</a>) is a tensor network whose vertices carry tables $\{0,1\}^u\to k$ with $u\le3$; its <em>size</em> is the number of vertices plus the number of exterior bits; it <em>represents</em> the tensor obtained by multiplying the vertex entries and summing over all values of the internal wires. A network is <em>exact</em> for a tensor if it represents that tensor, not an approximation or a power of it.</p>
+
+<div class="def" id="def-16-tag"><b>Definition (tagged permutation and stable-sort tensors).</b> <span class="pg">p. 59</span> <span class="tag paper">paper</span>
+The inputs of $\operatorname{Tag}(h,w)$ are $n=2^h$ source records $(j_i,x_i)$, where $j_i$ is an $h$-bit destination ("tag") and $x_i$ a $w$-bit payload, and $n$ proposed records $y_j$ of $w$ bits, one for each position $j$. The tensor $\operatorname{Tag}(h,w)$ is the indicator ($0$ or $1$ in $k$) of the event that the $j_i$ are distinct and $y_{j_i}=x_i$ for every $i$. The <em>stable-sort tensor</em> is the indicator that a proposed output list sorts the input records by a designated key and preserves the input order among records with equal keys. Both indicators compare the payload bits as well.</div>
+
+<div class="fill"><b>Background — stable sorting, and what a network for an indicator does.</b> <span class="tag filled">filled here</span>
+A sorting procedure is <em>stable</em> if records with equal keys leave in the order in which they entered. For a given input list the stably sorted output is unique, even when records repeat. This uniqueness is what makes the stable-sort tensor usable inside a tensor network: once the inputs are fixed, exactly one setting of the output legs has value $1$. Stability also makes radix sorting work: sorting by the least significant digit first and then stably by more significant digits yields the full order, because a later pass does not disturb the order that earlier passes created among records that agree on the later digit.
+<br><br>
+A network for such an indicator is a <em>verifier</em>, not a procedure. The proposed output is part of the exterior bits, and the network has value $1$ on exactly the consistent (input, output) pairs. A Boolean circuit that computes the output from the input yields a verifier of the same size up to a constant factor: replace every gate by its $0/1$ table, copy bits with equality tables, and compare the computed output with the proposed one (<a class="secref" href="#s2">§2</a>, proof of Proposition 2.3). With a classical sorting network of $O(nh^2)$ comparators (Batcher; see <a class="secref" href="#s18">§18</a>) and $O(h)$ gates per comparison of $O(h)$-bit records this gives size $O(nh^3)$ for $\operatorname{Tag}(h,h)$. Theorem 16.1 claims the exponent of $h$ can be lowered below $2$ under the hypothesis.
+</div>
+
+<div class="thm" id="thm-16-1"><b>Theorem 16.1 (Conditional stable sorting).</b> <span class="pg">p. 59</span> <span class="tag paper">paper</span>
+Suppose $\omega_k\lt9/4$, and let $n=2^h$.
+<ol>
+<li>For some $1\lt p\lt2$, $\operatorname{Tag}(h,h)$ has an exact trivalent network over $k$ of size $O(nh^p)$. The same bound holds for stable sorting of records of at most $ch$ bits, for every fixed $c$.</li>
+<li>For every $\zeta\gt0$ there is $a\gt1$ such that, for every $w\ge h^a$, both $\operatorname{Tag}(h,w)$ and stable sorting of $w$-bit records have exact trivalent networks over $k$ of size $O_\zeta(nwh^\zeta)$.</li>
+</ol>
+</div>
+
+<p>The proof is in <a class="secref" href="#s18-2">§18.2</a>. Three comments on the statement follow.</p>
+<ul>
+<li><b>Units.</b> The input of $\operatorname{Tag}(h,w)$ has $n(h+2w)$ bits. Part 2 says that for wide records the size per payload bit is $O(h^\zeta)$ with $\zeta$ arbitrarily small. Part 1 says that for records of width $h$ the size per input bit is $O(h^{p-1})$ with $p-1\lt1$.</li>
+<li><b>Value of $p$.</b> The paper gives no numerical value. The proof yields $p=2-1/(2a)$, where $a\gt1$ is the width threshold that part 2 provides for $\zeta=\tfrac12$ (p. 73). The threshold $a$ comes out of an argument by contradiction with ultralimits (Lemma 17.3), so neither $a$ nor $p$ is effective.</li>
+<li><b>Why $p\lt2$ is the needed property.</b> In <a class="secref" href="#s27">§27</a> the cost per wire end of evaluating a station of arity $u$ is $O((1+u)^{p-1})$ (Lemma 16.2 below). Part IV sets $\rho=p-1$ and needs $1-\delta\gt\rho(1+\delta)$ for some $\delta\gt0$, which is possible exactly when $\rho\lt1$.</li>
+</ul>
+
+<h3 id="s16-1">16.1 Evaluating a table by sorting its queries</h3>
+
+<p>A <em>station of arity $t$</em> is a vertex of a network that carries an arbitrary table $f:\{0,1\}^t\to K$. A trivalent network that evaluates one such table on one query can need a number of gates proportional to $2^t$, because the table has $2^t$ independent entries. The lemma shows that $2^t$ queries to the same table can be answered together for $O((1+t)^p)$ gates per query.</p>
+
+<div class="lem" id="lem-16-2"><b>Lemma 16.2 (Batched table evaluation).</b> <span class="pg">p. 59</span> <span class="tag paper">paper</span>
+Assume the ordinary-width stable-sort bound of Theorem 16.1 over $k$, with exponent $p\gt1$. Let a network of binary wires and $K$-valued tables represent a tensor $T$, where $K/k$ is any field extension. If $t_v\le u$ is the arity of station $v$ and $s=\sum_v(1+t_v)$, then $T^{\otimes2^u}$ has an exact trivalent $K$-network of size
+$$O\bigl(2^u\,s\,(1+u)^{p-1}\bigr).$$
+The constant is independent of $K$ and of the entries in the tables.</div>
+
+<div class="aha"><b>AHA.</b> The product $\prod_if(x_i)$ over a batch of queries depends only on how many times each address $z$ occurs: it equals $\prod_zf(z)^{c_z}$. Sorting the queries makes the counts $c_z$ readable by a single pass, and the power $f(z)^{c_z}$ is then produced by $t+1$ fixed one-bit factors $f(z)^{2^j}$ attached to the binary digits of $c_z$. The table entries enter only as fixed coefficients at fixed positions, so no gate has to "look up" anything.</div>
+
+<div class="proof">
+<p><b>One table, one batch.</b> Let $f:\{0,1\}^t\to K$ with $t\ge1$, and let the $2^t$ query addresses $x_1,\dots,x_{2^t}\in\{0,1\}^t$ be exterior legs. Let $c_z$ be the number of $i$ with $x_i=z$. The required value is $\prod_if(x_i)=\prod_zf(z)^{c_z}$, with $f(z)^0=1$ also when $f(z)=0$.</p>
+<p>Create one <em>dictionary row</em> for each address $z$, with a count field of $t+1$ bits whose value is summed over (a "guess"). The count field has $t+1$ bits because $0\le c_z\le2^t$. On bit $j$ of the count field of row $z$ ($0\le j\le t$) place a one-leg table with entries $(1,\ f(z)^{2^j})$: value $1$ if the bit is $0$ and $f(z)^{2^j}$ if it is $1$. The row position determines $z$, so these two entries are constants of the network. If the count field holds the number $c=\sum_j\beta_j2^j$, the product of the $t+1$ factors is $f(z)^c$.</p>
+<p>Create one <em>query row</em> for each query, holding its address and zeros in the count field. Sort the $2^{t+1}$ rows stably by address and, within an address, by row type, so that the dictionary row of $z$ follows all queries to $z$. Run a counter along the sorted list: it starts at zero, increases by one at each query row, and at a dictionary row it is required to equal the carried count and is then reset to zero.</p>
+<p><b>Exactness.</b> Fix the exposed addresses. The sorted list is unique because the sort is stable. The counter states are then forced, and at the dictionary row of $z$ the counter holds $c_z$, so the only count field that passes the check is $c_z$, including $c_z=0$ at an address that receives no query. So exactly one setting of the internal wires has a nonzero contribution, and its contribution is $\prod_zf(z)^{c_z}$. No multiplicity occurs, so the identity holds in every characteristic and also when some table entries are zero.</p>
+<p><b>Size of one batch.</b> The counter and the equality checks are ripple-carry operations on $(t+1)$-bit numbers at $2^{t+1}$ rows: $O(2^t(1+t))$ gates. The rows have $O(t+1)$ bits and there are $2^{t+1}$ of them, so part 1 of Theorem 16.1 (with $h$ replaced by $t+1$) gives a sorting network of size $O(2^t(1+t)^p)$. That network has tables with entries in $k$ and represents a $0/1$ tensor; read over $K\supseteq k$ it represents the same tensor.</p>
+<p><b>All stations, all copies.</b> Take $2^u$ copies of the original network. For each station $v$ of arity $t=t_v\ge1$, group its $2^u$ copies into $2^{u-t}$ batches of $2^t$ and replace each batch by the gadget above; a station of arity zero is a scalar. Connect the exposed address bits as the wires of the original network prescribe, separately in each copy. Summing over the wires of all copies gives $T^{\otimes2^u}$. The size is at most a constant times</p>
+$$\begin{aligned}\sum_v2^{u-t_v}\cdot2^{t_v}(1+t_v)^p&=2^u\sum_v(1+t_v)^p\\ &\le\ 2^u(1+u)^{p-1}\sum_v(1+t_v)=2^u\,s\,(1+u)^{p-1}.\end{aligned}$$
+<span class="qed">∎</span>
+</div>
+
+<p>Per copy of $T$, the bound is $s\,(1+u)^{p-1}$: each unit of $s$ (a station or a wire end) is charged $(1+u)^{p-1}$. This is the form in which <a class="secref" href="#s27">§27</a> uses the lemma, with $2^u$ as part of the replication factor $d$ of Theorem 2.1.</p>
+
+<h3 id="s16-2">16.2 The two scales of the sorting proof</h3>
+
+<p>This subsection has no numbered statement. It fixes the plan of <a class="secref" href="#s17">§17</a>–<a class="secref" href="#s18">§18</a> and three conventions used there. The hypothesis $\omega_k\lt9/4$ is assumed throughout Part II.</p>
+
+<p><b>The plan.</b> The proof of Theorem 16.1 treats wide records first.</p>
+<ol>
+<li><em>Wide records by recursion on the address length.</em> A permutation of $n=2^h$ addresses is written as a sum of networks in which records only make "hops" inside sets of about $2^{th}$ addresses, with a fixed factor $t\lt1$. A hop is a tagged permutation on a shorter address, so it can be handled by a recursive call. The requirement is that $t$ can be made arbitrarily small while the total width moved in each summand stays below $C\cdot nw$ for a constant $C$ that does not depend on $t$ (Proposition 18.1). The recursion then gives part 2 of the theorem.</li>
+<li><em>Ordinary width by two levels of radix sorting.</em> A short key selects a digit inside a block; whole packs of records with the same digit are then moved together as one wide record. Both levels call the wide-record bound (<a class="secref" href="#s18-2">§18.2</a>).</li>
+</ol>
+<p>Step 1 has a geometric part and a combinatorial part. <a class="secref" href="#s17">§17</a> compares the price of the target permutation with the prices of the hops: first for a group acting on a CAT(0) space (Lemma 17.2), then for finite price data that pass a local consistency test (Lemma 17.3). <a class="secref" href="#s18">§18</a> handles price data that fail the test: failure yields, by spectral comparison, an exact tensor identity that lowers a cost account. The two cases together bound the routed width.</p>
+
+<p><b>Convention 1: units.</b> From here to the end of Part IV, ordinary prices use base-two logarithms. A wire of one bit between sites $a,b$ then has price $d(a,b)$: the distance is the price of carrying one bit.</p>
+
+<p><b>Convention 2: compactness of price data.</b> The paper states that on a fixed finite list of sites, the price data of bounded scale (including scale zero) form a compact set, by (5.2) of <a class="secref" href="#s5">§5</a> and <a class="secref" href="#s3">§3</a>, and that a bound on the diameter suffices.</p>
+
+<div class="fill"><b>Gap fill — what is compact, and why a diameter bound bounds the scale.</b> <span class="tag filled">filled here</span>
+"Price data" on a finite list $S$ of sites means the function $T\mapsto H(T)$ on all nonzero tensors over the field with legs at the sites of $S$. The <em>scale</em> is the rate $D$ with $H(\Delta_S(q))=D\log q$ for the diagonal tensor $\Delta_S(q)$ that shares a $q$-valued label among all sites. Inequality (5.2) with trivial valuation reads $0\le H(T)\le D\sum_i\log q_i$, where the $q_i$ are the local dimensions of $T$. So price data of scale at most $D_0$ lie in a product of compact intervals, one per tensor. The price axioms (monotonicity under restriction, additivity on products, the direct-sum rule) are closed conditions in the product topology, so the set is compact by Tychonoff's theorem. A limit of prices whose scales tend to $0$ is the <em>collapsed price</em>, which gives every nonzero tensor price zero; that is the meaning of "including scale zero".
+<br><br>
+The scale is bounded by the diameter. Choose a spanning tree on $S$ and one binary wire along each tree edge. At each site, project the tensor product of the incident wire ends onto the settings in which all of them are equal. This is a restriction of the product of wires to $\Delta_S(2)$. Hence $D\le\sum_{\text{tree edges }(a,b)}d(a,b)\le(|S|-1)\operatorname{diam}(S)$. The paper's sentence "Equality along a spanning tree of binary wires realizes the full diagonal and bounds its price" is this argument.
+</div>
+
+<p><b>Convention 3: continuity of distances between interpolated points.</b> The paper states that distances between sites obtained from a finite list by finitely many geodesic interpolations at fixed fractions depend continuously on the original price data.</p>
+
+<div class="imp"><b>Imported — Lemma 5.2 (Geodesic determination), first assertion.</b> <span class="tag imported">imported</span> Ordinary price data on any subset of a complete CAT(0) spectral space determine all prices on its closed geodesic convex hull, up to a price-preserving isometry fixing the given data (<a class="secref" href="#s5">§5</a>).</div>
+
+<div class="fill"><b>Gap fill — the compactness argument behind Convention 3.</b> <span class="tag filled">filled here</span>
+Let price data $H_\nu$ on $S$ converge to $H$, with bounded scales. Realize each $H_\nu$ in a complete CAT(0) spectral space and adjoin the interpolated points (for example the point at fraction $\theta$ on the geodesic from $a$ to $b$). The enlarged lists lie in the convex hull of $S$, so their diameters, and by the previous box their scales, stay bounded. By Convention 2 a subnet of the enlarged price data converges. Each interpolation is characterized by two equalities, $d(a,y)=\theta\,d(a,b)$ and $d(y,b)=(1-\theta)\,d(a,b)$, and these pass to the limit. In a CAT(0) realization of the limit, uniqueness of geodesics identifies the limiting $y$ with the point at fraction $\theta$ on $[a,b]$. By Lemma 5.2 the limiting prices on the enlarged list, in particular the distances between interpolated points, are determined by $H$. Every convergent subnet therefore has the same limit, and this is continuity.
+</div>
+
+<p>Conventions 2 and 3 are used in the proof of Lemma 17.3 (comparison of two realizations on overlapping balls) and in <a class="secref" href="#s18-1">§18.1</a> (finite menus of replacements). Both uses are arguments by compactness, so the constants they produce are not effective.</p>
+</section>
+
+<section id="s17">
+<h2>17. From incidence to permutation actions <span class="pg">pp. 61–67</span></h2>
+<p class="role"><b>Role in the chain.</b> This section receives the incidence inequality (Theorem 15.1 and the unit-mass estimate in the proof of Corollary 15.2, <a class="secref" href="#s15">§15</a>) and the conventions of <a class="secref" href="#s16-2">§16.2</a>. It delivers Lemma 17.3: if prices assigned to the "payload wires" $i\to\pi(i)$ of a permutation $\pi$ are locally consistent with spectral prices in which every short hop costs at most $1$, then their mean is at most $C_0+1$, where $C_0=100$ does not depend on the number of hops into which $\pi$ is factored. Proposition 18.1 in <a class="secref" href="#s18">§18</a> uses the contrapositive: a mean above this value forces many local inconsistencies, each of which yields a cost-reducing tensor identity.</p>
+
+<p>The problem addressed is the following. A permutation of $n=2^h$ addresses can be factored into a bounded number of <em>hops</em>, each of which only changes a short part of the address. A record that follows the factorization pays for every hop, so the cost per payload bit is proportional to the number of factors. That number grows as the hops are made shorter, and the recursion of <a class="secref" href="#s18-2">§18.2</a> needs short hops with a cost that does not grow. The section obtains the bound in three stages: an inequality on incidence graphs (17.1), a fixed-point theorem for a group generated by hop subgroups (17.3, after the definitions of 17.2), and a transfer from actions on a space to finite price data (17.4).</p>
+
+<h3 id="s17-1">17.1 Two incidence inequalities</h3>
+
+<p>Fix a power $q\ge100$ of the characteristic of $k$. A <em>placement</em> of a bipartite incidence graph in a metric space assigns a site to every vertex on either side. Its <em>incidence energy</em> $e$ is the mean squared distance between the two sites of a uniformly chosen incidence (edge).</p>
+
+<div class="fill"><b>Background — the projective space $\mathrm{PG}(\ell-1,q)$.</b> <span class="tag filled">filled here</span>
+The <em>points</em> of $\mathrm{PG}(\ell-1,q)$ are the one-dimensional subspaces of $\mathbb F_q^\ell$ and its <em>lines</em> are the two-dimensional subspaces; a point is incident to a line if it is contained in it. Every line contains $q+1$ points. Every point lies on $j=(q^{\ell-1}-1)/(q-1)$ lines (the lines through a point correspond to the points of the quotient space $\mathbb F_q^\ell/\text{point}$). Two distinct points lie on exactly one line.
+</div>
+
+<div class="lem" id="lem-17-1"><b>Lemma 17.1.</b> <span class="pg">p. 61</span> <span class="tag paper">paper</span>
+Suppose $\omega_k\lt9/4$. In any complete CAT(0) spectral space over $k$, consider a placement of either of the following graphs.
+<ol>
+<li>The points and lines of the projective space $\mathrm{PG}(\ell-1,q)$, where $\ell\ge3$.</li>
+<li>The points of $\mathbb F_Q^2$ and the affine lines in the $q+1$ directions defined over $\mathbb F_q$, where $Q=q^R$.</li>
+</ol>
+Let $o$ be the barycenter of the point sites. Let $A$ and $B$ be the mean squared distances to $o$ on the point and line sides, respectively, with uniform weights on each side. Then
+$$e\ \ge\ (1-q^{-1/2})(A+B).$$
+</div>
+
+<div class="proof">
+<p><b>Step 0: reduction to the algebraic closure.</b> Theorem 15.1 needs an algebraically closed field that contains the coordinates of the configuration, and the statement here is over the finite field $k$. The algebraic closure $\bar k$ contains every $\mathbb F_Q$ in the statement, and $\omega_{\bar k}\le\omega_k\lt9/4$ (a bilinear algorithm over $k$ is one over $\bar k$).</p>
+
+<div class="imp"><b>Imported — scalar extension and ultralimits of prices (from <a class="secref" href="#s3">§3</a>).</b> <span class="tag imported">imported</span>
+(a) "Under a field extension, the possible joint values of spectral points on tensors defined over the original field are preserved [42, Section 2]." (b) "Every spectral space embeds, with all its prices, in a complete CAT(0) spectral space." (c) "In a pointed metric ultralimit of these spaces, the price of a fixed tensor on a bounded sequence of placements is the ultralimit of its prices [42, Sections 2 and 2.3, Theorem 4.3 and Proposition 3.3]." The paper deduces from (a) and (b) that each finite subset of a spectral space over $k$ has an isometric realization in a complete spectral space over $\bar k$.</div>
+
+<div class="fill"><b>Background — ultralimits of metric spaces, and why they make constants non-effective.</b> <span class="tag filled">filled here</span>
+An <em>ultrafilter</em> $\mathcal U$ on an index set $\Lambda$ is a finitely additive $\{0,1\}$-valued measure on all subsets of $\Lambda$. Every bounded family of real numbers $(c_\lambda)$ has a limit $\lim_{\mathcal U}c_\lambda$, the unique number $c$ such that $\{\lambda:|c_\lambda-c|\lt\varepsilon\}$ has measure $1$ for every $\varepsilon\gt0$. Given pointed metric spaces $(X_\lambda,d_\lambda,*_\lambda)$, the <em>pointed ultralimit</em> consists of the families $(x_\lambda)$ with $d_\lambda(x_\lambda,*_\lambda)$ bounded, with distance $\lim_{\mathcal U}d_\lambda(x_\lambda,y_\lambda)$, modulo distance zero. It is always complete. If every $X_\lambda$ is CAT(0), so is the ultralimit: midpoints are limits of midpoints, and the midpoint inequality passes to the limit. The barycenter of finitely many weighted points of the ultralimit is the limit of the coordinate barycenters $b_\lambda$: the variance inequality $\sum_i\mu_id_\lambda(z_\lambda,x_{i,\lambda})^2\ge\sum_i\mu_id_\lambda(b_\lambda,x_{i,\lambda})^2+d_\lambda(z_\lambda,b_\lambda)^2$ passes to the limit and shows that $\lim_{\mathcal U}b_\lambda$ is the unique minimizer.
+<br><br>
+Non-principal ultrafilters exist by the axiom of choice and cannot be written down. A proof that derives a contradiction from an ultralimit of hypothetical counterexamples shows that a constant exists and gives no bound for it. This is the source of the non-effective constants in Lemma 17.3.
+</div>
+
+<p>Let $X$ be the given space over $k$. For every finite subset $\Phi\subset X$ containing a fixed basepoint, take a realization of $\Phi$ in a complete CAT(0) spectral space $X_\Phi$ over $\bar k$. Take the pointed ultralimit $X'$ of the $X_\Phi$ over the set of all such $\Phi$, with an ultrafilter that contains every "tail" $\{\Phi:\Phi\supseteq\Phi_0\}$. Each $x\in X$ is present in almost all $\Phi$, with all its distances to other points of $\Phi$, so $X$ maps isometrically into $X'$. By the imported item (c), $X'$ is a complete CAT(0) spectral space over $\bar k$. The image of $X$ is complete, hence closed, and it is convex because the image of a geodesic of $X$ is a geodesic of $X'$ and geodesics in $X'$ are unique. Nearest-point projection onto a closed convex set does not increase distances and fixes the set; so for a distribution supported in the image, the barycenter computed in $X'$ lies in the image and equals the barycenter computed in $X$. The quantities $e$, $A$, $B$ are therefore the same in $X$ and in $X'$, and it suffices to prove the inequality for placements in complete CAT(0) spectral spaces over $\bar k$.</p>
+
+<p><b>Step 1: the affine plane (graph 2).</b> Apply Theorem 15.1 to $S=\mathbb F_Q^2\subset\bar k^2$ with unit masses. The secants are the $Q^2+Q$ lines of $\mathbb F_Q^2$ and $t_i=Q+1$, so $\sum_LK_L^2\le Q\sum_ir_i^2$, the sum being over all lines. Retain the $(q+1)Q$ lines in the $q+1$ directions defined over $\mathbb F_q$; there are $(q+1)Q^2$ retained incidences. With $A=Q^{-2}\sum_ir_i^2$ and $B=((q+1)Q)^{-1}\sum_{L\text{ retained}}r_L^2$, the computation in the proof of Corollary 15.2 gives for the mean cross term</p>
+$$\frac{2}{(q+1)Q^2}\sum_{L\text{ retained}}r_LK_L\le\frac{2}{(q+1)Q^2}\sqrt{Q\cdot Q^2A\cdot(q+1)Q\,B}=2\sqrt{\frac{AB}{q+1}} .$$
+<p>Hence $e\ge A+B-2\sqrt{AB/(q+1)}\ge\bigl(1-(q+1)^{-1/2}\bigr)(A+B)\ge(1-q^{-1/2})(A+B)$.</p>
+
+<p><b>Step 2: the projective space (graph 1).</b> Theorem 15.1 is about points of an affine plane, so the configuration $\mathrm{PG}(\ell-1,q)$ is first moved into a plane. Choose a linear map $\bar k^\ell\to\bar k^3$ that preserves the rank of every set of at most three vectors representing points of $\mathrm{PG}(\ell-1,q)$. For one such set the condition is nonempty and Zariski open in the space of linear maps; there are finitely many sets; $\bar k$ is infinite; so a common solution exists. The images of the points are then distinct points of the projective plane over $\bar k$, and three images are collinear exactly when the three original points are. Choose an affine chart of that plane that contains all the images (a line of the plane that avoids finitely many points exists). The result is a finite set $S\subset\bar k^2$ whose secants are in bijection with the lines of $\mathrm{PG}(\ell-1,q)$, with $t_i=j$ secants through each point and $s=q+1$ points on each secant.</p>
+<p>Write $r_i=d(o,x_i)$ for point sites and $r_L=d(o,y_L)$ for line sites, and let $K_L$ be the pull of <a class="secref" href="#s15-1">§15.1</a> with unit masses. If the space is a single point the claim is trivial. Otherwise Theorem 15.1 gives $\sum_LK_L^2\le(j-1)\sum_ir_i^2$. Let $n_{\mathrm P}$ and $n_{\mathrm L}$ be the numbers of points and lines and $M=j\,n_{\mathrm P}=s\,n_{\mathrm L}$ the number of incidences. Triangle comparison and the Cauchy–Schwarz inequality bound the mean cross term by</p>
+$$\frac2M\sum_Lr_LK_L\le\frac2M\sqrt{n_{\mathrm L}B\cdot(j-1)\,n_{\mathrm P}A}=2\sqrt{\frac{j-1}{js}\,AB}\ \le\ q^{-1/2}(A+B),$$
+<p>where the equality uses $M^2=j\,n_{\mathrm P}\cdot s\,n_{\mathrm L}$ and the last step uses $(j-1)/j\lt1$, $s\gt q$ and $2\sqrt{AB}\le A+B$. The sums $\sum_{(i,L)}r_i^2=MA$ and $\sum_{(i,L)}r_L^2=MB$ give $e\ge A+B-q^{-1/2}(A+B)$.
+<span class="qed">∎</span></p>
+</div>
+
+<h3 id="s17-2">17.2 Permutations on short address sets</h3>
+
+<p>This subsection has no numbered statement. It defines the address set, the group $G$, the hop subgroups $K_V$, the number $t$ of (17.1), and it shows that the $K_V$ generate $G$.</p>
+
+<div class="def" id="def-17-address"><b>Definition (padded address set).</b> <span class="pg">p. 62</span> <span class="tag paper">paper</span>
+Choose an integer $\ell\ge3$ and a number $m$ of auxiliary coordinates; $m$ will depend only on $q$. For $n=2^h$ put
+$$r=\left\lfloor\frac{\log_qn}{\ell+m}\right\rfloor,\qquad U=\mathbb F_q^r,\quad N=q^r,\quad c=\left\lceil n/N^{\ell+m}\right\rceil,\qquad\mathcal I=U^\ell\times[c]\times U^m ,$$
+where $[c]=\{1,\dots,c\}$. The original $n$ addresses are identified with the first $n$ elements ("labels") of $\mathcal I$ in a fixed ordering, and an input permutation $\pi$ is extended by fixed points.</div>
+
+<div class="fill"><b>Gap fill — the two size bounds.</b> <span class="tag filled">filled here</span>
+$|\mathcal I|=cN^{\ell+m}$. Since $N^{\ell+m}=q^{r(\ell+m)}\le n$, we have $n\le cN^{\ell+m}\lt n+N^{\ell+m}\le2n$. Since $q^{(r+1)(\ell+m)}\gt n$, we have $n/N^{\ell+m}\lt q^{\ell+m}$ and so $c\le q^{\ell+m}$, a constant for fixed $q,\ell,m$.
+</div>
+
+<div class="def" id="def-17-G"><b>Definition (the group $G$ and the hop subgroups $K_V$).</b> <span class="pg">p. 62</span> <span class="tag paper">paper</span>
+A <em>permutation function</em> takes a height $h$ and a valid input permutation as parameters and outputs a permutation of $\mathcal I$. It is required to be given by a single deterministic program that uses $nh^{O(1)}$ operations on words of $O(h)$ bits. These functions form a countable group $G$ under pointwise composition; the input permutation $\pi$ itself is an element of $G$. Identify $U^\ell$ with $\mathbb F_q^\ell\otimes U$. For a subspace $V\le\mathbb F_q^\ell$ of dimension at most two, $K_V\le G$ is the subgroup of permutation functions that preserve every fiber of the projection $\mathcal I\to(\mathbb F_q^\ell/V)\otimes U$.</div>
+
+<div class="aha"><b>AHA.</b> An element of $G$ is a program, not a permutation of one fixed set. The same element acts on the address sets of all heights $h$ and for all inputs. This is what allows one group to act on a limit space built from problems of growing size (Lemma 17.3), and the countability of the set of programs is what allows the hops to be exhausted by an increasing sequence of finite sets.</div>
+
+<p>A fiber of $\mathcal I\to(\mathbb F_q^\ell/V)\otimes U$ consists of the labels with a prescribed image; all auxiliary labels $[c]\times U^m$ lie in it, so it has $cN^{m+\dim V}$ elements. Since $N\le n^{1/(\ell+m)}$ and $c\le q^{m+\ell}$, every element of $K_V$ (a <em>hop</em>) permutes sets of size at most $2^{th+O(1)}$, where</p>
+$$t=\frac{m+2}{m+\ell}.\tag{17.1}$$
+<p>For fixed $m$, $t\to0$ as $\ell\to\infty$: increasing $\ell$ shortens the address inside a fiber. For a flag $0\subset L\subset P$ (a line inside a plane of $\mathbb F_q^\ell$) the subgroups are nested, $K_0\subset K_L\subset K_P$, and $K_0$ permutes only the auxiliary labels.</p>
+
+<div class="fill"><b>Background — rearrangeable (Beneš) networks as a three-factor decomposition.</b> <span class="tag filled">filled here</span>
+Beneš's theorem [9], in the form used here: <i>every permutation $\sigma$ of a product $\mathsf A\times\mathsf B$ can be written $\sigma=\sigma_3\sigma_2\sigma_1$, where $\sigma_1$ and $\sigma_3$ change only the $\mathsf A$-coordinate and $\sigma_2$ changes only the $\mathsf B$-coordinate.</i>
+<br><br>
+Proof. Let $a=|\mathsf A|$. Form a bipartite multigraph with a left copy and a right copy of $\mathsf B$ and one edge for every element $(\alpha,\beta)$: if $\sigma(\alpha,\beta)=(\alpha',\beta')$ the edge joins left $\beta$ to right $\beta'$. Every vertex has degree $a$. By König's edge-coloring theorem an $a$-regular bipartite multigraph has a proper coloring of its edges with $a$ colors, which we take to be the elements of $\mathsf A$; at each vertex every color occurs once. Let $\gamma(\alpha,\beta)$ be the color of the edge of $(\alpha,\beta)$. Define $\sigma_1(\alpha,\beta)=(\gamma,\beta)$; it is a bijection because the colors at the left vertex $\beta$ are distinct. Define $\sigma_2(\gamma,\beta)=(\gamma,\beta')$; it is a bijection because the edges of one color form a perfect matching. Define $\sigma_3(\gamma,\beta')=(\alpha',\beta')$; it is a bijection because the colors at the right vertex $\beta'$ are distinct. $\square$
+<br><br>
+The middle factor is a family of permutations of $\mathsf B$, one for each color, and can be decomposed again if $\mathsf B$ is itself a product. For a product of $\ell+1$ coordinates this gives $2\ell+1$ factors, each changing a single coordinate. With two-element coordinates this is the classical Beneš network of $2\log_2n-1$ switching stages.
+</div>
+
+<p><b>The $K_V$ generate $G$.</b> <span class="tag paper">paper</span> Treat $[c]\times U^m$ as one coordinate, next to the $\ell$ coordinates of $U^\ell$. Applying the decomposition repeatedly writes every element of $G$ as a product of a bounded number of stages (at most $2\ell+1$ by the count in the box), each changing one coordinate. A stage that changes the $a$th coordinate of $U^\ell$ lies in $K_{L_a}$ for the coordinate line $L_a\subset\mathbb F_q^\ell$; a stage that changes the auxiliary coordinate lies in $K_0$. The paper spells out the factorization because the routing protocol of <a class="secref" href="#s18">§18</a> uses its factors as the designated path from $i$ to $\pi(i)$.</p>
+
+<p><b>The stages are in $G$: computing the coloring.</b> <span class="tag paper">paper</span> Membership in $G$ requires a program with $nh^{O(1)}$ word operations, so the edge coloring must be computed in that time. The paper gives the following procedure (see also [21]).</p>
+<ul>
+<li><em>Even degree.</em> An even-regular bipartite multigraph splits into two regular halves by alternating two colors around Euler tours. (Every closed walk in a bipartite graph has even length, so the alternation closes up, and at each vertex half of the edges receive each color.)</li>
+<li><em>Odd degree $a$.</em> First remove one perfect matching, found as follows. Let $v$ be the number of vertices on each side and $H$ the least integer with $2^H\gt av$. Multiply every edge multiplicity by $\lfloor2^H/a\rfloor$ and add copies of an arbitrary "dummy" perfect matching to reach degree exactly $2^H$. The number of dummy copies per vertex is $2^H-a\lfloor2^H/a\rfloor\lt a$, so the total dummy multiplicity is less than $av\lt2^H$. Split into two regular halves $H$ times, each time keeping the half with fewer dummy edges. The dummy count at least halves in each step, so after $H$ steps it is less than $1$, that is, zero; the degree is then $2^H/2^H=1$. The kept graph is a perfect matching made of original edges. In each split, an edge of multiplicity $\mu$ contributes $\lfloor\mu/2\rfloor$ copies to each half and only the odd leftover copies are distributed by Euler tours; so it suffices to store the original edges and the dummy matching with their multiplicities.</li>
+<li>After the matching is removed the degree is even and is halved. The recursion has $O(\log a)$ levels.</li>
+</ul>
+<p>The total time is linear in the number of edges up to logarithmic factors. Here the number of edges is $|\mathcal I|\lt2n$.</p>
+
+<h3 id="s17-3">17.3 Uniform displacement</h3>
+
+<p>If $G$ acts by isometries on a metric space and every hop moves a point $x$ by at most $1$, the triangle inequality along the coordinate factorization gives $d(x,\pi x)\le2\ell+1$, a bound that grows with $\ell$. The next lemma replaces it by an absolute constant, by finding a point fixed by all of $G$.</p>
+
+<div class="fill"><b>Background — three facts about complete CAT(0) spaces $Y$.</b> <span class="tag filled">filled here</span>
+(i) <em>Variance inequality.</em> If $b$ is the barycenter of a finitely supported probability measure $\mu$, then $\int d(z,y)^2\,d\mu(y)\ge\int d(b,y)^2\,d\mu(y)+d(z,b)^2$ for every $z$. (ii) <em>Circumcenter.</em> A bounded set $\Omega$ has a unique smallest enclosing closed ball; its center is the circumcenter of $\Omega$. If $\Omega\subset\bar B(p,\varrho)$ and $p\in\Omega$, the circumradius is at most $\varrho$, so the circumcenter is within $\varrho$ of $p$. (iii) <em>Equivariance.</em> Barycenters, circumcenters, midpoints and geodesics are defined by the metric alone. An isometry that preserves a measure or a set fixes its barycenter or circumcenter; in particular a group that has a bounded orbit fixes the circumcenter of that orbit (the Bruhat–Tits fixed point theorem), and the midpoint of two fixed points is fixed.
+</div>
+
+<div class="fill"><b>Background — Garland's local-to-global method and its metric version.</b> <span class="tag filled">filled here</span>
+Let a two-dimensional simplicial complex be given and a map $y$ from its vertices to a space $Y$. The <em>energy</em> of $y$ is the mean of $d(y_{W_1},y_{W_2})^2$ over edges. Every edge $W_1W_2$ of a triangle is opposite to the third vertex $V$ of that triangle, and belongs to the <em>link</em> of $V$ (the graph formed by the edges opposite to $V$ in the triangles through $V$). Averaging over triangles and their vertices therefore writes the energy as an average over vertices $V$ of the energies of the links. Suppose that for every $V$ there is a point $z_V$ whose mean squared distance to the link vertices is at most $\kappa$ times the link energy, with a fixed $\kappa\lt1$. Moving every $y_V$ halfway toward $z_V$ multiplies the total energy by at most $\kappa$. Iteration gives a limit map of energy zero, i.e. a constant map.
+<br><br>
+For a real Hilbert space $Y$ and $z_V$ the mean of the link, $\kappa=1/(2\lambda_1)$ where $\lambda_1$ is the first positive eigenvalue of the normalized Laplacian of the link, and the condition is $\lambda_1\gt\tfrac12$. Garland [29] used this to prove vanishing of cohomology for groups acting on Bruhat–Tits buildings; Izeki and Nayatani [30] proved fixed-point theorems for isometric actions on CAT(0) spaces under a nonlinear version of the link condition. The paper's Lemma 17.2 uses the same scheme on a small complex (one triangle for each flag $0\subset L\subset P$), with one change: the map $y$ is required to send each vertex $V$ to a point fixed by its subgroup $K_V$, and each $z_V$ must also be fixed by $K_V$. The limit point is then fixed by every $K_V$.
+</div>
+
+<div class="lem" id="lem-17-2"><b>Lemma 17.2.</b> <span class="pg">p. 63</span> <span class="tag paper">paper</span>
+Suppose $G$ acts isometrically on a complete CAT(0) space $Y$ in which the inequalities of Lemma 17.1 hold for all placements. There is an absolute constant $C_0$ such that, if $d(x,gx)\le1$ for all $g\in\bigcup_VK_V$, then $G$ fixes a point within $C_0/2$ of $x$. In particular $d(x,\pi x)\le C_0$.</div>
+
+<p>The last sentence follows from the first: if $y_*$ is fixed by $G$ then $d(x,\pi x)\le d(x,y_*)+d(\pi y_*,\pi x)=2\,d(x,y_*)$.</p>
+
+<div class="proof">
+<p><b>Setup.</b> The vertices of the complex are the subspaces $V$ of $\mathbb F_q^\ell$ of dimension $0$, $1$, $2$; there is one triangle $\{0,L,P\}$ for each flag $0\subset L\subset P$. Choose a flag uniformly at random and, within it, a vertex or an edge uniformly. A <em>placement</em> assigns to each $V$ a point $y_V\in Y$ fixed by $K_V$. The aim is to find, for each $V$, another point $z_V$ fixed by $K_V$ such that, for a uniform flag through $V$ with opposite vertices $W_1,W_2$ and $W$ uniform in $\{W_1,W_2\}$,</p>
+$$\mathbb E\,d(z_V,y_W)^2\ \le\ \tfrac34\,\mathbb E\,d(y_{W_1},y_{W_2})^2 .\tag{17.2}$$
+
+<p><b>The vertex $V=0$.</b> The opposite edges are the pairs $(L,P)$ with $L\subset P$, i.e. the incidences of $\mathrm{PG}(\ell-1,q)$. Let $z_0$ be the barycenter of the points $y_L$ (uniform over lines $L$). Since $K_0\subset K_L$ for every $L$, $K_0$ fixes every $y_L$ and hence $z_0$. In Lemma 17.1(1), with point sites $y_L$ and line sites $y_P$, the barycenter is $z_0$ and $\mathbb E\,d(z_0,y_W)^2=(A+B)/2$, because the marginals of a uniform incidence are uniform on each side. The lemma gives $(A+B)/2\le e/[2(1-q^{-1/2})]$, and $1/[2(1-q^{-1/2})]\le1/1.8\lt0.556$ for $q\ge100$.</p>
+
+<p><b>The vertex $V=L$.</b> The opposite edges join $0$ to the planes $P\supset L$. Let $z_L$ be the barycenter of the $y_P$ with $P\supset L$; it is fixed by $K_L$ because $K_L\subset K_P$. The variance inequality with test point $y_0$ gives $\mathbb E_Pd(y_0,y_P)^2\ge\mathbb E_Pd(z_L,y_P)^2+d(y_0,z_L)^2$. The left side is the link energy and the right side is $2\,\mathbb E\,d(z_L,y_W)^2$. So (17.2) holds with coefficient $\tfrac12$.</p>
+
+<p><b>The vertex $V=P$: where the difficulty is.</b> The opposite edges join $0$ to the lines $L\subset P$; the link energy is $e_P=\mathbb E_{L\subset P}\,d(y_0,y_L)^2$. The barycenter construction fails here for a reason of symmetry, not of expansion: $K_P$ is the largest of the three groups, and the points $y_0$, $y_L$ are fixed only by the smaller groups $K_0$, $K_L$, so their barycenter need not be fixed by $K_P$. The paper replaces the link by a large affine incidence graph made of $K_P$-translates of $y_0$ and the $y_L$, whose point barycenter is moved by $K_P$ only a small distance.</p>
+
+<p><i>Named partitions and their sites.</i> Fix a basis of $P$ and a linear complement of $P$ in $\mathbb F_q^\ell$. In each fiber of $\mathcal I\to(\mathbb F_q^\ell/P)\otimes U$ this gives coordinates $(x_1,x_2)\in U^2$, and each value of $(x_1,x_2)$ names a class of $cN^m$ labels. Call this the coordinate name $\mathsf p:\mathcal I\to U^2$. A <em>named partition</em> is any other function $\mathsf p':\mathcal I\to U^2$, computed uniformly for all heights and inputs within the time bound of $G$, that takes each value $cN^m$ times in each fiber.</p>
+
+<div class="fill"><b>Gap fill — named partitions form the coset space $K_P/K_0$, and coarse partitions the coset space $K_P/K_L$.</b> <span class="tag filled">filled here</span>
+Given $\mathsf p'$, define $g$ fiber by fiber: sort the labels with coordinate name $\nu$ and the labels with new name $\nu$, and map the first list to the second in order. Then $g$ preserves the fibers modulo $P$, is computable by sorting within the time bound, so $g\in K_P$, and $\mathsf p'\circ g=\mathsf p$, i.e. $\mathsf p'=\mathsf p\circ g^{-1}$. If also $\mathsf p'=\mathsf p\circ g'^{-1}$, then $\mathsf p\circ(g^{-1}g')=\mathsf p$. The elements of $K_P$ that preserve $\mathsf p$ are those that preserve the fibers of $\mathcal I\to\mathbb F_q^\ell\otimes U$, which is the group $K_0$. So $g'=g\kappa$ with $\kappa\in K_0$, and $g'y_0=g\,y_0$ because $K_0$ fixes $y_0$. The site $\xi(\mathsf p')=g\,y_0$ is therefore well defined, and $\xi(\mathsf p'\circ\gamma^{-1})=\gamma\,\xi(\mathsf p')$ for $\gamma\in K_P$.
+<br><br>
+For a line $L\subset P$, reduce the name modulo $L\otimes U$; this gives a coarser partition of each fiber into $N$ classes. For the coordinate name, the elements of $K_P$ that preserve the reduced name are those that preserve the fibers of $\mathcal I\to(\mathbb F_q^\ell/L)\otimes U$, which is $K_L$. By the same argument the coarse partition $\mathsf p\circ g^{-1}\bmod L\otimes U$ has the well-defined site $g\,y_L$. A named partition and its reduction modulo $L$ have sites $g\,y_0$ and $g\,y_L$ with the same $g$, hence at distance exactly $d(y_0,y_L)$.
+</div>
+
+<p><i>An affine plane of partitions.</i> Let $Q=q^R$ with $R\le m$. Use $R$ of the auxiliary $U$-coordinates $(\eta_1,\dots,\eta_R)$ of a label as the values of an $\mathbb F_q$-linear map $\mathsf u:\mathbb F_Q\to U$ on a fixed $\mathbb F_q$-basis of $\mathbb F_Q$. Each label thus carries its own linear map $\mathsf u$, and for a uniform label in a fiber, $\mathsf u$ is uniform and independent of $(x_1,x_2)$. For each $(\mathsf a,\mathsf b)\in\mathbb F_Q^2$ form the name</p>
+$$\mathsf p_{\mathsf a,\mathsf b}=\bigl(x_1+\mathsf u(\mathsf a),\ x_2+\mathsf u(\mathsf b)\bigr).$$
+<p>For fixed auxiliary coordinates this is a translation of $U^2$, so every value is taken $cN^m$ times in each fiber: $\mathsf p_{\mathsf a,\mathsf b}$ is a named partition, with a site $\xi_{\mathsf a,\mathsf b}$. Consider an affine line of $\mathbb F_Q^2$ with direction $(\lambda_1,\lambda_2)\in\mathbb F_q^2$, and let $L\subset P$ be the line spanned by the vector with coordinates $(\lambda_1,\lambda_2)$. Moving from $(\mathsf a,\mathsf b)$ to $(\mathsf a+\tau\lambda_1,\mathsf b+\tau\lambda_2)$, $\tau\in\mathbb F_Q$, changes the name by $(\lambda_1\mathsf u(\tau),\lambda_2\mathsf u(\tau))$, because $\mathsf u(\lambda\tau)=\lambda\,\mathsf u(\tau)$ for $\lambda\in\mathbb F_q$. This change lies in $L\otimes U$. So the name modulo $L\otimes U$ is constant along the affine line, and the affine line receives the site of that coarse partition. This is the reason why only directions defined over $\mathbb F_q$ are retained. The result is a placement of graph 2 of Lemma 17.1 in which every incidence in direction $L$ has length exactly $d(y_0,y_L)$; every point has one line in each of the $q+1$ directions, so its incidence energy is $e_P$. With $b_0$ the barycenter of the $Q^2$ point sites, Lemma 17.1(2) gives</p>
+$$(1-q^{-1/2})(A+B)\ \le\ e_P .$$
+
+<p><i>A law of large numbers.</i> For $d_*$ independent uniform samples $\xi_1,\dots,\xi_{d_*}$ of point sites, form the successive geodesic mean: $M_1=\xi_1$, and $M_i$ is the point at fraction $1/i$ on the geodesic from $M_{i-1}$ to $\xi_i$. Then</p>
+$$\mathbb E\,d(M_{d_*},b_0)^2\le A/d_* .\tag{17.3}$$
+
+<div class="fill"><b>Gap fill — proof of (17.3).</b> <span class="tag filled">filled here</span>
+For the point $M$ at fraction $\theta$ on a geodesic $[p,p']$ of a CAT(0) space, $d(z,M)^2\le(1-\theta)d(z,p)^2+\theta d(z,p')^2-\theta(1-\theta)d(p,p')^2$. Apply this with $z=b_0$, $p=M_{i-1}$, $p'=\xi_i$, $\theta=1/i$, and take the expectation over $\xi_i$ with $M_{i-1}$ fixed. Write $\epsilon=d(b_0,M_{i-1})^2$. We have $\mathbb E\,d(b_0,\xi_i)^2=A$ and, by the variance inequality at $b_0$, $\mathbb E\,d(M_{i-1},\xi_i)^2\ge A+\epsilon$. Hence
+$$\begin{aligned}\mathbb E\,d(b_0,M_i)^2&\le\Bigl(1-\frac1i\Bigr)\epsilon+\frac Ai-\frac1i\Bigl(1-\frac1i\Bigr)(A+\epsilon)\\ &=\Bigl(1-\frac1i\Bigr)^2\epsilon+\frac{A}{i^2}.\end{aligned}$$
+With $E_i=\mathbb E\,d(b_0,M_i)^2$ this gives $E_1\le A$ and, by induction, $E_i\le\frac{(i-1)^2}{i^2}\cdot\frac{A}{i-1}+\frac{A}{i^2}=\frac Ai$.
+</div>
+
+<p><i>Independent tuples.</i> A tuple of named partitions is <em>independent</em> if its joint name is uniform in every fiber, at every height and input. Choose a large absolute integer $d_*$ and set $m=R=4d_*$. For $4d_*$ independent uniform elements of $\mathbb F_Q$, the probability of an $\mathbb F_q$-linear dependence is at most $\sum_{j=0}^{R-1}q^{j-R}\lt1/(q-1)$ (the $(j+1)$st element lies in the span of the first $j$ with probability at most $q^j/q^R$). So with probability at least $\tfrac12$ the coordinates $\mathsf a_i,\mathsf b_i$ of $2d_*$ sampled affine points are linearly independent. The values of the uniform linear map $\mathsf u$ on linearly independent elements are jointly uniform, also conditionally on $(x_1,x_2)$; so the $2d_*$ partitions $\mathsf p_{\mathsf a_i,\mathsf b_i}$ are then independent.</p>
+
+<div class="fill"><b>Gap fill — transitivity of $K_P$ on independent tuples, and the constant $8A/d_*$ (the step on p. 64).</b> <span class="tag filled">filled here</span>
+<i>Transitivity.</i> Let $(\mathsf p^{(1)},\dots,\mathsf p^{(2d_*)})$ and $(\mathsf q^{(1)},\dots,\mathsf q^{(2d_*)})$ be two independent tuples, each computable within the time bound. In each fiber every joint name in $(U^2)^{2d_*}$ is taken by the same number $cN^{m+2-4d_*}$ of labels under both tuples. Sort and match the labels with equal joint names. The resulting $g$ preserves fibers modulo $P$ and is computable by sorting, so $g\in K_P$, and $\mathsf q^{(i)}=\mathsf p^{(i)}\circ g^{-1}$ for all $i$ at once. By the equivariance of the site map, $\xi(\mathsf q^{(i)})=g\,\xi(\mathsf p^{(i)})$ for all $i$.
+<br><br>
+<i>Consequence.</i> The successive geodesic mean is defined by the metric, so $g$ maps the mean of the first $d_*$ sites of one tuple to that of the other, and likewise for the last $d_*$ sites. The distance $\Delta$ between the means of the two halves is therefore the same number for every independent $2d_*$-tuple.
+<br><br>
+<i>The bound on $\Delta$.</i> For $2d_*$ independent uniform affine points with half-means $M',M''$, the triangle inequality and (17.3) give $\mathbb E\,d(M',M'')^2\le2\,\mathbb E\,d(M',b_0)^2+2\,\mathbb E\,d(M'',b_0)^2\le4A/d_*$. The tuple is independent with probability at least $\tfrac12$, and on that event $d(M',M'')^2=\Delta^2$. Hence $\tfrac12\Delta^2\le4A/d_*$, i.e. $\Delta^2\le8A/d_*$.
+<br><br>
+<i>A good $d_*$-tuple.</i> In the same way, $\mathbb E\,d(M,b_0)^2\le A/d_*$ for the mean $M$ of $d_*$ uniform affine points, and the tuple is independent with probability at least $\tfrac12$; so some independent $d_*$-tuple of affine partitions has $d(M,b_0)^2\le2A/d_*$.
+</div>
+
+<p><i>The barycenter $b_0$ is almost fixed by $K_P$.</i> Fix $g\in K_P$. Let $\mathbf p$ be the independent $d_*$-tuple with mean $M$ just found; its translate $g\mathbf p$ has mean $gM$. The $2d_*$-tuple $(\mathbf p,g\mathbf p)$ need not be independent. The paper constructs a third $d_*$-tuple $\mathbf p''$ such that both $(\mathbf p,\mathbf p'')$ and $(g\mathbf p,\mathbf p'')$ are independent. In each fiber, form the bipartite multigraph whose left vertices are the joint names under $\mathbf p$, whose right vertices are the joint names under $g\mathbf p$, and which has one edge for each label, joining its two joint names. Each side has $N^{2d_*}$ vertices and every vertex has degree $cN^{m+2-2d_*}=cN^{2d_*+2}$, which is divisible by $N^{2d_*}$. Color the edges properly (<a class="secref" href="#s17-2">§17.2</a>), group the colors into $N^{2d_*}$ sets of equal size indexed by $U^{2d_*}$, and let the third name of a label be the index of the color set of its edge. At every vertex each third name occurs equally often, which is the independence of $(\mathbf p,\mathbf p'')$ (left vertices) and of $(g\mathbf p,\mathbf p'')$ (right vertices). The coloring algorithm computes $\mathbf p''$ within the time bound. By the previous box the mean $M''$ of $\mathbf p''$ satisfies $d(M,M'')=\Delta$ and $d(gM,M'')=\Delta$. Therefore</p>
+$$\begin{aligned}d(b_0,gb_0)&\le d(b_0,M)+d(M,M'')+d(M'',gM)+d(gM,gb_0)\\ &\le2\bigl(\sqrt{2A/d_*}+\sqrt{8A/d_*}\bigr)\le0.04\sqrt A\end{aligned}$$
+<p>for $d_*$ sufficiently large. The middle expression equals $6\sqrt2\,\sqrt{A/d_*}$, so $d_*\ge45000$ suffices; this makes $m=R=180000$ (this numerical value is computed here and is not stated in the paper).</p>
+
+<p><i>The point $z_P$.</i> The orbit $K_Pb_0$ lies in the ball of radius $0.04\sqrt A$ about $b_0$. Its circumcenter $z_P$ is fixed by $K_P$ and satisfies $d(z_P,b_0)\le0.04\sqrt A$. Give each side of the affine incidence graph mass $\tfrac12$. The root mean squared distance from this distribution to $b_0$ is $\sqrt{(A+B)/2}$, so by the triangle inequality for root mean squares the one to $z_P$ is at most $\sqrt{(A+B)/2}+0.04\sqrt A$. Every affine point site is $\gamma y_0$ for some $\gamma\in K_P$, and every affine line site of direction $L$ is $\gamma y_L$; since $z_P$ is fixed by $\gamma$, $d(z_P,\gamma y_0)=d(z_P,y_0)$ and $d(z_P,\gamma y_L)=d(z_P,y_L)$. The mean squared distance is therefore $\tfrac12d(z_P,y_0)^2+\tfrac12\mathbb E_{L\subset P}d(z_P,y_L)^2$, which is the left side of (17.2) at $P$. Using $\sqrt A\le\sqrt{A+B}$ and $(1-q^{-1/2})(A+B)\le e_P$,</p>
+$$\begin{aligned}\mathbb E\,d(z_P,y_W)^2&\le\Bigl(\tfrac1{\sqrt2}+0.04\Bigr)^2(A+B)\\ &\le\frac{(1/\sqrt2+0.04)^2}{1-q^{-1/2}}\,e_P\ \lt\ \tfrac34\,e_P ,\end{aligned}$$
+<p>since $(1/\sqrt2+0.04)^2\lt0.559$ and $1-q^{-1/2}\ge0.9$. This proves (17.2) at $P$.</p>
+
+<p><b>Iteration on the flags.</b> Initialize $y_V$ as the circumcenter of the orbit $K_Vx$. The orbit lies within distance $1$ of $x$ by hypothesis, so $y_V$ is fixed by $K_V$ and within $1$ of $x$. Let $e$ be the mean squared edge length (uniform flag, uniform edge); initially $e\le4$ because $d(y_V,y_W)\le2$. In one step, replace each $y_V$ by the midpoint $y_V'$ of $y_V$ and $z_V$, which is again fixed by $K_V$.</p>
+
+<div class="fill"><b>Gap fill — the two estimates of one step and the final constant.</b> <span class="tag filled">filled here</span>
+<i>Energy.</i> In a CAT(0) space the distance between corresponding points of two geodesics is a convex function of the parameter. Apply this to the geodesic from $y_V$ to $z_V$ and the geodesic from $z_W$ to $y_W$ (in this order): at the midpoints, $d(y_V',y_W')\le\tfrac12d(y_V,z_W)+\tfrac12d(z_V,y_W)$, hence $d(y_V',y_W')^2\le\tfrac12\bigl(d(y_V,z_W)^2+d(z_V,y_W)^2\bigr)$. Average over a uniform flag and a uniform edge $\{V,W\}$ of it. The right side becomes the mean of $d(z_V,y_W)^2$ over a uniform flag and a uniform ordered pair of its vertices. A uniform vertex of a uniform flag is $0$, a uniform line, or a uniform plane with probability $\tfrac13$ each, and the edge opposite to a uniform vertex is a uniform edge; so averaging (17.2) over $V$ gives $e_{\mathrm{new}}\le\tfrac34e$.
+<br><br>
+<i>Movement.</i> $d(y_V,y_V')=\tfrac12d(y_V,z_V)\le\tfrac12\bigl(d(y_V,y_W)+d(y_W,z_V)\bigr)$ for a neighbor $W$. Taking root mean squares over the flag, $V$ and $W$, the first term has root mean square $\sqrt e$ and the second at most $\sqrt{3e/4}$. So the root mean squared movement is at most $(\sqrt e+\sqrt{3e/4})/2\lt0.94\sqrt e\le\sqrt e$.
+<br><br>
+<i>Convergence.</i> After $j$ steps $e\le4(3/4)^j$, so the movement of step $j+1$ has root mean square at most $2(\sqrt3/2)^j$, and these numbers sum to $2/(1-\sqrt{3/4})\lt14.93$. On the set of placements use the weighted root-mean-square product metric (weight of $V$ = probability that a uniform vertex of a uniform flag is $V$). The product is complete, the sequence of placements is Cauchy, and its limit has energy zero. Every flag contains the vertex $0$, so the graph on the vertices is connected and the limit is a constant placement $y_V=y_*$. The fixed-point set of $K_V$ is closed, so $y_*$ is fixed by every $K_V$, hence by $G$ (<a class="secref" href="#s17-2">§17.2</a>).
+<br><br>
+<i>Distance to $x$.</i> The root mean square over $V$ of $d(y_V^{\mathrm{initial}},y_*)$ is at most $14.93$. Hence at least one $V$ has $d(y_V^{\mathrm{initial}},y_*)\le14.93$, and $d(x,y_V^{\mathrm{initial}})\le1$. So $d(x,y_*)\le1+2/(1-\sqrt{3/4})\lt16$. Any $C_0\ge32$ satisfies the lemma; the paper takes $C_0=100$.
+</div>
+<span class="qed">∎</span>
+</div>
+
+<!-- FIGURE IDEA: one triangle with vertices 0, L, P and the three nested groups K_0, K_L, K_P written at the vertices; beside it the three links: the incidence graph of PG(l-1,q) at 0, a star of planes at L, and at P a star of q+1 lines replaced by the affine incidence graph on F_Q^2. -->
+
+<table>
+<tr><th>Vertex $V$</th><th>Link (opposite edges)</th><th>Point $z_V$</th><th>Coefficient in (17.2)</th><th>Input</th></tr>
+<tr><td>$0$</td><td>incidences $(L,P)$ of $\mathrm{PG}(\ell-1,q)$</td><td>barycenter of the $y_L$</td><td>$1/[2(1-q^{-1/2})]\lt0.556$</td><td>Lemma 17.1(1)</td></tr>
+<tr><td>$L$</td><td>$0$ to planes $P\supset L$</td><td>barycenter of the $y_P$, $P\supset L$</td><td>$1/2$</td><td>variance inequality</td></tr>
+<tr><td>$P$</td><td>$0$ to lines $L\subset P$</td><td>circumcenter of $K_Pb_0$</td><td>$(1/\sqrt2+0.04)^2/(1-q^{-1/2})\lt0.621$</td><td>Lemma 17.1(2), (17.3)</td></tr>
+</table>
+
+<h3 id="s17-4">17.4 Finite tests on permutation orbits</h3>
+
+<p>Lemma 17.2 is about an action on a metric space. The routing protocol of <a class="secref" href="#s18">§18</a> has no such space; it has a finite address set and a table of proposed prices. This subsection defines a local test on such a table and proves that passing the test almost everywhere implies the conclusion of Lemma 17.2 for the mean payload price.</p>
+
+<div class="def" id="def-17-test"><b>Definition (core generators, commodities, tests).</b> <span class="pg">p. 65</span> <span class="tag paper">paper</span>
+<ul>
+<li><em>Core generators</em>: a finite symmetric subset of $\bigcup_VK_V$ that contains the factors of a fixed coordinate factorization of $\pi$ and their inverses. For each input they define an undirected graph on $\mathcal I$ of bounded degree, with a <em>core link</em> from each label to its image under each generator. Each $i$ has a path to $\pi(i)$ along the factors, of length at most a fixed rational number $a_{\mathrm p}$ independent of $h$ and of the input.</li>
+<li><em>Test parameters</em>: the core generators, a ball radius, a maximum number of sites, and a maximum local dimension.</li>
+<li><em>Commodities</em>: each <em>payload wire</em> (the one-bit wire from $i$ to $\pi(i)$) is a commodity with its own index; so is every nonzero $k$-tensor of permitted format on an ordered list of distinct sites inside a common test ball, in fixed coordinate bases. The index is global: two balls that contain the same tensor on the same ordered sites refer to one index. There are $O(|\mathcal I|)$ indices.</li>
+<li><em>Price array</em>: a nonnegative number for each commodity. The number assigned to the payload wire $i\to\pi(i)$ is written $x_{i,\pi(i)}$. A payload price is capped at $a_{\mathrm p}$; each other format has a uniform rational cap that suffices to create the tensor at one site and transport its legs in binary along core links of the ball.</li>
+<li><em>Test on a ball</em>: compare the array with an ordinary spectral price on the sites of the ball. The <em>error</em> is the largest of: the absolute differences between assigned and spectral prices of the commodities of the ball, and the positive excesses above $1$ of the spectral lengths of the core links inside the ball. The <em>discrepancy</em> is the minimum error over all ordinary prices, the collapsed price included. The center <em>passes to tolerance $\rho$</em> if the discrepancy is at most $\rho$.</li>
+</ul></div>
+
+<p>The minimum is attained: a price with bounded error gives every core link length at most $1$ plus the error; the core links connect the ball, so by the spanning-tree bound of <a class="secref" href="#s16-2">§16.2</a> the scale is bounded, and prices of bounded scale form a compact set.</p>
+
+<div class="lem" id="lem-17-3"><b>Lemma 17.3 (Finite detection).</b> <span class="pg">p. 65</span> <span class="tag paper">paper</span>
+For each $\ell$ there are finite test parameters and $\rho\gt0$ such that the following holds for all sufficiently large $h$ and every valid permutation input. If all but a fraction $\rho$ of the centers pass to tolerance $\rho$, the assigned payload prices satisfy
+$$|\mathcal I|^{-1}\sum_{i\in\mathcal I}x_{i,\pi(i)}\ \le\ C_0+1 .$$
+Here $C_0$ is the absolute constant of Lemma 17.2.</div>
+
+<p>The number $\rho$, the radius and the format bounds are obtained by contradiction from an ultralimit. The proof gives no estimate for them, and they depend on $\ell$.</p>
+
+<div class="proof sketch">
+<p><b>The sequence of counterexamples.</b> Suppose the lemma fails for some $\ell$. Then for every choice of finite test parameters and of $\rho$ there are counterexamples at arbitrarily large $h$. Choose a sequence indexed by $\nu=1,2,\dots$ in which the sets of core generators increase and exhaust the countable set $\bigcup_VK_V$, the radii and format bounds tend to infinity, the tolerance and the permitted exceptional fraction tend to zero, $h_\nu\to\infty$, and the factorization of $\pi$ and the cap $a_{\mathrm p}$ are kept fixed. In each counterexample the mean payload price exceeds $C_0+1$. The aim is an isometric action of $G$ in which every hop displaces a point $x$ by at most $1$ and $\pi$ displaces it by at least $C_0+1$, contradicting Lemma 17.2.</p>
+
+<p><b>Charts and marks.</b> At each passing center $i$ take a complete CAT(0) spectral realization $X_i$ of a price that attains the test on the ball of $i$ (the <em>chart</em> at $i$); at a failing center take the one-point space. For $g\in G$ the <em>mark</em> of $g$ in the chart at $i$ is the site $g^{-1}i$ (the center itself if that site is not in the ball). Since $g^{-1}$ is a fixed word in elements of the $K_V$, for large $\nu$ these elements are core generators and the ball contains the whole path from $i$ to $g^{-1}i$; each link of the path has length at most $1$ plus the tolerance, so the mark is at a distance from the center that is bounded for each fixed $g$.</p>
+
+<p><b>The limit space.</b> For each $\nu$ form the product of the charts over all centers $i\in\mathcal I$ with the root-mean-square distance $\bigl(|\mathcal I|^{-1}\sum_id_i(\cdot,\cdot)^2\bigr)^{1/2}$, pointed at the vector of centers. Take a pointed ultralimit over $\nu$, and let $Y$ be the closed convex hull of the limits $\mathbf m_g$ of the vectors of marks, $g\in G$. Products with the root-mean-square distance and ultralimits of complete CAT(0) spaces are complete CAT(0) spaces (the midpoint inequality is preserved by averaging and by limits). Both inequalities of Lemma 17.1 hold in $Y$: they hold in each chart; in a product the barycenter is taken coordinatewise and $e$, $A$, $B$ are the averages of their coordinate values; in the ultralimit the barycenter is the limit of the barycenters (background box in <a class="secref" href="#s17-1">§17.1</a>); and a closed convex subset contains the barycenters of the distributions supported in it. Lemma 17.1 is stated for spectral spaces over $k$; this step transfers its two <em>inequalities</em> to $Y$ and not a spectral structure, which is what the hypothesis of Lemma 17.2 asks for ("in which the inequalities of Lemma 17.1 hold for all placements").</p>
+
+<p><b>The action.</b> For $u\in G$ the paper claims that $\mathbf m_g\mapsto\mathbf m_{ug}$ extends to an isometry of $Y$. A dense subset of $Y$ consists of the points given by finite expressions of geodesic interpolations of marks. Fix two such expressions. In the chart at $i$, the translated expressions involve the labels $(ug)^{-1}i=g^{-1}(u^{-1}i)$; these are the labels of the original expressions in the chart at $u^{-1}i$. So the comparison is between two realizations, in two different charts, of prices on the same finite list of labels. For large $\nu$ both balls contain the list, and both centers pass except for a fraction tending to zero (the map $i\mapsto u^{-1}i$ preserves the uniform measure). Any fixed tensor on the distinct labels of the list is a commodity with one global index, and both realizations price it within the tolerance of its assigned price; so the two realizations differ by at most twice the tolerance on that tensor once the format bounds include it. The paper concludes by a compactness argument that the distance between the two expressions in the chart at $i$ and in the chart at $u^{-1}i$ differ by a quantity that tends to zero uniformly: a violating sequence would have a subsequence with a fixed pattern of coincidences among the labels; the word lengths bound the diameters, hence the scales (spanning-tree bound); limiting prices on the list exist in both charts and agree on every tensor; and by Convention 3 of <a class="secref" href="#s16-2">§16.2</a> the limiting distances between the expressions agree. On exceptional pairs the distances are bounded (word lengths in a passing chart, zero in a collapsed chart), so they contribute a vanishing amount to the mean square. Reindexing the average by $i\mapsto u^{-1}i$ gives $d(u\mathsf E_1,u\mathsf E_2)=d(\mathsf E_1,\mathsf E_2)$ in the limit for all pairs of expressions. The map therefore is well defined and isometric on a dense subset, extends to $Y$, has the inverse coming from $u^{-1}$, and satisfies the group law.</p>
+
+<p><b>The contradiction.</b> Let $x=\mathbf m_{\mathrm{id}}$, the limit of the vectors of centers. For $g\in K_V$, the hop $g^{-1}$ is eventually a core generator; in a passing chart the mark $g^{-1}i$ is at distance at most $1$ plus the tolerance from $i$, and in a failing chart at distance $0$; so $d(x,gx)\le1$. The mark of $\pi^{-1}$ in the chart at $i$ is the site $\pi(i)$. In a passing chart its distance to the center is the spectral price of the payload wire $i\to\pi(i)$, which agrees with the assigned price $x_{i,\pi(i)}$ up to the tolerance; in a failing chart the distance is $0$ and the assigned price is at most $a_{\mathrm p}$, and such charts have vanishing measure. So $d(x,\pi^{-1}x)$ is the ultralimit of the root mean square of the assigned payload prices, which is at least their arithmetic mean, which exceeds $C_0+1$. Since $d(x,\pi x)=d(\pi^{-1}x,x)$, this contradicts $d(x,\pi x)\le C_0$ from Lemma 17.2.
+<span class="qed">∎</span></p>
+</div>
+
+<div class="open"><b>Not verified — the uniform comparison of two charts (p. 66, "Translation of the marks").</b> <span class="tag unverified">not verified</span>
+The walk above reproduces the paper's argument at the paper's level of detail. Two points were not reconstructed in full. (1) The step from "the two realizations agree within twice the tolerance on every fixed tensor" to "the distances between interpolated points agree up to $o(1)$" rests on Lemma 5.2 and on the continuity statement of <a class="secref" href="#s16-2">§16.2</a>, applied to limits of price data in which the list of sites may have coincidences; the paper handles this with the phrase "a fixed pattern of coincident labels" and no further detail. (2) Whether the realization "attaining the test" can be chosen so that the marks depend measurably or consistently on the center is not discussed; the argument only uses averages over centers, so no choice issue is visible, but this was not checked against [42].
+</div>
+</section>
+
+<section id="s18">
+<h2>18. Bounded-width permutation routing <span class="pg">pp. 67–73</span></h2>
+<p class="role"><b>Role in the chain.</b> This section receives Lemma 17.3 (<a class="secref" href="#s17">§17</a>), the strict spectral comparison of <a class="secref" href="#s3">§3</a>, and two constructions of the companion paper [42]. It delivers Proposition 18.1 (a permutation tensor is an exact sum of networks that move a total width of at most $C\,nw$ through hops on short address sets, with $C$ absolute) and then, in 18.2, the proof of Theorem 16.1. Theorem 16.1 is used by Lemma 16.2 (<a class="secref" href="#s16-1">§16.1</a>) and in Part IV (<a class="secref" href="#s26">§26</a>, <a class="secref" href="#s27">§27</a>).</p>
+
+<h3 id="s18-1">18.1 From a failed price test to a routing identity</h3>
+
+<p>Fix $\ell$, the core generators and the test parameters of Lemma 17.3, and write $M=|\mathcal I|$, so $n\le M\lt2n$. Sending one bit along the designated path from $i$ to $\pi(i)$ uses up to $a_{\mathrm p}$ core links, and $a_{\mathrm p}$ grows with $\ell$. The proposition replaces this by a sum of networks in which the mean number of link uses per payload bit is bounded by an absolute constant.</p>
+
+<div class="prop" id="prop-18-1"><b>Proposition 18.1.</b> <span class="pg">p. 67</span> <span class="tag paper">paper</span>
+Suppose $\omega_k\lt9/4$ and fix $H\ge1$. For all sufficiently large $h$, every valid set of tags and every $h\le w\le h^H$, the associated permutation tensor for $w$-bit payloads is an exact sum over $k$ of networks with the following properties.
+<ol>
+<li>Each label has a bounded number of fixed slots per core generator. A used slot carries $O(w)$ bits to a neighbor along the generator or its inverse. Both ends belong to the same prescribed group of at most $2^{th+O(1)}$ labels. The sum of the carried widths in any summand is at most $Cnw$, where $C$ is independent of $\ell$ and $t$.</li>
+<li>At each label a fixed trivalent network of size $O(w(1+\log w)^{O(1)})$ implements the local maps. Its configuration consists of a bounded list of menu indices, widths and offsets.</li>
+<li>A summand is specified by $O(n\log(2w))$ bits. Given these bits and the tags, a deterministic controller computes the local configurations and matchings in $nh^{O(1)}$ word operations. The exponents and slot capacities are independent of $H$. The running time may have a multiplicative constant depending on $H$.</li>
+</ol>
+</div>
+
+<p>Here $t=(m+2)/(m+\ell)$ is the number of (17.1), and the "permutation tensor" for valid tags is the tensor of the $M$ bundles of $w$ parallel one-bit wires from $i$ to $\pi(i)$. The proof gives $C=2(C_0+4)$, which is $208$ for $C_0=100$.</p>
+
+<div class="imp"><b>Imported — the local replacement argument [42, Section 9].</b> <span class="tag imported">imported</span> The paper writes: "We use the local replacement argument of [42, Section 9]." What follows in the paper's proof is a description of that argument in the present setting; the paper does not state which statements of [42, Section 9] are quoted verbatim and which are re-proved.</div>
+
+<div class="imp"><b>Imported — strict spectral comparison [42, Lemma 2.2] (from <a class="secref" href="#s3">§3</a>).</b> <span class="tag imported">imported</span> If two nonzero tensors on the same sites satisfy $\varphi(T)\lt\varphi(U)$ for every spectral point $\varphi$, there is a fixed integer $\mathsf C$ such that, for every $j\ge1$, $T^{\otimes j}$ is a restriction of the direct sum of $\mathsf C$ copies of $U^{\otimes j}$.</div>
+
+<div class="aha"><b>AHA.</b> The proof never constructs a good routing directly. It keeps a table of prices for all outstanding requests. If the prices are locally consistent with a spectral price almost everywhere, Lemma 17.3 says that payload wires are already cheap on average. If they are inconsistent on some ball, the inconsistency means that no spectral point prices the demands on that ball as high as the table does; strict spectral comparison turns that statement into an exact identity that expresses the demands through cheaper supplies. Either the account is small or it can be lowered.</div>
+
+<div class="proof sketch">
+<p><b>Vocabulary.</b> A <em>request</em> for a commodity leaves that tensor to be supplied at specified legs. Its <em>cap</em> $a_i$ bounds the cost of supplying it <em>directly</em>: prepare the tensor at one site and send its legs along designated core paths, in binary encoding with unused coordinates padded by zero. By multilinearity of contraction, a tensor identity can be substituted for several requests at any stage.</p>
+
+<p><b>Step 1: the identity on a ball.</b> Let $x\in\prod_i[0,a_i]$ be a price array with positive discrepancy on a ball that is not a single site. Request one copy of each commodity of the ball with $x_i\gt0$; let $D$ be the tensor product of these demands and $L=\sum_{i:x_i\gt0}x_i$ its assigned price. ($L\gt0$, because the zero array passes the test with the collapsed price.) The available <em>supplies</em> $T_j$ are all commodities of the ball, at their assigned prices, and the one-bit core links of the ball, at price $1$. The paper claims: there are numbers $l_j$ strictly above the supply prices and a number $0\lt L_-\lt L$ such that every normalized spectral log price $\mathsf P$ (that is, $\mathsf P=\log_2\varphi$ for a spectral point $\varphi$) satisfies</p>
+$$\mathsf P(D)\ \lt\ L_-\,\max_j\frac{\mathsf P(T_j)}{l_j}.$$
+
+<div class="fill"><b>Gap fill — why positive discrepancy gives this strict inequality.</b> <span class="tag filled">filled here</span>
+<i>The maximum ratio is bounded below.</i> A spanning tree of one-bit core links restricts to the binary diagonal $\Delta$ on all sites of the ball (<a class="secref" href="#s16-2">§16.2</a>), and $\mathsf P(\Delta)=\log_22=1$ because $\Delta$ is a direct sum of two units. So $1\le\sum_{\text{tree}}\mathsf P(\text{link})\le\bigl(\max_j\mathsf P(T_j)/l_j\bigr)\sum_{\text{tree}}l_j$.
+<br><br>
+<i>Contradiction if the inequality with $L$ fails.</i> Suppose that for a sequence of arrays $l^{(\nu)}$ decreasing to the supply prices there are $\mathsf P_\nu$ with $\mathsf P_\nu(D)\ge L\max_j\mathsf P_\nu(T_j)/l^{(\nu)}_j$. Divide $\mathsf P_\nu$ by its maximum ratio. The result $\mathsf P_\nu'$ is a price whose scale is the reciprocal of that ratio, hence at most $\sum_{\text{tree}}l_j^{(\nu)}$, and it satisfies $\mathsf P_\nu'(T_j)\le l_j^{(\nu)}$ for all $j$ and $\mathsf P_\nu'(D)\ge L$. By compactness (<a class="secref" href="#s16-2">§16.2</a>) a subsequence converges to a price $\mathsf P^*$ with $\mathsf P^*(T_j)\le x_j$ for the commodities, $\mathsf P^*(\text{link})\le1$, and $\mathsf P^*(D)\ge L$. By additivity, $\mathsf P^*(D)=\sum_{i:x_i\gt0}\mathsf P^*(T_i)\le\sum_{i:x_i\gt0}x_i=L$. So equality holds for every commodity with $x_i\gt0$, and commodities with $x_j=0$ have $0\le\mathsf P^*(T_j)\le0$. The price $\mathsf P^*$ then matches every assigned price exactly and gives every core link length at most $1$: the discrepancy of the ball is zero, a contradiction. Hence for some fixed $l_j$ strictly above the supply prices, $\mathsf P(D)\lt L\max_j\mathsf P(T_j)/l_j$ for all $\mathsf P$. Applying the same compactness to the normalized prices $\mathsf P'$ (the set $\{\mathsf P':\mathsf P'(T_j)\le l_j\}$ is compact and $\mathsf P'(D)\lt L$ on it) gives $\sup\mathsf P'(D)\lt L$, and $L_-$ can be chosen strictly between this supremum and $L$.
+</div>
+
+<p>Choose an integer $b_0$ and form the direct sum</p>
+$$U=\bigoplus_jT_j^{\otimes\lfloor b_0L_-/l_j\rfloor}$$
+<p>(this $U$ is a tensor; it is unrelated to the vector space $U=\mathbb F_q^r$ of <a class="secref" href="#s17-2">§17.2</a>).</p>
+
+<div class="fill"><b>Gap fill — $b_0$ large makes $U$ dominate $D^{\otimes b_0}$ at every spectral point.</b> <span class="tag filled">filled here</span>
+Let $\epsilon\gt0$ be the margin with $\mathsf P(D)\le(L_--\epsilon)\,R$ for all $\mathsf P$, where $R=\max_j\mathsf P(T_j)/l_j\gt0$ is attained at $j^*$. A spectral point is additive on direct sums and multiplicative on products, so $\log_2\varphi(U)\ge\mathsf P(T_{j^*})\lfloor b_0L_-/l_{j^*}\rfloor\ge R\,(b_0L_--l_{j^*})$, while $\log_2\varphi(D^{\otimes b_0})=b_0\mathsf P(D)\le b_0(L_--\epsilon)R$. The first exceeds the second as soon as $b_0\epsilon\gt\max_jl_j$.
+</div>
+
+<p>Strict spectral comparison now gives, for every $r\ge1$, an exact restriction of $D^{\otimes b_0r}$ from at most $K(b_0)$ direct copies of $U^{\otimes r}$. Here $K(b_0)$ is the integer $\mathsf C$ of the imported statement for the pair $T=D^{\otimes b_0}$, $U$; it depends on $b_0$ and not on $r$. Expand $U^{\otimes r}$ into its blocks, one for each ordered word $(j_1,\dots,j_r)$ of supply choices, and apply the restricting maps blockwise. A restriction of a direct sum is the ordinary sum of the restrictions of its blocks, so this yields an identity</p>
+$$D^{\otimes b}=\sum_{\text{copy},\ \text{word}}\ (\text{local maps})\Bigl(\bigotimes_{a=1}^rT_{j_a}^{\otimes\lfloor b_0L_-/l_{j_a}\rfloor}\Bigr),\qquad b=b_0r .$$
+<p>Each term supplies $b$ copies of every demand from supplies of total price at most $\sum_al_{j_a}\lfloor b_0L_-/l_{j_a}\rfloor\le bL_-$. With $s$ supply types, the index of a term (a copy and a word) takes at most $\lceil\log_2(K(b_0)s^r)\rceil$ bits. The ratio of this length to $b$ is at most $(\log_2K(b_0)+1)/(b_0r)+(\log_2s)/b_0$, which is made arbitrarily small by first increasing $b_0$ and then $r$.</p>
+
+<p><b>Step 2: repeating the identity, and histograms.</b> Use the identity $J$ times in parallel on $Jb$ copies of each demand. The expanded sum runs over ordered $J$-tuples of term indices. The paper makes only the <em>histogram</em> of the tuple (the number of occurrences of each index value) part of the outer sum; since the alphabet is fixed, a histogram is described by $O(\log(2J))$ bits. The sum over the ordered tuples with a given histogram is carried out inside one network: a root sums over the ordered words, sends each word along a spanning tree of core links of the ball, and enforces the histogram. The histogram determines how many copies of each supply are used; the word assigns them to the individual applications of the restricting maps. Each ordered word occurs once with its original coefficient in $k$. The index rate is chosen so low that transmitting the word costs at most $Jb(L-L_-)/2$. One application therefore retires demands of assigned price $JbL$ and introduces supplies and control of price at most $Jb(L_-+(L-L_-)/2)$: a saving of at least $Jb(L-L_-)/2$.</p>
+
+<p><b>Step 3: a finite menu.</b> The demands stay positively priced and the saving stays strict in a neighborhood of the array $x$. There are finitely many types of balls, because the field, the radius, the degrees and the formats are fixed. The set of price arrays on a ball type with discrepancy at least $\rho/2$ is compact, so finitely many replacements (a <em>menu</em>) cover it, with a uniform positive lower bound on the saving per unit of demand and on the prices of the selected demands. The menu comes from a compactness argument and is not given explicitly.</p>
+
+<p><b>Step 4: an account that bounds the total width.</b> Follow one summand of the expansion. Let $w\,z_i$ be its integer stock of outstanding requests for commodity $i$, and let $S$ be its installed core width divided by $Mw$. The summand is given the <em>account</em> $S+F(z)$, where</p>
+$$F(z)=\frac1M\max_{0\le x\le a}\sum_i\Bigl(z_ix_i-\tfrac12\mu x_i^2\Bigr),$$
+<p>the maximum is over arrays $x$ with $0\le x_i\le a_i$, and $\mu\gt0$ is a rational number with $\mu\sum_ia_i^2/(2M)\le1$ (possible because there are $O(M)$ commodities with uniformly bounded caps). The maximizing array $x(z)$ serves as the price array of the summand.</p>
+
+<div class="fill"><b>Gap fill — the four properties of $F$ that the proof uses.</b> <span class="tag filled">filled here</span>
+$F(z)=\frac1M\sum_i\phi_i(z_i)$ with $\phi_i(\zeta)=\max_{0\le\xi\le a_i}(\zeta\xi-\tfrac12\mu\xi^2)$. For $\zeta\ge0$ the maximizer is $\xi=\min(a_i,\zeta/\mu)$, so
+$$\phi_i(\zeta)=\begin{cases}\zeta^2/(2\mu),&\zeta\le\mu a_i,\\ a_i\zeta-\tfrac12\mu a_i^2,&\zeta\ge\mu a_i,\end{cases}$$
+$$\phi_i'(\zeta)=\min(a_i,\zeta/\mu)=x_i .$$
+(a) <i>Stock supports price:</i> $z_i\ge\mu x_i$. (b) <i>Smoothness:</i> $\phi_i'$ is Lipschitz with constant $1/\mu$, so for $z+v\ge0$,
+$$F(z+v)-F(z)\le\frac1M\sum_ix_iv_i+\frac1{2\mu M}\sum_iv_i^2 .$$
+(c) <i>Lower bound:</i> taking $x=a$ in the maximum, $F(z)\ge\frac1M\sum_ia_iz_i-\frac{\mu}{2M}\sum_ia_i^2\ge\frac1M\sum_ia_iz_i-1$. (d) <i>Excess stock:</i> for an integer $B\gt\max_i\mu a_i$ and $z_i\ge B$, $\phi_i$ is linear with slope $a_i$. Supplying $w\,v$ excess requests of commodity $i$ directly lowers $F$ by exactly $a_iv/M$ and raises $S$ by at most $a_iv/M$ (the cap $a_i$ bounds the installed width per request). So the account does not increase when every stock above $wB$ is supplied directly.
+</div>
+
+<p><i>A round.</i> Suppose the mean maximizing price of the $M$ payload commodities exceeds $C_0+2$. By Lemma 17.3 more than $\rho M$ balls have discrepancy greater than $\rho$. A ball meets a bounded number of other balls, so a greedy choice selects $\Omega(M)$ pairwise disjoint such balls. On each selected ball apply its menu replacement with $J=\lfloor\alpha w/b\rfloor$ for a small fixed rational $\alpha\gt0$; property (a) and the lower bound on selected demand prices guarantee that the stock is sufficient. New core links are charged to $S$, and the other supplies become new requests. In the linear term of (b) each ball contributes at most $-Jb(L-L_-)/(2Mw)$, the saving of Step 2 in normalized units; over $\Omega(M)$ balls and for large $w$ this is at most $-c\alpha$ for some $c\gt0$. All changes satisfy $|v_i|=O(\alpha)$ on $O(M)$ coordinates, so the quadratic term of (b) is $O(\alpha^2)$. For $\alpha$ small, each round lowers the account by a fixed positive amount in every resulting summand. After the round, stocks above the cap are supplied directly (property (d)).</p>
+
+<p><i>Introducing the payloads.</i> Start with no requests. Introduce the $w$ copies of each payload in equal increments on a fixed fine mesh (rounded to integers with exact total $w$). Before each increment, run rounds until the mean payload price is at most $C_0+2$.</p>
+
+<div class="fill"><b>Gap fill — the arithmetic that gives $C=2(C_0+4)$.</b> <span class="tag filled">filled here</span>
+An increment raises $z_i$ by $\varepsilon$ for the $M$ payload commodities, with $1/\varepsilon$ increments in total. By (b) it raises the account by at most $\frac1M\sum_{\text{payloads}}x_i\varepsilon+\frac{1}{2\mu M}M\varepsilon^2\le(C_0+2)\varepsilon+\varepsilon^2/(2\mu)$. Over all increments this is at most $C_0+2+\varepsilon/(2\mu)\le C_0+3$ for a fine mesh. The account starts at $0$, is never negative, increases by at most $C_0+3$ in total, and decreases by a fixed positive amount in each round. So each summand undergoes a bounded number of rounds, and its final account is at most $C_0+3$. Supplying all remaining requests directly installs width at most $\sum_ia_i\,wz_i$, which in normalized units is $\frac1M\sum_ia_iz_i\le F(z)+1$ by (c). The total installed width is therefore at most $(S+F(z)+1)\,Mw\le(C_0+4)Mw\le2(C_0+4)\,nw$.
+</div>
+
+<p>The constant $2(C_0+4)$ does not depend on $\ell$: the caps $a_i$, the menu, $\mu$, $\alpha$, $\rho$ and the number of rounds all depend on $\ell$, but they enter only through the number of slots and the size of the control, not through the bound on the total width.</p>
+
+<p><b>Step 5: realizing the summands.</b> The paper then argues the three listed properties. (1) A label lies in at most one selected ball per round; a direct supply that uses an edge originates within bounded distance of it; bounded degree, boundedly many commodity types per neighborhood and the stock cap $wB$ give a bounded number of slots of width $O(w)$ per generator, and the generator (an element of some $K_V$) prescribes the group of at most $2^{th+O(1)}$ labels that contains both ends. (2) At the sites of a commodity the requests are kept in a common order, retired from the front and appended at the back; the histogram fixes the list lengths; prefix counts of the ordered word assign supply positions; comparison sorting on addresses of $O(1+\log w)$ bits realizes the resulting permutations and partial matchings with $O(w(1+\log w)^{O(1)})$ trivalent gates at a site; each block map has fixed size over $k$. (3) The controller enumerates the bounded neighborhoods, computes prices from stocks, uses finite tables (a rational grid of price arrays with a valid menu entry for each cell; the discrepancy is $1$-Lipschitz in the array) to select the balls, and assigns slots. There are $O(n)$ histograms over the bounded number of rounds, each encoded uniquely in $O(\log(2w))$ bits, which gives $O(n\log(2w))$ selector bits; the work is $nh^{O(1)}$ word operations.
+<span class="qed">∎</span></p>
+</div>
+
+<div class="open"><b>Not verified — parts of the proof of Proposition 18.1 (pp. 67–70).</b> <span class="tag unverified">not verified</span>
+The following were reproduced from the paper without an independent derivation. (1) The correspondence between "price" and installed width for supplies other than core links: the account treats a new request for a commodity at its current price $x_j$, and the argument that this is consistent across overlapping balls is part of the imported local replacement argument [42, Section 9]. (2) The realization inside one network of the sum over ordered words with a prescribed histogram, at transmission cost at most $Jb(L-L_-)/2$ (p. 68): the regrouping of the sum is an identity, but the network that enforces a histogram and its cost were not reconstructed. (3) Step 5 as a whole (p. 69): the slot count, the size $O(w(1+\log w)^{O(1)})$ of the local networks and the controller's running time are stated in the paper in one paragraph each. (4) The role of the threshold $C_0+2$ where Lemma 17.3 has $C_0+1$: the paper mentions "a fixed slack in the test" for the grid of price arrays; the exact use of the extra unit was not traced. (5) The statement requires $w\le h^H$ and "sufficiently large $w$" is used for integer rounding; how the constants depend on $H$ is given only as in item 3 of the proposition.
+</div>
+
+<h3 id="s18-2">18.2 From local transports to stable sorting</h3>
+
+<p>Write $S(h,w)$ for the least size of a trivalent network over $k$ for $\operatorname{Tag}(h,w)$, with $n=2^h$. (This $S$ replaces the normalized width $S$ of 18.1.) Proposition 18.1 bounds the transport in each summand, but the summands use different slots, and one fixed network must serve all of them. This subsection derives a recurrence for $S$ and solves it. Several letters are reused by the paper with new meanings in this subsection; each is defined where it appears.</p>
+
+<h4>Sharing a fixed pool of calls</h4>
+
+<p>Fix $\ell$, the factor $t=(m+2)/(m+\ell)$ and the protocol of Proposition 18.1. In each term (summand) the protocol has at most $Ln$ links of total width at most $Cnw$; $C$ is independent of $\ell$ and $L$ is not. Choose $0\lt Y\le1$ with $L\le C/Y$ and split each link into chunks of $w'=\lceil Yw\rceil$ bits, with the padding of a last chunk pinned to zero at both ends.</p>
+
+<div class="fill"><b>Gap fill — the chunk count.</b> <span class="tag filled">filled here</span>
+A link of width $\beta$ gives $\lceil\beta/w'\rceil\le\beta/w'+1$ nonempty chunks. Summing over at most $Ln$ links of total width at most $Cnw$, and using $w'\ge Yw$ and $L\le C/Y$, the number of chunks in any term is at most $Cnw/w'+Ln\le Cn/Y+Cn/Y=m_*n$ with $m_*=2C/Y$.
+</div>
+
+<p>A chunk is a transfer of $w'$ bits between two labels of one group of at most $2^{th+O(1)}$ labels. If the set of active chunks were fixed, the chunks of a group could be executed by one tagged permutation on that group. The set is not fixed; it depends on the term. The fixed network therefore contains a pool of modules and a mechanism that assigns active chunks to module positions.</p>
+
+<div class="imp"><b>Imported — assignment graphs [42, Lemma 10.2].</b> <span class="tag imported">imported</span> The paper states: such a graph connects at most $\mathsf cK$ candidates to $K$ slots. Every active subset of at most $K/2$ candidates can be assigned injectively to adjacent slots. The degrees are bounded in terms of $\mathsf c$, and the assignment takes $O_{\mathsf c}(K)$ deterministic word operations with the graph as fixed advice. (Here $K$ is a number of slots, unrelated to the field $K$ of Lemma 16.2 and to the groups $K_V$.)</div>
+
+<p>The paper's construction, in order:</p>
+<ol>
+<li><em>Lists.</em> There are $O(n)$ candidate slots, grouped by the short-address sets within which they communicate. Choose a dyadic capacity $U=2^{th+O(1)}$ at least twice the largest group (a new meaning of $U$). Pack whole groups greedily into lists of capacity $U$; every closed list is at least half full, so there are $O(n/U+1)$ lists.</li>
+<li><em>Batches.</em> Fix a small dyadic fraction $K/U$. In each list divide the active chunks, in order, into batches of $K/2$, the last one possibly shorter, and reserve $K$ slots for each nonempty batch. Full batches reserve two slots per chunk, and each list has at most one short batch, so the total reservation is at most $2m_*n+O((n/U+1)K)\le3m_*n$; the last inequality holds for large $h$ because $U=o(n)$ and $K/U$ is chosen small after the packing constants are fixed.</li>
+<li><em>First assignment.</em> For each list install enough candidate batches for all its chunks. One assignment graph places the source ends of a batch in $K$ slots and another places the target ends.</li>
+<li><em>Second assignment.</em> Whole batches are assigned to a shared pool of $\lceil6m_*n/K\rceil$ physical modules, each with $K$ input and $K$ output positions. At most $3m_*n/K$ batches are active, which is at most half the pool, and the number of candidate batches is a bounded multiple of the pool size; so the assignment-graph property applies again, and the two lists of an active batch move together to its module. Counting idle modules, at most $\lceil6m_*n/K\rceil K\le7m_*n$ positions are installed for large $h$.</li>
+<li><em>Modules.</em> Every module is one copy of $\operatorname{Tag}(h',w')$ with $h'=\log_2K=th+O(1)$. Unmatched positions are filled in order, unused bits are pinned to zero, and an idle module receives identity tags and zero payloads. All assignments are deterministic functions of the term and its tags. Because the assignment graphs have bounded degree, the switches cost $O(nw)$ in total.</li>
+</ol>
+
+<p><b>Control.</b> The remaining control data are tags, selectors and slot descriptions. The controller's computation is verified inside the network by guessing a time-stamped execution, checking each instruction, and sorting all memory transactions by address, time and access order with a comparison network, so that every read can be checked against the last write. Fixed initial memory and padding make the accepting execution unique for each legal selector, which keeps the sum exact. A comparison network also checks that the original tags are distinct. For fixed $H$ and $h\le w\le h^H$ the size of everything outside the shorter calls is</p>
+$$D_{\mathrm{control}}(h,w)=O_H\bigl(nw(\log(2h))^{O(1)}+nh^J\bigr),\qquad J\gt2 .\tag{18.1}$$
+<p>The first term pays for the local maps of Proposition 18.1(2); the second for $nh^{O(1)}$ word operations, their bit implementation and the memory check. Here $J$ is an exponent (a new meaning of $J$), and the exponents do not depend on $H$. The paper states these claims without further proof. With $7m_*n/K=7m_*n/2^{h'}$ modules the result is the recurrence</p>
+$$S(h,w)\ \le\ D_{\mathrm{control}}(h,w)+\frac{7m_*n}{2^{h'}}\,S(h',w'),\qquad h'=th+O(1),\quad w'=\lceil Yw\rceil .$$
+
+<h4>Wide payloads</h4>
+
+<div class="fill"><b>Background — Batcher's sorting networks.</b> <span class="tag filled">filled here</span>
+A <em>comparator network</em> is a fixed sequence of compare-and-exchange operations on pairs of positions; the sequence does not depend on the data. A sequence is <em>bitonic</em> if it increases and then decreases, or is a cyclic shift of such a sequence. For a bitonic sequence of even length $\mathsf N$, comparing position $i$ with position $i+\mathsf N/2$ for all $i\lt\mathsf N/2$ produces two bitonic halves such that every element of the first is at most every element of the second (it suffices to check this for $0/1$ sequences, by the zero–one principle). Recursion sorts a bitonic sequence with $(\mathsf N/2)\log_2\mathsf N$ comparators. Sorting two halves recursively, reversing one, and merging gives a count $\mathsf B(\mathsf N)=2\mathsf B(\mathsf N/2)+(\mathsf N/2)\log_2\mathsf N$, hence $\mathsf B(\mathsf N)=\tfrac14\mathsf N\log_2\mathsf N\,(\log_2\mathsf N+1)$ for $\mathsf N$ a power of two (Batcher [8]; check: $\mathsf B(2)=1$, $\mathsf B(4)=6$). With $\mathsf N=n=2^h$ this is $O(nh^2)$ comparators. A comparator on records with $h$-bit keys and $w$-bit payloads is a Boolean circuit of $O(h+w)$ gates.
+</div>
+
+<p>It suffices to prove part 2 of Theorem 16.1 for $0\lt\zeta\lt1$. The parameters are chosen in this order.</p>
+<table>
+<tr><th>Parameter</th><th>Choice</th><th>Depends on</th></tr>
+<tr><td>$\ell$</td><td>so large that $14C\,t^\zeta\lt1/4$</td><td>$\zeta$, $C$, $m$</td></tr>
+<tr><td>$Y$, $J$</td><td>from the protocol for this $\ell$ ($L\le C/Y$; exponent in (18.1))</td><td>$\ell$ (non-effective, through Lemma 17.3)</td></tr>
+<tr><td>$\mathsf u$</td><td>smooth nonincreasing $\mathsf u:[1,\infty)\to[\zeta,2]$, equal to $2$ on $[1,J]$, eventually equal to $\zeta$, with $b=-\mathsf u'$ satisfying $0\le b\lt1$ and $Y^{-b}\lt3/2$ everywhere</td><td>$\zeta$, $J$, $Y$</td></tr>
+<tr><td>$H$</td><td>in the interior of the interval where $\mathsf u=\zeta$</td><td>$\mathsf u$</td></tr>
+</table>
+<p>(The paper writes $u$ for the function called $\mathsf u$ here.) The claim is that for $h\ge2$ and $h\le w\le h^H$, with a constant $D$ (a new meaning of $D$),</p>
+$$S(h,w)\ \le\ D\,n\,w\,h^{\mathsf u(a)},\qquad a=\log_hw .\tag{18.2}$$
+<p><b>Base range $a\le J$.</b> Batcher's network puts the tagged sources in destination order with $O(nh^2)$ comparators of bit cost $O(h+w)=O(w)$. Comparing the sorted tags with the positions $0,\dots,n-1$ checks that the tags form a permutation, and comparing the payloads with the proposed outputs completes the verifier. The size is $O(nwh^2)=O(nwh^{\mathsf u(a)})$ because $\mathsf u=2$ on $[1,J]$.</p>
+
+<p><b>Inductive range $a\gt J$.</b> Induct on $h$; for large $h$, $h'\lt h$ and $w'\ge h'$. Write $a'=\log_{h'}w'$. The paper states, uniformly for $J\le a\le H$,</p>
+$$\begin{aligned}a'-a&=\frac{\log Y-a\log t+o(1)}{\log h},\\ \frac{w'(h')^{\mathsf u(a')}}{w\,h^{\mathsf u(a)}}&=(1+o(1))\,t^{\mathsf u(a)+a\,b(a)}\,Y^{1-b(a)} .\end{aligned}$$
+
+<div class="fill"><b>Gap fill — the two formulas and the closing of the induction.</b> <span class="tag filled">filled here</span>
+<i>First formula.</i> $w'=Yw(1+o(1))$ and $h'=th(1+o(1))$, so $a'=\dfrac{\log Y+a\log h+o(1)}{\log t+\log h+o(1)}$ and $a'-a=\dfrac{\log Y-a\log t+o(1)}{\log h+\log t+o(1)}$, which is the stated expression because $\log t$ is a constant.
+<br><br>
+<i>Second formula.</i> $(h')^{\mathsf u(a')}=(1+o(1))\,t^{\mathsf u(a')}h^{\mathsf u(a')}$ and, by Taylor expansion of $\mathsf u$ on the compact interval, $h^{\mathsf u(a')-\mathsf u(a)}=\exp\bigl(\log h\cdot(-b(a))(a'-a)+o(1)\bigr)=(1+o(1))\,Y^{-b(a)}t^{a\,b(a)}$. Multiplying by $w'/w=(1+o(1))Y$ gives the ratio $t^{\mathsf u(a)+ab(a)}Y^{1-b(a)}$.
+<br><br>
+<i>The recursive share.</i> By the induction hypothesis the recursive term of the recurrence is at most $\dfrac{7m_*n}{2^{h'}}\cdot D\,2^{h'}w'(h')^{\mathsf u(a')}=7m_*\,D\,n\,w'(h')^{\mathsf u(a')}$. With $7m_*=14C/Y$ and the ratio above this is $(1+o(1))\,14C\,t^{\mathsf u(a)+ab(a)}\,Y^{-b(a)}\cdot D\,n\,w\,h^{\mathsf u(a)}$. Since $t\lt1$, $\mathsf u\ge\zeta$ and $ab\ge0$, $t^{\mathsf u+ab}\le t^\zeta$. So the share is at most $(1+o(1))\cdot\tfrac14\cdot\tfrac32\lt\tfrac12$ of the claimed bound for large $h$.
+<br><br>
+<i>The control share.</i> For $a\ge J$, $nh^J\le nw$, and $(\log(2h))^{O(1)}=o(h^\zeta)$; so (18.1) is $o(nwh^{\mathsf u(a)})$ uniformly. The two shares together are below the claimed bound for $h\ge h_0$; enlarging $D$ covers $h\lt h_0$.
+</div>
+
+<p>The factor $Y^{-b}$ is the reason for the gradual exponent $\mathsf u$. A call has width $w'\approx Yw$ with $Y\lt1$, so its width exponent $a'$ can be smaller than $a$, and near the threshold where the cheap exponent $\zeta$ starts the call may fall into the range of a larger exponent. A slowly varying $\mathsf u$ makes this loss a bounded factor $Y^{-b}\lt3/2$. The independence of $C$ from $\ell$ is what allows $14Ct^\zeta\lt1/4$: $t\to0$ as $\ell\to\infty$, while $Y$ and $L$ depend on $\ell$ but cancel from the product $7m_*\cdot Y=14C$.</p>
+
+<p><b>Calls and inputs outside the range.</b> If a call has $w'\gt(h')^H$, the payload is split evenly into $\lceil w'/\lfloor(h')^H\rfloor\rceil$ slices with the same tags; the number of slices is bounded, their width exponents are $H+o(1)$ (where $\mathsf u=\zeta$), and copying the tags costs $O(h')$ per slot and slice, which is within (18.1). For an input with $w\gt h^H$, split it into slices of maximum width $\lfloor h^H\rfloor$ in the same way; tag copying costs at most a constant times the data volume. At bounded heights the Batcher network costs $O_h(w)$. Let $A\gt1$ be a number such that $\mathsf u=\zeta$ on $[A,\infty)$. Then</p>
+$$S(h,w)=O_\zeta(2^h\,w\,h^\zeta)\qquad(w\ge h^A).\tag{18.3}$$
+<p>This is the bound of Theorem 16.1(2) for $\operatorname{Tag}$, with threshold exponent $A$ (called $a$ in the theorem). The threshold $A$ depends on $J$ and $Y$, hence on the non-effective data of Lemma 17.3.</p>
+
+<h4>From tagged permutations to stable sorting</h4>
+
+<p><span class="tag paper">paper</span> For $2^s$ records of $v$ bits, a stable sort uses one $\operatorname{Tag}(s,v)$ and $O(2^s(s+v))$ additional gates: give each proposed output record a guessed position in the input list; use the tagged permutation to check that this assignment sends every output to an equal input; and check along the output list that the pairs (key, guessed input position) are strictly increasing in lexicographic order.</p>
+
+<div class="fill"><b>Gap fill — why these checks force the stably sorted output.</b> <span class="tag filled">filled here</span>
+The tagged permutation check says that the guessed positions $\gamma_1,\dots,\gamma_{2^s}$ are distinct and that output $j$ equals input $\gamma_j$; in particular they have the same key. So $\gamma$ is a bijection from output positions to input positions that preserves keys, and it maps the outputs with key $\kappa$ bijectively onto the inputs with key $\kappa$. The order check says that keys do not decrease along the output and that, among outputs with equal key, $\gamma$ increases. An increasing bijection between two finite ordered sets is unique. So $\gamma$ is determined by the input, also when records are identical, and the output is the stable sort. Exactly one guess is accepted, so the network is exact.
+</div>
+
+<p>The stable-sort tensor therefore inherits (18.3). This completes part 2 of Theorem 16.1.</p>
+
+<h4>Packing ordinary-width records</h4>
+
+<p>For records of width $O(h)$ the bound (18.3) does not apply, since it needs width at least $h^A$. The paper applies (18.3) at two scales in each pass of a radix sort, with two choices of $\zeta$ (the letters $a$, $B$, $s$, $P$ below have the meanings of this paragraph only):</p>
+<ul>
+<li>$\zeta=\tfrac12$, with threshold exponent $a\gt1$;</li>
+<li>$\zeta=1/(2a)$, with threshold exponent $B\gt1$.</li>
+</ul>
+<p>Start with $O(n)$ records whose keys and payloads have $O(h)$ bits. The radix digit has $s=\lfloor h^{1/a}\rfloor$ bits. Run $O(h/s)$ stable passes, least significant digit first, the last digit padded with zeros.</p>
+
+<p><b>One pass.</b></p>
+<ol>
+<li>Pad the list to blocks of $2^{2s}$ slots.</li>
+<li><em>Local sort.</em> Stably sort each block by (dummy flag, digit), dummies last in their old order.</li>
+<li><em>Packs.</em> Choose a power of two $P\in[h^{B-1},2h^{B-1})$. Extend each run of one real digit to a multiple of $P$ by dummies at its end. Then each <em>pack</em> of $P$ consecutive slots contains records of at most one real digit. A fixed allowance of $O((2^s+1)P)$ extra slots per block covers the padding of all runs (at most $2^s$ digit values, less than $P$ dummies each), keeps the old dummies and rounds the length to a multiple of $P$. Scans compute the run lengths and the destinations of all old records; a second local tagged permutation checks these destinations; new dummies are appended with guessed destinations that are required to increase strictly, so that exactly one filling is valid.</li>
+<li><em>Global sort.</em> Scan each pack for its digit and stably sort the packs by digit, empty packs last. Records with equal digits keep their order inside a block and across blocks.</li>
+</ol>
+
+<table>
+<tr><th>Input block in order</th><th>Packs of digit $0$</th><th>Packs of digit $1$</th></tr>
+<tr><td>$a_1\ b_0\ c_1\ d_1$</td><td>$[b,\cdot]$</td><td>$[a,c]\ [d,\cdot]$</td></tr>
+<tr><td>$e_0\ f_1\ g_0\ h_0$</td><td>$[e,g]\ [h,\cdot]$</td><td>$[f,\cdot]$</td></tr>
+</table>
+<p>The table reproduces the paper's Figure 6 (p. 72): one radix pass with two records per pack. A subscript is the digit being sorted and a dot is a dummy slot. Stable sorting of whole packs collects the middle column and then the right column, each from top to bottom; reading the real records gives $b,e,g,h,a,c,d,f$.</p>
+
+<div class="fill"><b>Gap fill — the cost of one pass and the exponent $p=2-1/(2a)$.</b> <span class="tag filled">filled here</span>
+<i>Local calls.</i> A block has address length $2s+O(1)$. Its records are padded to width $\mathsf c\,h$ with a constant $\mathsf c\ge2^{a}+1$, which is at least $(2s+O(1))^a$ for large $h$ because $s^a\le h$. So the first bound applies with $\zeta=\tfrac12$: the cost per slot is $O(\mathsf ch\cdot(2s)^{1/2})=O(hs^{1/2})$, and over $O(n)$ slots it is $O(nhs^{1/2})\le O(nh^{1+1/(2a)})$.
+<br><br>
+<i>Global call.</i> There are $O(n/P)$ packs of $O(hP)$ bits, with address length $h+O(\log h)$ (the paper's figure). Since $hP\ge h^B$, constant-factor padding reaches the second threshold, and the bound with $\zeta=1/(2a)$ gives $O\bigl((n/P)\cdot hP\cdot h^{1/(2a)}\bigr)=O(nh^{1+1/(2a)})$.
+<br><br>
+<i>All passes.</i> There are $O(h/s)=O(h^{1-1/a})$ passes, so the total is
+$$O\bigl((h/s)\,n\,h^{1+1/(2a)}\bigr)=O\bigl(n\,h^{\,2-1/a+1/(2a)}\bigr)=O\bigl(n\,h^{\,2-1/(2a)}\bigr).$$
+The two choices of $\zeta$ balance the local and the global cost: the local cost per record bit is $s^{1/2}=h^{1/(2a)}$, and the global exponent is chosen equal to it.
+<br><br>
+<i>The list stays of size $O(n)$.</i> One pass multiplies the length by $1+O(2^{-s}P)$ (allowance $(2^s+1)P$ per block of $2^{2s}$ slots) and adds $O(2^{2s}+2^sP)$ for the last block. Over $O(h/s)$ passes the product of the factors is $\exp\bigl(O(h\,2^{-s}P/s)\bigr)$, which is bounded because $P$ is polynomial in $h$ and $2^{-s}=2^{-\lfloor h^{1/a}\rfloor}$ decays faster than any power of $h$. The accumulated additive term is $2^{O(s)}h^{O(1)}=2^{o(h)}=o(2^h)$.
+<br><br>
+<i>An observation that the paper does not state.</i> Since $a\gt1$, the exponent satisfies $\tfrac32\lt p\lt2$. The paper asserts only $1\lt p\lt2$.
+</div>
+
+<p><b>From the radix sort to $\operatorname{Tag}(h,h)$.</b> <span class="tag paper">paper</span> Take the union of the $n$ source records and the $n$ proposed target records. Give each source its claimed destination and each target its prescribed position, and radix-sort the union by destination, sources before targets at equal destination. A scan over the real records, with a register of $O(h)$ bits, requires for each destination in order exactly one source followed by one target with equal payloads. This rejects repeated or missing tags and verifies the payloads. Thus $\operatorname{Tag}(h,h)$ has an exact trivalent network of size $O(nh^p)$ with</p>
+$$p=2-\frac1{2a},\qquad1\lt p\lt2 .$$
+<p>For width $ch$ the payload is split across a bounded number of tagged calls with the same tags. The reduction from stable sorting to tagged permutations then gives the ordinary-width statement for stable sorting. This completes the proof of Theorem 16.1 (p. 73). <span class="qed">∎</span></p>
+
+<div class="open"><b>Not verified — items in 18.2 that depend on [42] or are stated without proof (pp. 70–71).</b> <span class="tag unverified">not verified</span>
+(1) The assignment graphs of [42, Lemma 10.2] are used as stated; their existence, their degree bound and the linear-time assignment were not checked. (2) The claim that the second assignment can move "the two lists of each active batch together" at total switch cost $O(nw)$ was not reconstructed beyond the counting given above. (3) The control bound (18.1), including the memory-checking construction and the statement that its exponents are independent of $H$, is taken from the paper. (4) The constants are non-effective: $Y$, $J$, the thresholds $A$, $a$, $B$ and therefore $p$ depend on the test parameters and on $\rho$ from Lemma 17.3, which come from an argument by contradiction with ultralimits, and on the finite menu of 18.1, which comes from compactness. The paper gives no numerical value for any of them.
+</div>
+
+<div class="fill"><b>Gap fill — where each earlier result enters the proof of Theorem 16.1.</b> <span class="tag filled">filled here</span>
+<table>
+<tr><th>Result</th><th>What it contributes</th></tr>
+<tr><td>Theorem 14.1 (sphere prices)</td><td>the sphere tensor attains the transport cost from the barycenter; used in Theorem 15.1</td></tr>
+<tr><td>Theorem 15.1</td><td>$\sum_LK_L^2\le\sum_i(t_i-1)a_i^2r_i^2$; gives Lemma 17.1 with constant $1-q^{-1/2}$</td></tr>
+<tr><td>Lemma 17.1</td><td>link inequalities with contraction coefficient below $\tfrac34$</td></tr>
+<tr><td>Lemma 17.2</td><td>a point fixed by $G$ within $C_0/2$; $d(x,\pi x)\le C_0$ with $C_0$ independent of $\ell$</td></tr>
+<tr><td>Lemma 17.3</td><td>the same bound, $C_0+1$, for mean payload prices that pass finite local tests</td></tr>
+<tr><td>Proposition 18.1</td><td>routing with total width at most $2(C_0+4)\,nw$ through hops on sets of size $2^{th+O(1)}$</td></tr>
+<tr><td>Recurrence and (18.2)</td><td>$S(h,w)=O_\zeta(nwh^\zeta)$ for $w\ge h^A$, because $14Ct^\zeta\lt\tfrac14$ for large $\ell$</td></tr>
+<tr><td>Two-level radix sort</td><td>$\operatorname{Tag}(h,h)$ in size $O(nh^{2-1/(2a)})$</td></tr>
+</table>
+</div>
+</section>
+

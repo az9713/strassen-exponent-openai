@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "nine-fourths-tutorial.html"
+        ],
+        "createdAt": "2026-11-25T18:51:08.763Z",
+        "reason": "agent decided: left border colour and style of theorem/proof boxes is the provenance code of the tutorial (paper, imported, filled, not verified); not confirmed by the user"
+      },
+      {
+        "rule": "aphoristic-cadence",
+        "value": "*",
+        "files": [
+          "nine-fourths-tutorial.html"
+        ],
+        "createdAt": "2026-11-25T20:43:30.135Z",
+        "reason": "agent decided: the matches are the box titles 'Not verified — ...' (the provenance label of the tutorial) and factual status lines ('Not read.', 'Not opened.'); no manufactured-contrast copy found by a text search; not confirmed by the user"
+      }
+    ]
+  }
+}

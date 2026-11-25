@@ -1,0 +1,161 @@
+p1	Theorem 1.1 
+p2	Corollary 1.2 
+p2	Corollary 1.3 
+p3	Figure 1
+p4	Figure 2
+p7	Theorem 2.1 (Compression of tensor powers)
+p7	Theorem 2.2 (Volume of list distinctness)
+p7	§2 The obstruction from list distinctness
+p7	§2.1 Two estimates for networks on bits
+p8	Proposition 2.3 
+p8	Lemma 2.4 (Bilinearization of a formal circuit)
+p8	§2.2 Comparison at a fixed input length
+p8	§2.3 Passing from finite fields to arbitrary fields
+p9	Lemma 2.5 (Finite specialization)
+p9	§2.4 Rank bounds from the exponent
+p10	§3 Tensor prices and wire distances
+p11	§3.1 From tensors to distances
+p11	§3.2 Geometric extension and spectral comparison
+p12	Theorem 4.3 
+p12	Lemma 2.2 
+p12	§4 The cost of testing many lists
+p12	§4.1 Checking a tagged permutation
+p13	Lemma 4.1 (Uniform destinations)
+p13	§4.2 Fields without ports
+p14	§4.3 Finite fields with ports
+p15	§5 Price extensions and simultaneous minimization
+p15	§5.1 Integral restrictions
+p16	Theorem 5.1 (Price extension)
+p16	§5.2 A test for extending a price
+p18	Lemma 5.2 (Geodesic determination and submean inequality)
+p18	§5.3 Geodesic placement
+p19	Lemma 5.3 (Pinned evaluations)
+p19	§5.4 Unique evaluations at minimizing sites
+p20	Theorem 6.1 (Gauss lift)
+p20	§6 A valued lift and a submean inequality
+p20	§6.1 The Gauss lift
+p23	Lemma 6.2 (Specialization and the star inequality)
+p23	§6.2 Prices on disks
+p25	Theorem 7.1 (Rigidity of analytic motion)
+p25	§7 A moving family forces a lower bound of 9/4
+p26	§7.1 The threshold for displacement
+p27	§7.2 Rescaling at the threshold
+p27	§7.3 Geodesics of the disk tree
+p28	§7.4 The price of a common label at four sites
+p29	Figure 3
+p29	Figure 4
+p30	Proposition 8.1 (Tripod principle)
+p30	§8 A lower bound from the price of a shared label
+p30	Figure 3
+p31	Lemma 8.2 (A decoder with short rows)
+p31	§8.1 A decoder for rectangular multiplication
+p32	§8.2 Two copies of the output near a collision
+p33	§9 Polynomial multiplication near contact
+p33	§9.1 The continuum profile
+p34	Lemma 9.1 
+p34	§9.2 A label visible at two sites
+p35	§9.3 Slopes and intercepts on a triangle
+p36	Proposition 9.2 (Profile near contact)
+p37	Lemma 10.1 (Adding an input)
+p37	§10 Energy and radial contraction
+p38	Lemma 10.2 (Continuum limit of the degree energy)
+p38	§10.1 From degrees to widths
+p39	Lemma 10.3 (Radial contraction)
+p39	§11 Propagation of equality on a tripod
+p39	§11.1 Comparing the three directional integrals
+p42	§11.2 The strong minimum principle
+p43	Corollary 11.1 
+p43	Theorem 5.1 
+p43	§11.3 The three wire lengths at the maximal price
+p43	§12 Synchronization of tensor parameters
+p44	Theorem 12.1 (Synchronization)
+p46	Corollary 12.2 (Simultaneous pricing)
+p47	§13 Fermionic sphere tensors
+p47	§13.1 The kernel and its coefficients
+p47	§2 Z≥0. Its basis consists of the
+p48	Proposition 13.1 (Fusion)
+p48	§13.2 Fusing a cluster at a marked point
+p49	Lemma 13.2 (Dimension of a level)
+p49	§13.3 Energy and dimension
+p49	§2 Z≥0 one hasdh≤ec
+p49	§13.4 The width needed to transmit a leg
+p50	Lemma 13.3 (Fusion width)
+p50	§2 Z≥0 put
+p51	Lemma 13.3 
+p51	Theorem 14.1 (Sphere prices)
+p51	§14 The price of a sphere tensor
+p52	Lemma 14.2 
+p52	§14.1 Pricing one additional leg
+p53	§14.2 Recovering a wire by a collision
+p54	Figure 5
+p55	Corollary 14.3 (Prescribed widths)
+p55	Corollary 14.4 (A common comparison tensor)
+p55	§14.3 Prescribed widths and uniform comparison
+p56	Theorem 15.1 (Incidence inequality)
+p56	§15 Incidence expansion
+p56	§15.1 An inequality for secant lines
+p58	Corollary 15.2 (Affine incidence links)
+p58	§15.2 The sharp local link inequality
+p59	Theorem 16.1 (Conditional stable sorting)
+p59	Lemma 16.2 (Batched table evaluation)
+p59	Theorem 16.1 
+p59	§16 Stable sorting under a strict square saving
+p59	§16.1 Evaluating a table by sorting its queries
+p60	Lemma 5.2 
+p60	§16.2 The two scales of the sorting proof
+p61	Lemma 17.1 
+p61	Theorem 15.1 
+p61	§17 From incidence to permutation actions
+p61	§17.1 Two incidence inequalities
+p62	§17.2 Permutations on short address sets
+p63	Lemma 17.2 
+p63	§17.3 Uniform displacement
+p63	§4 Ed(yW1,yW2)2. (17.2)
+p65	Lemma 17.3 (Finite detection)
+p65	§17.4 Finite tests on permutation orbits
+p67	Proposition 18.1 
+p67	§18 Bounded-width permutation routing
+p67	§18.1 From a failed price test to a routing identity
+p70	§18.2 From local transports to stable sorting
+p72	Figure 6
+p73	Lemma 19.1 (Local concentration)
+p73	§19 Concentrating the arity of a tensor network
+p74	§19.1 Sphere forms and a transposition identity
+p75	Lemma 19.2 (Transposition at a seam)
+p76	§20 Planting the wiring at marked points
+p76	Figure 7
+p77	Lemma 20.1 (Auxiliary marks of bounded weight)
+p77	§20.1 The wiring form for one species
+p78	Lemma 20.1 
+p78	§20.2 Realizing the joint auxiliary state
+p80	§21 Moving insertions through a sewn surface
+p80	§21.1 Reconstructing an evaluation from collisions
+p81	§21.2 Crossing a seam
+p82	§21.3 Accounting for motion
+p82	Figure 8
+p83	§22 Accounting for the new arities
+p86	Lemma 23.1 (Compression of a tensor power)
+p86	§23 Reducing the total arity of a tensor power
+p87	§23.1 The common graph and its initial loads
+p88	§24 Reducing the width between unfrozen stations
+p89	Lemma 24.1 (Reduction of core width)
+p89	§24.1 A wiring identity
+p90	Lemma 24.2 (A fixed choice of widths)
+p90	Figure 9
+p91	§24.2 Subrounds
+p93	§24.3 Resetting the core degree
+p93	Figure 10
+p95	§24.4 Paying for the reset
+p96	§25 The arity budgets after one round
+p96	§25.1 From concentration to bounded degree
+p98	Figure 11
+p99	§25.2 Iteration and the description of the final tables
+p100	Lemma 19.1 
+p101	Lemma 26.1 (Realizing a transcript)
+p101	§26 Realizing the expansion on a fixed network
+p101	§26.1 From a transcript to a tensor
+p103	Theorem 16.1 
+p103	§26.2 The transcript of the rounds
+p106	Lemma 16.2 
+p106	Lemma 27.1 (Descent of a trivalent network)
+p106	§27 Trivalent compression and the exponent

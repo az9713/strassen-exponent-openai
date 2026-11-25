@@ -1,0 +1,3 @@
+# session transcript and design-hook cache: not project files
+.ignore/cc1_strassen.txt
+.impeccable/hook.cache.json

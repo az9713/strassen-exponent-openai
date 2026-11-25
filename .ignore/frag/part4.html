@@ -1,0 +1,986 @@
+<!-- PART IV of the paper: "From arity to network volume", Sections 23-27, pp. 86-107 -->
+
+<section id="s23">
+<h2>23. Reducing the total arity of a tensor power <span class="pg">pp. 86–88</span></h2>
+
+<p class="role"><b>Role in the chain.</b> Part IV of the paper (§23–§27, pp. 86–107) proves Theorem 2.1 (Compression of tensor powers, p. 7), the statement that <a class="secref" href="#s2">§2</a> combines with Theorem 2.2 to contradict $\omega_k\lt 9/4$. Part IV receives Lemma 19.1 (Local concentration, p. 73; <a class="secref" href="#s19">§19</a>), Theorem 16.1 (Conditional stable sorting, p. 59) and Lemma 16.2 (Batched table evaluation, p. 59; <a class="secref" href="#s16">§16</a>). Section 23 states Lemma 23.1 (Compression of a tensor power), defines the objects on which its proof operates, and constructs the starting configuration. The proof of Lemma 23.1 continues through <a class="secref" href="#s24">§24</a> (one wire reduction), <a class="secref" href="#s25">§25</a> (one round, and the iteration of rounds) and ends on p. 106 in <a class="secref" href="#s26-2">§26.2</a>. Lemma 23.1 is used $J$ times in <a class="secref" href="#s27">§27</a> to prove Theorem 2.1.</p>
+
+<p>The paper describes the task of Part IV on p. 5: the expansion produced by the tensor identities "has many summands with different wirings. A single network must describe the possible wirings, route the records, look up the entries and sum the contributions. Counting all four operations gives the logarithmic saving in Theorem 2.1 and completes the contradiction." Sections 23–25 bound each summand. Section 26 puts all summands on one network. Section 27 does the final count.</p>
+
+<div class="def" id="def-23-network"><b>Definition (bit tensor, network, trivalent, size, volume; table network, bundle, label).</b> <span class="pg">pp. 7, 86</span> <span class="tag paper">paper</span>
+A <em>bit tensor</em> of arity $u$ over a field is a function $\{0,1\}^u\to$ field. In a <em>tensor network</em> each vertex carries such a table. A <em>wire</em> pairs two argument positions; each unpaired position is a named <em>exterior bit</em>. For a fixed setting of the exterior bits, multiply the selected entries of all vertices and sum over all settings of the wires. The resulting function of the exterior bits is the tensor <em>represented</em> by the network. A network is <em>trivalent</em> if every vertex has arity at most three. For a trivalent network, <em>size</em> counts the vertices and the exterior bits, and <em>volume</em> counts the vertices and all wires including the exterior ones (p. 7).
+<p>For unrestricted arity the paper uses the following terms (p. 86). A <em>table network</em> over a field $K$ has bit wires and a table $\{0,1\}^s\to K$ at each <em>station</em> of arity $s$. Its <em>size</em> is the number of stations plus the sum of their arities, including external legs. Parallel bits between two stations form an ordered <em>bundle</em>; the <em>width</em> of a bundle is its number of bits. A <em>label</em> names the table of a station in a <em>dictionary</em> fixed for the network: a rule that assigns a table to each label.</p></div>
+
+<div class="fill"><b>Background — why the three size measures agree up to a constant for trivalent networks.</b> <span class="tag filled">filled here</span>
+Let a trivalent network have $N$ vertices, $E$ internal wires and $e$ exterior bits. Each internal wire uses two argument positions and each exterior bit one, so $2E+e\le 3N$.
+<ul>
+<li>Size is $N+e$. Volume is $N+E+e\le N+\tfrac12(3N-e)+e\le\tfrac52(N+e)$. Hence size $\le$ volume $\le\tfrac52\,$size.</li>
+<li>The table-network size is $N+(2E+e)$. It is at least $N+e$ and at most $4N$. Hence trivalent size $\le$ table-network size $\le 4\,$(trivalent size).</li>
+</ul>
+A bound on any one of the three quantities therefore gives a bound on the others with an absolute constant. Theorem 2.2 is stated for volume and Theorem 2.1 for size; <a class="secref" href="#s27">§27</a> starts the macros from the table-network size $s_0\le 4m$.</div>
+
+<h3 id="s23-a">Why the total arity must fall</h3>
+
+<p>Lemma 19.1 turns a network into a sum of networks, each with a few large stations (called <em>frozen</em>) and many small stations (the <em>core</em>). The paper observes (p. 86) that this is not sufficient: the cost of the final evaluation also depends on the <em>total</em> arity. If $u_v$ is the arity of station $v$, the batched evaluation of Lemma 16.2 costs, per copy of the tensor, at most a constant times the number of stations plus</p>
+$$\sum_{v:\,u_v\gt 0}u_v^{\,p}\ \le\ \Bigl(\max_vu_v\Bigr)^{p-1}\sum_vu_v .$$
+<p>Here $1\lt p\lt 2$ is the exponent of Theorem 16.1(1). The inequality is $u_v^p=u_v^{p-1}u_v\le(\max u)^{p-1}u_v$, summed over $v$. The right side is a product of two factors: a power less than one of the largest arity, and the total arity. The paper's plan is to let the largest arity grow by a factor $h^{(1+\delta)a}$ if the total arity falls by a factor $h^{(1-\delta)a}$. The product then changes by $h^{(1+\delta)a(p-1)-(1-\delta)a}$, and this exponent is negative when $\delta$ is small, because $p-1\lt 1$.</p>
+
+<p>The quantity that controls the trade is the <em>sum of squared arities</em>. Lemma 19.1 takes a bound on this sum as its hypothesis and returns a bound of the same order. The construction keeps the sum of squares within a budget in every round, so that Lemma 19.1 can be applied again.</p>
+
+<div class="lem" id="lem-23-1"><b>Lemma 23.1 (Compression of a tensor power).</b> <span class="pg">p. 86</span> <span class="tag paper">paper</span>
+Let $k$ be a finite field with $\omega_k\lt 9/4$. Let $h=\lceil\log_2n\rceil$, $0\lt\delta\le 1/10$, and $0\lt\beta\le b\le 1/2$. For every sufficiently small fixed $a\gt 0$ depending only on $k,\delta,\beta$, and all sufficiently large $n$, the following holds. Work over an extension $K/k$ of degree $O(\log h)$ large enough for Lemma 19.1 at the scales used below. Suppose that an input table network has maximum arity $h^b$ or less, $(\log h)^{O(1)}$-bit table labels, size at most $m$ with $n\le m\le n^{1.1}$, and $e\le m\,h^{-2a}$ external bits. Some $d$ with $1\le d=n^{o(1)}$ admits a table network over $K$ for its $d$th tensor power, with all $de$ external bits separately accessible, such that
+$$\text{size}\le m\,d\,h^{-(1-\delta)a},\qquad\text{maximum arity}\le h^{\,b+(1+\delta)a}.$$
+The output labels again have $(\log h)^{O(1)}$ bits. The cutoff for $n$ may depend on the fixed exponent in the input label-length bound.</div>
+
+<p>The first sentence of the box (the hypothesis on $k$) is stated by the paper for the whole of Part IV on p. 86, not inside the lemma. The paper calls one application of Lemma 23.1 a <em>macro</em>. The output of a macro satisfies the hypotheses of the next macro with $b$ replaced by $b+(1+\delta)a$, as long as this exponent is at most $1/2$ and the exterior-bit condition holds; <a class="secref" href="#s27">§27</a> arranges both.</p>
+
+<div class="fill"><b>Gap fill — the effect of one macro on the lookup bound.</b> <span class="tag filled">filled here</span>
+The paper states (p. 87): before the macro the lookup bound is $O(m\,h^{b(p-1)})$ per copy, and after it the bound acquires the factor $h^{-a\{(1-\delta)-(1+\delta)(p-1)\}}$. The computation: by the display above with $\max u\le h^b$ and total size $m$, the bound before is $O(m\,h^{b(p-1)})$. After the macro, the size per copy is at most $m\,h^{-(1-\delta)a}$ and the largest arity is at most $h^{b+(1+\delta)a}$, so the bound is
+$$O\bigl(m\,h^{-(1-\delta)a}\cdot h^{(b+(1+\delta)a)(p-1)}\bigr)=O\bigl(m\,h^{b(p-1)}\bigr)\cdot h^{-a\{(1-\delta)-(1+\delta)(p-1)\}}.$$
+The brace is positive if and only if $\delta\lt(2-p)/p$. For $p\ge 2$ it is negative for every $\delta\gt 0$.</div>
+
+<h3 id="s23-b">The structure of the proof of Lemma 23.1</h3>
+
+<p>The macro replaces a power of the input tensor by a sum of products. The paper's vocabulary for this expansion is used in all of §23–§26.</p>
+
+<div class="def" id="def-23-vocab"><b>Definition (summand, block, host, occurrence, grouping step, round, beat).</b> <span class="pg">p. 87</span> <span class="tag paper">paper</span>
+<ul>
+<li>A <em>summand</em> is one term of the expansion. It is a product of factors called <em>blocks</em>. Different blocks have disjoint lists of external bits.</li>
+<li>In one summand, its $N_b$ blocks use the same simple graph of possible adjacencies, the <em>host</em>. The vertices of the host are <em>positions</em>; $H$ is their number. The host may depend on the summand.</li>
+<li>An <em>occurrence</em> is a pair (host position, block). It can be empty. Every actual internal wire joins stations in the same block. A host edge can carry bundles of different widths in different blocks. The local port order at each end of a wire records which bits correspond.</li>
+<li>A <em>grouping step</em> relabels the blocks and groups them $r$ at a time, with $r$ a power of two. In each group the old blocks are multiplied and transformed together, and the group becomes one new block.</li>
+<li>A <em>round</em> has three phases: it concentrates the squared arities (Lemma 19.1), then applies a fixed number of wire reductions to the core, then restores bounded degree of the host. A wire reduction is called a <em>beat</em>; a beat consists of several contractions (<em>subrounds</em>) followed by a <em>reset</em> of the core degree (<a class="secref" href="#s24">§24</a>).</li>
+</ul>
+The number of rounds grows with $h$. Once the parameter $D$ is fixed, all repetition counts within one round are constants.</div>
+
+<p>Table 1 of the paper (p. 87) lists the quantities. It is reproduced here with one added column that says where each quantity is fixed.</p>
+
+<table>
+<tr><th>Quantity</th><th>Meaning within one summand (paper)</th><th>Where fixed (this tutorial)</th></tr>
+<tr><td>$H,\ N_b$</td><td>positions of the common host and blocks using it</td><td>change at every grouping step, (23.1)</td></tr>
+<tr><td>$r$</td><td>number of blocks combined at each grouping step</td><td><a class="secref" href="#s25-2">§25.2</a></td></tr>
+<tr><td>$S,\ T_0$</td><td>initial blocks and original copies per block, with $d=ST_0$</td><td>$T_0$ in §23.1; $S$ in <a class="secref" href="#s25-2">§25.2</a></td></tr>
+<tr><td>$L,\ T$</td><td>total arity budget and working arity scale</td><td>(23.3) at the start; (25.3) after each round</td></tr>
+<tr><td>$D$</td><td>concentration parameter, fixed for all rounds</td><td><a class="secref" href="#s25-1">§25.1</a></td></tr>
+<tr><td>$X,\ Z$</td><td>width between core stations and total frozen charge</td><td><a class="secref" href="#s24">§24</a></td></tr>
+<tr><td>$\Delta,\ \nabla$</td><td>degree bounds for the core host and the full host</td><td><a class="secref" href="#s24">§24</a></td></tr>
+<tr><td>$B,\ u$</td><td>maximum packing load and unit of internal width</td><td><a class="secref" href="#s24">§24</a>, <a class="secref" href="#s25-1">§25.1</a></td></tr>
+</table>
+<p>The paper's caption adds: the budgets $L$, $X$ and $Z$ each cover all blocks of the summand.</p>
+
+<div class="proof sketch">
+<p>The proof of Lemma 23.1 has four stages. The bounds of stages 1–3 hold for each summand separately.</p>
+<ol>
+<li><b>Initialization</b> (§23.1). The input network is given bounded degree by binary trees. $T_0\approx h^b$ copies are stacked so that every station has arity between $T_0/2$ and $T_0$. $S$ such stacks are the initial blocks. The invariants (23.2) hold with $L=L_0$ and $T=T_0$.</li>
+<li><b>One round</b> (<a class="secref" href="#s25-1">§25.1</a>, using Lemma 19.1 once and Lemma 24.1 a constant number of times). If (23.2) holds with $(L,T)$ at the start of a round, it holds with $(L/G,\ qT)$ at the end, where $G$ and $q\le G^{1+\delta/3}$ are constants.</li>
+<li><b>Iteration</b> (<a class="secref" href="#s25-2">§25.2</a>). After $j\approx a\log h/\log G$ rounds the total charged arity is $O(md\,h^{-a}\log h)$ and the arity scale is $O(h^{b+(1+\delta/3)a})$.</li>
+<li><b>Assembly</b> (<a class="secref" href="#s26">§26</a>). The sum over all summands is represented by one fixed network of size at most $md\,h^{-(1-\delta)a}$ whose large tables are dictionary gates of arity at most $h^{b+(1+\delta)a}$.</li>
+</ol>
+</div>
+
+<div class="fill"><b>Notation — letters with more than one meaning in Part IV.</b> <span class="tag filled">filled here</span>
+The paper reuses letters. The tutorial keeps the paper's letters and states the active meaning at each use. The collisions are:
+<table>
+<tr><th>Letter</th><th>Meanings (section)</th></tr>
+<tr><td>$J$</td><td>beats per round (§25.1); macros (§27); iterations of Theorem 2.1 in Proposition 2.3 (§2); an interval index $a_J$ (§24.3)</td></tr>
+<tr><td>$j$</td><td>rounds per macro (§25.2, §26.2); index of a macro (§27); depth of a dyadic interval (§24)</td></tr>
+<tr><td>$D$</td><td>concentration parameter (§23–§26); degree $[K:k]$ (Lemma 27.1); the tensor $D_w$ and the party $D$ of the six-party identity (§24.1)</td></tr>
+<tr><td>$\Delta$</td><td>bound on the core degree of the host (§24–§25); net saved exponent (§27)</td></tr>
+<tr><td>$\rho$</td><td>contraction factor $1-(2-\lambda)/4$ of a subround (§24.2, §24.4); $p-1$ (§27)</td></tr>
+<tr><td>$b$</td><td>arity exponent (Lemma 23.1); width of the finite wiring identity (§24.1), written $b_*$ in §24.2</td></tr>
+<tr><td>$A$</td><td>party of the six-party identity (§24.1); colony multiplier (§24.2); current label length (§25.2); candidate matrix (§26.2); total exponent (§27)</td></tr>
+<tr><td>$B$</td><td>party (§24.1); bound on one load (§24–§25)</td></tr>
+<tr><td>$C$, $C_0,C_1,C_2,\dots$</td><td>$C$: party (§24.1); generic constants. The numbered constants are local: $C_1$ is the colony constant of (24.1) and $C_2$ the degree exponent in §24; $C_0,C_1,C_2$ are constants of $L_0$ and of $r$ in §25.2; $C_0,C_1,C_2$ are exponents of $h$ in §26</td></tr>
+<tr><td>$y$</td><td>a host position in the formula for $\nu_v$ (§24.3); the exponent in $Y=2^y$ (§24.3, §24.4); $\overline y_{vw}$ is a mean contact width (§24.3)</td></tr>
+<tr><td>$T$</td><td>arity scale (§23–§27); a tensor in the statements imported from §3 and §16 (§24.1, §27)</td></tr>
+<tr><td>$M$</td><td>auxiliary party (§24.1); exponent in $R\ge h^M$ (§25.2, §26.2); allowance $M_j$ (§27); $\mathcal M$ is the sum of loads (§24)</td></tr>
+<tr><td>$P$</td><td>length-ratio bound $2^{64\lceil\log_2(2\Delta)\rceil}$ (§24); number of processors (§26)</td></tr>
+<tr><td>$q$</td><td>multiplier of the arity scale (§25); $h^{-(1-\delta)a}$ (§27)</td></tr>
+<tr><td>$r$</td><td>group size (§23–§26); a tensor-power exponent (§24.1); copy factor $r_j$ and bit count (§27)</td></tr>
+<tr><td>$s$</td><td>arity (§23); grouping steps per round (§25.2); propagation distance $s_e$, base length $s_v$ (§24); size $s_j$ (§27); charge of a record (§26.1)</td></tr>
+<tr><td>$t$</td><td>subrounds per beat (§24.4); slot capacity (§26.1); number of lists (§2)</td></tr>
+<tr><td>$u$</td><td>unit of bundle width (§24–§25); padded string length (§26.1); final largest arity (§27)</td></tr>
+<tr><td>$\sigma$</td><td>slack (§24–§25); exponent of Theorem 2.2 (§27)</td></tr>
+<tr><td>$\eta,\ \eta'$</td><td>$\eta$: exterior-bit allowance of Theorem 2.1 (§27); $\eta'$: selector rate of the wiring identity (§24.1)</td></tr>
+<tr><td>$V,\ W,\ U,\ w$</td><td>§26.1: charge bound, dictionary, string length, chunk width; elsewhere $V$ is the input tensor (§27), $W$ the budget of Lemma 19.1 (§25.1), $w$ the word length of $D_w$ (§27)</td></tr>
+<tr><td>$m$</td><td>size of the input network (§23, §25–§27); largest permitted price-distance (§24.1); $m_{ij}$ a count of routed units (§24.3)</td></tr>
+</table></div>
+
+<h3 id="s23-1">23.1 The common graph and its initial loads <span class="pg">pp. 87–88</span></h3>
+
+<p><b>Grouping and the host.</b> At a grouping step the new positions may be indexed by an old position, a dyadic subinterval of the $r$ block indices of a group, and a bounded number of other choices. A <em>dyadic interval</em> of $\{0,\dots,r-1\}$ is a set of indices that share a binary prefix; there are $2r-1$ of them. The paper allows padding of the host subject to</p>
+$$H'\le c\,r\,H,\qquad N_b'=N_b/r,\tag{23.1}$$
+<p>where $c$ is fixed throughout all repetitions of that step and may depend on the design of the round. Consequently the number $HN_b$ of allocated occurrences grows by at most the factor $c$ at each grouping step. This is used in <a class="secref" href="#s25-2">§25.2</a>, display (25.4).</p>
+
+<p><b>The invariants of a round.</b> At the beginning of each round the paper requires: every live occurrence holds one station (the paper does not define <em>live</em>; the tutorial reads it as: not empty); the host has degree bounded by an absolute constant; external bits are fixed at specified ports. Let $T$ be a dyadic width (a power of two) and $L$ a total arity budget. The <em>charged arity</em> of a live station of actual arity $s_v$ is $z_v=\max(s_v,\theta T)$, where $\theta\gt 0$ is a small fixed dyadic constant chosen in <a class="secref" href="#s25-1">§25.1</a>. The invariants are</p>
+$$\sum_vz_v\le L,\qquad\sum_vz_v^2\le LT,\qquad\max_vz_v\le DT/2.\tag{23.2}$$
+<p>All three sums and the maximum run over all stations of all blocks of the summand. The paper gives the purpose of each bound (p. 88):</p>
+<ul>
+<li>the first pays for the surviving bits;</li>
+<li>the second is the input to the next local concentration (it is the hypothesis $\sum t_i^2\le WT$ of Lemma 19.1);</li>
+<li>the third lets several stations be packed into one cell of capacity $DT$ without overflow;</li>
+<li>the floor $\theta T$ bounds the number of stations, and so of table descriptions, that can enter a pack of a given charge.</li>
+</ul>
+<p>Every station of arity zero is a scalar. It is removed from the network and its value is kept as a factor of the summand.</p>
+
+<div class="fill"><b>Gap fill — what the pair $(L,T)$ measures.</b> <span class="tag filled">filled here</span>
+If all charged arities were equal to one value $z$, the first two bounds of (23.2) would read $Nz\le L$ and $Nz^2\le LT$ for $N$ stations, and they hold with equality for $z=T$, $N=L/T$. So $T$ is the typical arity and $L/T$ the typical number of stations. In general the two bounds give $\sum z_v^2/\sum z_v\le T$ when the first is tight: $T$ bounds the arity-weighted mean arity. A later configuration with budget $L/G$ and scale $qT$ has square budget $(L/G)(qT)=(q/G)\,LT$. If $q$ is only slightly larger than $G$, the square budget is almost unchanged while the total arity has fallen by $G$ and the typical arity has risen by $q$.</div>
+
+<p><b>First step: bounded degree by binary trees.</b> A station of arity $s$ may be joined to $s$ different stations, so the input graph can have degree $h^b$. The paper replaces each station of positive arity $s$ as follows. The $s$ ports of the station leave it as one ordered bundle to the root of a balanced binary tree. At each split an identity tensor divides one ordered bundle into two bundles whose lengths differ by at most one. At each leaf there is an identity tensor on one bit. The original wires and external bits are attached at the leaves. An input wire that was a loop at one station becomes a connection between two leaves of the same tree.</p>
+
+<div class="fill"><b>Background — a balanced binary tree of equality tensors.</b> <span class="tag filled">filled here</span>
+The <em>identity</em> (or <em>equality</em>) tensor that splits a bundle of $t$ bits is the $0/1$ table on $t+\lceil t/2\rceil+\lfloor t/2\rfloor=2t$ bits which is $1$ exactly when the first $t$ bits equal the concatenation of the other two groups. Three properties are used.
+<ol>
+<li><b>The tensor is unchanged.</b> In the sum over wire values, each identity tensor is zero unless its two sides agree. For given values at the leaves there is exactly one assignment of the tree wires with nonzero weight, and its weight is the original table entry. The network with trees represents the same tensor as before.</li>
+<li><b>Degree and arity ratio.</b> The original station now has one neighbour (the root). A split vertex has three neighbours, a leaf two. A vertex that splits a $t$-bit bundle has arity $2t$ and its children have arity about $t$; the paper records that the arities at the two ends of a tree edge have bounded ratio. A leaf-to-leaf connection has width one at both ends.</li>
+<li><b>Cost.</b> A tree on $s$ ports has $\lceil\log_2s\rceil+1$ levels, and each level has total arity at most $2s$. With $s\le h^b\le h^{1/2}$ there are $O(\log(2+h))$ levels. Summing over stations, the new network has total arity $O(m\log(2+h))$. The new tables are identities described by their lengths, so their labels are short.</li>
+</ol></div>
+
+<p><b>Second step: stacking $T_0$ copies.</b> Choose a dyadic $T_0\in[4h^b,8h^b]$ and take $T_0$ copies of the tree network constructed in the first step. At a station of arity $s$ (every arity is now at most $2h^b\le T_0/2$) let $v$ be the largest power of two with $v\le T_0/s$. Divide the $T_0$ copies into consecutive intervals of length $v$. Each interval becomes one position of the host, and the station at that position is the tensor product of the $v$ corresponding copies of the table.</p>
+
+<div class="fill"><b>Gap fill — the arithmetic of stacking.</b> <span class="tag filled">filled here</span>
+<ul>
+<li><b>Arity.</b> The product of $v$ copies has arity $sv$. From $v\le T_0/s\lt 2v$ follows $sv\in(T_0/2,\,T_0]$.</li>
+<li><b>Number of positions.</b> A station of arity $s$ gives $T_0/v\lt 2s$ intervals. Summing over the stations of the tree network, the stack has $H_0=O(m\log(2+h))$ positions.</li>
+<li><b>Bounded degree.</b> If two stations of arities $s,s'$ are adjacent, then $s/s'$ is bounded (property 2 of the previous box, and width one at both ends of a leaf-to-leaf edge). Then $v/v'$ is bounded, and an interval of length $v$ at one end meets at most $\max(1,v/v')$ intervals at the other end. The stack therefore has bounded degree.</li>
+<li><b>Bit order.</b> A bundle between two interval stations is ordered first by the old bundle order and then by the copy index. Both ends use this order.</li>
+<li><b>Labels.</b> The table at an interval is specified by the old table label, the interval length and a bounded number of ordered port lengths.</li>
+</ul>
+The stacking is the reason for the factor $T_0$ in $d$: one position of the host now serves $v$ copies, and every station has arity of order $T_0$ whatever its original arity was.</div>
+
+<p><b>Third step: $S$ blocks.</b> Take $S$ blocks, each a copy of this stack, and pad $H_0$ to the order $m\log(2+h)$. The represented tensor is the $d$th power of the input tensor with $d=T_0S$, up to the scalar stations removed earlier; the $d$th power of the product of those scalars is kept as a factor of the final tensor. The starting parameters are</p>
+$$d=T_0S,\qquad T=T_0,\qquad L=L_0=C\,m\,T_0\,S\log(2+h).\tag{23.3}$$
+
+<div class="fill"><b>Gap fill — the invariants (23.2) hold at the start.</b> <span class="tag filled">filled here</span>
+One copy of the tree network has total arity $O(m\log(2+h))$. Stacking multiplies the total by $T_0$ and taking $S$ blocks by $S$, so the total arity is at most $L_0$ for a sufficiently large absolute $C$. Every station has arity $s_v\in(T_0/2,T_0]$; with $\theta\le 1/2$ the charged arity is $z_v=s_v$. Then $\sum z_v\le L_0$; $\ \sum z_v^2\le T_0\sum z_v\le L_0T_0$; and $\max z_v\le T_0\le DT_0/2$ when $D\ge 2$. These are the three bounds of (23.2) with $L=L_0$, $T=T_0$. The host has bounded degree and every occurrence holds one station.</div>
+
+<p>The $ed$ exterior bits keep their individual names throughout the construction. The number $S$ of blocks and the group size $r$ are chosen in <a class="secref" href="#s25-2">§25.2</a>, after the design of one round is fixed.</p>
+
+</section>
+
+<section id="s24">
+<h2>24. Reducing the width between unfrozen stations <span class="pg">pp. 88–96</span></h2>
+
+<p class="role"><b>Role in the chain.</b> This section proves Lemma 24.1 (Reduction of core width): one fixed sequence of steps, called a <em>beat</em>, halves the total width of the wires between the small stations of a summand, up to an additive error, and returns a host whose small stations have degree at most three. It receives the division of a summand into frozen stations and core stations from Lemma 19.1 (as set up in <a class="secref" href="#s25-1">§25.1</a>), the wide-record bound of Theorem 16.1(2) (<a class="secref" href="#s16">§16</a>) for a permutation network, and from <a class="secref" href="#s3">§3</a> the geometry of prices together with two results that the paper imports from [42]. It delivers three things: Lemma 24.1, applied $J=\lceil 2\epsilon\log D\rceil$ times in every round in <a class="secref" href="#s25-1">§25.1</a>; the dyadic partition estimate (24.1), reused in <a class="secref" href="#s25-1">§25.1</a> to form the cells of Lemma 19.1; and Lemma 24.2 (A fixed choice of widths), used inside the beat. The section is part of the proof of Lemma 23.1 (<a class="secref" href="#s23">§23</a>).</p>
+
+<p>Notation in force (from <a class="secref" href="#s23">§23</a>): a <em>summand</em> is a product of $N_b$ <em>blocks</em>; all blocks of a summand share a <em>host</em> graph with $H$ <em>positions</em>; an <em>occurrence</em> is a pair (position, block); a <em>grouping step</em> merges the blocks $r$ at a time ($r$ a power of two), so that $N_b$ becomes $N_b/r$ and $H$ becomes at most $crH$. The field $k$ is finite with $\omega_k\lt 9/4$, and logarithms are binary. Several letters of this section have other meanings elsewhere: here $\rho$ is the contraction factor of a subround, $\Delta$ a degree bound, $u$ a unit of width, $P$ a length ratio, $b$ the width of the wiring identity, and $A,B,C,D,M,N'$ are, in §24.1 only, the names of six parties.</p>
+
+<div class="def" id="def-24-setting"><b>Definition (core, frozen, tether, the widths $X$ and $Z$, loads, unit, degree bounds).</b> <span class="pg">pp. 88–89</span> <span class="tag paper">paper</span>
+After the concentration step of a round, some stations are <em>frozen</em> for the rest of the round; the others form the <em>core</em>. Each core occurrence carries one tensor. Each frozen occurrence holds a list of tensors and the charge assigned to each when it was frozen. All exterior legs are on frozen tensors. Host adjacencies between frozen stations are discarded, since they carry no wires.
+<ul>
+<li>$X$ is the sum, over all blocks, of the widths of the core–core wires, each wire counted once.</li>
+<li>$Z$ is the total frozen charge.</li>
+<li>A <em>tether</em> is a core–frozen wire. The tethers have total width at most $Z$.</li>
+<li>For packing, the <em>load</em> of a core occurrence is its arity; the load of a frozen occurrence is the sum of its charges times a fixed dyadic factor in $(0,1]$. $B$ is an upper bound on one load. $\mathcal M$ is the sum of all loads; $\mathcal M\le 2X+2Z$.</li>
+<li>Each internal width is a multiple of an integer <em>unit</em> $u\le B$.</li>
+<li>$\Delta\ge 3$ bounds the <em>core degree</em> of the host (core neighbours of a core position), and $\nabla\ge\Delta$ bounds its <em>full degree</em>.</li>
+</ul></div>
+
+<div class="fill"><b>Gap fill — $\mathcal M\le 2X+2Z$, and why $\nabla$ can be much larger than $\Delta$.</b> <span class="tag filled">filled here</span>
+The arity of a core station is the sum of the widths of its core–core wires and of its tethers. Summed over the core, each core–core wire is counted at both ends, which gives $2X$, and the tethers give at most $Z$. The frozen loads sum to at most $Z$ because the dyadic factor is at most one. Hence $\mathcal M\le 2X+Z+Z$. The tether bound holds because a tether ends at a frozen station whose arity is at most its charge.
+<p>The host records <em>possible</em> contacts across all blocks. A core station can be tethered to different frozen stations in different blocks, so a core position of core degree three can have many potential tether neighbours in the common host. The estimates of Lemma 24.1 are uniform in this number.</p></div>
+
+<div class="lem" id="lem-24-1"><b>Lemma 24.1 (Reduction of core width).</b> <span class="pg">p. 89</span> <span class="tag paper">paper</span>
+Fix a bound on the incoming core degree and assume the hypothesis of Theorem 16.1. There is a fixed sequence of grouping and contraction steps, called a <em>beat</em>, with the following bounds in each summand, for slack $\sigma\gt 0$:
+$$X_{\mathrm{out}}\le\tfrac12X+C(Z+\sigma),\qquad\Delta_{\mathrm{out}}\le 3,\qquad Z_{\mathrm{out}}=Z.$$
+The identity retains all exterior legs separately. The maximum load, the reciprocal bundle unit and $\log(2\nabla)$ increase by at most fixed factors. These factors and $C$ are independent of the incoming full degree.
+<p>At a step with $H$ host positions and $N_b$ blocks, a power of two, choose dyadic $r\mid N_b$. Grouping leaves $N_b/r$ blocks and uses at most $crH$ positions. It suffices to take $r\ge c_*$, $c_*HN_bB/r\le\sigma$ at each step and a starting unit divisible by the product of the subdivision factors. The position and slack constants $c,c_*$ may depend on the degree bounds at the step in question.</p></div>
+
+<p>The "hypothesis of Theorem 16.1" is $\omega_k\lt 9/4$. The <em>slack</em> $\sigma$ is a free parameter: the error term $C\sigma$ pays for partially filled packs, and the condition $c_*HN_bB/r\le\sigma$ says that one load $B$ per position and group, times a constant, is within the slack. In <a class="secref" href="#s25-1">§25.1</a> the paper takes $\sigma=L/\sqrt D$.</p>
+
+<p><b>Plan of the proof.</b> A beat consists of $t$ wire-saving <em>subrounds</em> followed by one <em>reset</em>.</p>
+<ul>
+<li>A subround (§24.2) replaces the core width $X$ by at most $\rho X+C(Z+\sigma)$ with an absolute $\rho\lt 1$. It increases the core degree from $\Delta$ to at most $C_2\Delta^{C_2}$. It uses the wiring identity of §24.1.</li>
+<li>The reset (§24.3) returns the core degree to three. It multiplies the core width by a constant $\kappa$ that depends on the degree reached.</li>
+<li>§24.4 chooses $t$ with $\kappa\rho^t\le\tfrac12$ and resolves the mutual dependence between $t$, $\kappa$ and the degree.</li>
+</ul>
+
+<h3 id="s24-1">24.1 A wiring identity <span class="pg">pp. 89–90</span></h3>
+
+<p>Six <em>parties</em> are placed in a triangular array (Figure 9, p. 90): the first row is $C,M,A$; the second row is $N',D$; the third row is $B$. The columns are $(C,N',B)$, $(M,D)$ and $(A)$. A pair of parties is <em>permitted</em> if it lies in one row or in one column. The permitted pairs are the four row pairs $CM$, $CA$, $MA$, $N'D$ and the four column pairs $CN'$, $CB$, $N'B$, $MD$; write $E_{\mathrm{perm}}$ for this set of eight pairs. An $s$-bit <em>wire</em> between two parties is the equality tensor on two $s$-bit indices. The two <em>demanded</em> wires are $AB$ and $CD$; neither pair is permitted.</p>
+
+<p><b>What Figure 9 shows.</b> Three panels show the same six parties. In the first, "Demanded wires", dashed lines join $C$ to $D$ and $A$ to $B$. In the second, "Row partition", three boxes enclose the rows $\{C,M,A\}$, $\{N',D\}$, $\{B\}$. In the third, "Column partition", three boxes enclose the columns $\{C,N',B\}$, $\{M,D\}$, $\{A\}$. The caption states the use: an equality wire between $C$ and $M$, for example, disappears when the rows are contracted and survives when the columns are contracted; every permitted wire disappears in one of the two layouts.</p>
+<!-- FIGURE IDEA: the triangular array C M A / N' D / B with the 8 permitted pairs drawn solid (4 row pairs in one colour, 4 column pairs in another) and the 2 demanded pairs AB, CD dashed. -->
+
+<p>The goal of the subsection is an identity that writes the product of the two demanded wires as a sum of networks that use permitted pairs only, with total permitted width strictly less than <em>twice</em> the demanded width. The comparison value is the direct route: $AB$ through $C$ and $CD$ through $M$ uses four permitted wires for two demanded wires, a ratio of exactly two.</p>
+
+<div class="fill"><b>Background — prices and wire distances, as used in this subsection.</b> <span class="tag filled">filled here</span>
+The definitions are from <a class="secref" href="#s3">§3</a> (pp. 10–11). Fix a finite set of <em>sites</em> (here the six parties). A tensor has one vector space at each site. A tensor $T$ is a <em>restriction</em> of $U$ if one linear map at each site takes $U$ to $T$. A <em>spectral point</em> $\varphi$ assigns to each tensor a number in $\mathbb R_{\ge 0}$, is monotone under restriction, sends $0$ to $0$ and the unit tensor to $1$, and satisfies $\varphi(T\oplus U)=\varphi(T)+\varphi(U)$ and $\varphi(T\otimes U)=\varphi(T)\varphi(U)$. In Parts II–IV the <em>(ordinary) price</em> is $\log_2\varphi$. The <em>wire distance</em> $d(x,y)$ between two sites is the price of a one-bit wire between them, so an $s$-bit wire has $\varphi=2^{s\,d(x,y)}$. The function $d$ satisfies the triangle inequality. The <em>scale</em> is the price of one bit shared by all sites; for $\log_2\varphi$ it equals $1$, because that tensor is a direct sum of two unit tensors and $\varphi$ is additive. A <em>scale-one ordinary price over $k$</em> is such a function $\log_2\varphi$ on tensors over $k$: the price axioms (5.1) of p. 15 at scale one, with trivial valuation, state that the exponential of the price is monotone, multiplicative and additive. The paper states (p. 16 after the range bound (5.2), and p. 60) that the prices of a fixed scale on a fixed finite list of sites form a compact set in the topology of pointwise convergence, because the axioms are closed conditions.</div>
+
+<div class="imp"><b>Imported — [42, Theorem 4.3] (with [42, Sections 2 and 2.3, Proposition 3.3]).</b> <span class="tag imported">imported</span>
+As the paper states it in §3.2 (p. 11): every spectral space embeds, with all its prices, in a complete $\operatorname{CAT}(0)$ spectral space. In the extension every pair $a,b$ has a unique midpoint $\mu$, and every point $o$ satisfies
+$$d(o,\mu)^2\le\tfrac12d(o,a)^2+\tfrac12d(o,b)^2-\tfrac14d(a,b)^2.$$
+Sites at wire distance zero are identified. (The paper writes $m$ for the midpoint; this tutorial writes $\mu$ because $m$ is a distance below.)</div>
+
+<div class="imp"><b>Imported — [42, Lemma 2.2] (strict spectral comparison).</b> <span class="tag imported">imported</span>
+As the paper states it in §3.2 (p. 11): if two nonzero tensors on the same sites satisfy $\varphi(T)\lt\varphi(U)$ for every spectral point $\varphi$, there is a fixed integer $C$ such that, for every $j\ge 1$, $T^{\otimes j}$ is a restriction of the direct sum of $C$ copies of $U^{\otimes j}$.</div>
+
+<p><b>The strict inequality.</b> For a scale-one ordinary price over $k$ on the six parties, let $m$ be the greatest wire distance on a permitted pair. The paper asserts a constant $\lambda_*\lt 2$, uniform over all such prices, with</p>
+$$d(A,B)+d(C,D)\le 2\lambda_*\,m.$$
+
+<div class="fill"><b>Gap fill — the derivation of $\lambda_*\lt 2$.</b> <span class="tag filled">filled here</span>
+<ol>
+<li><b>$m\ge 1/5$.</b> The graph on the six parties with the eight permitted pairs as edges is connected; a spanning tree has five edges, for example $CM,CA,CN',CB,MD$. Put a one-bit wire on each tree edge and, at each party, the local map that keeps only the assignments in which all incident bits agree. The result is one bit shared by all six parties, whose price is the scale, $1$. It is a restriction of the tensor product of the five wires, whose price is the sum of five distances, each at most $m$. Monotonicity gives $1\le 5m$.</li>
+<li><b>Both demanded distances are at most $2m$.</b> $d(A,B)\le d(A,C)+d(C,B)\le 2m$, since $AC$ is a row pair and $CB$ a column pair. $d(C,D)\le d(C,M)+d(M,D)\le 2m$, and also $d(C,D)\le d(C,N')+d(N',D)\le 2m$.</li>
+<li><b>If $d(C,D)=2m$, then $M$ and $N'$ coincide in the extension.</b> Equality forces $d(C,M)=d(M,D)=m$ and $d(C,N')=d(N',D)=m$. Let $\mu$ be the midpoint of $C,D$ in the $\operatorname{CAT}(0)$ extension. The imported inequality with $o=M$ gives $d(M,\mu)^2\le\tfrac12m^2+\tfrac12m^2-\tfrac14(2m)^2=0$. So $M=\mu$, and likewise $N'=\mu$.</li>
+<li><b>If also $d(A,B)=2m$, then $C=M$.</b> Equality forces $d(A,C)=d(C,B)=m$, so by the argument of step 3, $C$ is the midpoint of $A,B$. The pair $AM$ is permitted, and $N'B$ is permitted with $N'=M$; hence $d(A,M)\le m$ and $d(M,B)\le m$, and $M$ is also the midpoint of $A,B$. Midpoints are unique, so $d(C,M)=0$.</li>
+<li><b>Contradiction.</b> Step 3 gave $d(C,M)=m\ge 1/5\gt 0$. So no scale-one price has $d(A,B)=d(C,D)=2m$, and with step 2, $d(A,B)+d(C,D)\lt 4m$ for every such price.</li>
+<li><b>Uniformity.</b> The ratio $f=(d(A,B)+d(C,D))/(2m)$ is a continuous function on the compact set of scale-one prices, because each distance is the value of the price at one fixed tensor and $m\ge 1/5$. A continuous function on a compact set attains its maximum. The maximum is the value of $f$ at some price, hence less than $2$. Call it $\lambda_*$.</li>
+</ol>
+The constant $\lambda_*$ is not effective: step 6 gives no numerical bound. Steps 3 and 4 apply the imported embedding theorem to every element of the compact set; each element is itself a scale-one price, and the paper states in §3.2 that identifying sites at wire distance zero turns a price on finitely many sites into a spectral space.</div>
+
+<p><b>The finite identity.</b> Choose $\lambda_*\lt\lambda_0\lt 2$. The paper claims: for fixed $\eta'\gt 0$ and arbitrarily large $b$, the two demands of width $b$ (the tensor product of a $b$-bit wire $AB$ and a $b$-bit wire $CD$) are an ordinary sum of at most $2^{\eta'b}$ networks, each of which has wires only on permitted pairs, of total width at most $2\lambda_0b$, and a local tensor at each party.</p>
+
+<div class="fill"><b>Gap fill — from the price inequality to an exact identity.</b> <span class="tag filled">filled here</span>
+<ol>
+<li><b>Supply and demand.</b> Choose $h_0$ so large that $w_s:=\lfloor 2\lambda_0h_0\rfloor\gt 2\lambda_*h_0$. The <em>demand</em> $T$ is the product of the two demanded wires of width $h_0$. The <em>supply</em> $U$ is the direct sum, over the eight permitted pairs, of a single wire of width $w_s$ on that pair.</li>
+<li><b>Strict comparison at every spectral point.</b> $\varphi(T)=2^{h_0(d(A,B)+d(C,D))}\le 2^{2\lambda_*h_0m}$. By additivity, $\varphi(U)=\sum_{e\in E_{\mathrm{perm}}}2^{w_s\,d(e)}\ge 2^{w_sm}$. Since $w_s\gt 2\lambda_*h_0$ and $m\gt 0$, $\varphi(T)\lt\varphi(U)$.</li>
+<li><b>Restriction.</b> By [42, Lemma 2.2] there is $C_{\mathrm{cmp}}$ such that for every $r\ge 1$, $T^{\otimes r}$ is a restriction of $C_{\mathrm{cmp}}$ direct copies of $U^{\otimes r}$. Now $T^{\otimes r}$ is the pair of demands of width $b=h_0r$. Distributing the tensor power over the direct sum, $U^{\otimes r}$ is the direct sum over sequences $(e_1,\dots,e_r)\in E_{\mathrm{perm}}^r$ of the products of $r$ wires of width $w_s$; each such product is a set of permitted wires of total width $r\,w_s\le 2\lambda_0b$.</li>
+<li><b>From a restriction of a direct sum to a sum of networks.</b> A linear map from a direct sum of spaces is a row of maps, one per block. Applying the restriction maps to the direct sum therefore gives the <em>ordinary sum</em>, over the blocks, of the restricted blocks. Each term is a network: the permitted wires of that block, with the block's restriction map at each party as the local tensor (its ports are the party's ends of the permitted wires and its ends of the demanded legs).</li>
+<li><b>Number of terms.</b> There are $C_{\mathrm{cmp}}\cdot 8^r$ terms; an index takes $r\log_2|E_{\mathrm{perm}}|+O_{h_0}(1)=3r+O_{h_0}(1)$ bits. This is at most $\eta'b=\eta'h_0r$ when $h_0\gt 3/\eta'$ and $r$ is large. Hence the order of choice: $h_0$, then $r$.</li>
+</ol>
+The identity is an equality of tensors over $k$; the same tables give the same identity over every extension $K/k$.</div>
+
+<p>The finite identity has $2^{\eta'b}$ terms, a number that grows with the width. A subround applies the identity to wires that carry many copies of a bit, and it needs a number of terms that does not grow. Lemma 24.2 provides this.</p>
+
+<div class="lem" id="lem-24-2"><b>Lemma 24.2 (A fixed choice of widths).</b> <span class="pg">p. 90</span> <span class="tag paper">paper</span>
+There are constants $b\in\mathbb N$ and $\lambda\lt 2$ such that for every $z\ge 1$ the two width-$bz$ demands are the sum of a bounded number of networks on the same six parties. Each uses at most $2\lambda b$ bundles of $z$ bits on permitted edges. Its local tensors are specified by $z$, the party and the index of the summand. The index set and choices of widths (in units of $z$) can be fixed independently of $z$.</div>
+
+<div class="proof">
+<p><b>Step 1: the $z$th power.</b> Raise the finite identity (width $b$, at most $2^{\eta'b}$ terms) to its $z$th tensor power. The two demands now have width $bz$. A term is indexed by a sequence of $z$ <em>selectors</em>, each of at most $\lceil\eta'b\rceil$ bits. The number of terms, up to $2^{\eta'bz}$, grows with $z$.</p>
+<p><b>Step 2: group the sequences by rounded widths.</b> For a sequence of selectors and a permitted edge, add the widths that the $z$ chosen terms put on that edge, and round the total up to a multiple of $z$. Group the sequences by the vector of the eight rounded totals, measured in units of $z$. Each entry of the vector is an integer between $0$ and the largest width of a single term on an edge, so the vector belongs to a fixed finite set that does not depend on $z$. Empty groups are allowed. Rounding costs at most one unit per permitted edge.</p>
+<p><b>Step 3: one network per group.</b> Within a group, the selector sequence becomes an internal variable. Choose a spanning tree of the permitted graph (five edges) and send the full sequence on each tree edge; this uses at most $\lceil\eta'b\rceil$ additional units of $z$ bits per tree edge. The local table at a party checks that the sequences on all its incident tree edges are identical and valid, that the sequence belongs to the group, and that the padding positions carry zeros. It then uses the sequence to cut the bits of each incident permitted edge into the $z$ slices prescribed by the selectors, and evaluates the product of the $z$ local tensors of the finite identity.</p>
+<p><b>Step 4: exactness.</b> Because the tree is connected, a nonzero contribution requires the same sequence at all six parties, and for a given sequence there is exactly one assignment of the tree wires. Summing over the tree wires therefore gives the sum of the terms of that group, each once. Summing over the groups gives the $z$th power of the finite identity.</p>
+<p><b>Step 5: the width.</b> In units of $z$ the total width of a network is at most $2\lambda_0b+|E_{\mathrm{perm}}|+5\lceil\eta'b\rceil$. Choose $\eta'$ sufficiently small and then $b$ sufficiently large to bound this by $2\lambda b$ with $\lambda\lt 2$.</p>
+<span class="qed">∎</span></div>
+
+<div class="fill"><b>Gap fill — the arithmetic of Step 5 and the order of the constants.</b> <span class="tag filled">filled here</span>
+With $|E_{\mathrm{perm}}|=8$ and $\lceil\eta'b\rceil\le\eta'b+1$, the total is at most $(2\lambda_0+5\eta')b+13$. Fix $\lambda$ with $\lambda_0\lt\lambda\lt 2$ and take $\eta'=(\lambda-\lambda_0)/5$. Then the total is at most $(\lambda_0+\lambda)b+13\le 2\lambda b$ as soon as $b\ge 13/(\lambda-\lambda_0)$. The finite identity exists for arbitrarily large $b=h_0r$, so such a $b$ is available. The order of choice is
+$$\lambda_*\ \to\ \lambda_0\ \to\ \lambda\ \to\ \eta'\ \to\ h_0\ \to\ r\ \to\ b=h_0r.$$
+All of these are absolute constants once $k$ is fixed, and none is effective, because $\lambda_*$ and the constant $C_{\mathrm{cmp}}$ of the imported comparison are not. The number of networks is at most the number of vectors, $(\lfloor 2\lambda_0b\rfloor+1)^8$.</div>
+
+<h3 id="s24-2">24.2 Subrounds <span class="pg">pp. 91–92</span></h3>
+
+<p>In a subround, the occurrences at each position are grouped into <em>packs</em> (a pack is the tensor product of its members, kept as one station). Two outgoing units of width from two different packs of the same colony play the roles of the demanded wires $AB$ and $CD$ of §24.1. The subround must produce many such pairs and must bound the number of packs that one contraction merges.</p>
+
+<p><b>Balanced partitions</b> (p. 91). Within each group of $r$ block indices, use the dyadic intervals of the indices in their common order. Give every host edge $e$ a <em>propagation distance</em></p>
+$$s_e=64\lceil\log_2(2x_e)\rceil,\qquad x_e=\begin{cases}\Delta&\text{on core edges},\\ \nabla&\text{on tethers}.\end{cases}$$
+<p>Let $2\le A\le r$ be dyadic. At each position, <em>mark</em> every interval whose load (the sum of the loads of its occurrences at that position) is greater than $AB$. A marked interval must be split. Marks propagate: a mark passes to the parent interval at the same position, and, for each incident host edge $e$, to the ancestor $s_e$ levels higher at the other end of $e$, whenever that ancestor exists. The maximal unmarked intervals are the leaves of the resulting binary partitions; the paper calls them <em>colonies</em>.</p>
+
+<div class="fill"><b>Gap fill — three properties of colonies.</b> <span class="tag filled">filled here</span>
+<ul>
+<li><b>Load at most $AB$.</b> A colony is unmarked, so its load is at most $AB$.</li>
+<li><b>Length at least $A$.</b> One occurrence has load at most $B$, so an interval of load greater than $AB$ has more than $A$ indices and, being dyadic, at least $2A$. A propagated mark sits on a longer interval than its source. So every marked interval has length at least $2A$, and its children, among them every colony other than a full group, have length at least $A$. A full group has length $r\ge A$.</li>
+<li><b>Bounded length ratio across an edge.</b> Let colonies $I$ at one end of $e$ and $I'$ at the other end intersect, with $|I|\lt|I'|$; then $I\subset I'$ as index sets. The parent of $I$ is marked and has length $2|I|$. Its ancestor $s_e$ levels higher, of length $2^{s_e+1}|I|$, is marked at the other end if it exists. If $|I'|\ge 2^{s_e+1}|I|$, then $I'$ contains that marked interval, so $I'$ equals it or is one of its ancestors and is marked, a contradiction. If the ancestor does not exist, the group itself is shorter than $2^{s_e+1}|I|$. In both cases $|I'|\le 2^{s_e}|I|$.</li>
+</ul></div>
+
+<p>The paper states that a common permutation of the indices inside each group gives a total colony count</p>
+$$Q\le C_1\Bigl(\frac{HN_b}{r}+\frac{\mathcal M}{AB}\Bigr)\tag{24.1}$$
+<p>with $C_1$ absolute. The first term is one colony per position and group, which cannot be avoided; the second is the number of colonies needed to hold the total load $\mathcal M$ at capacity $AB$.</p>
+
+<div class="fill"><b>Gap fill — proof of (24.1), following p. 91.</b> <span class="tag filled">filled here</span>
+A binary partition has one more leaf than marked internal nodes. So $Q$ equals the number $HN_b/r$ of (position, group) pairs plus the number of marks. It suffices to find a permutation with $O(\mathcal M/(AB))$ marks.
+<ol>
+<li><b>The random permutation.</b> Identify the $r$ indices of a group with the field $\mathbb F_r$, written in a binary basis, and multiply all indices by one uniformly random nonzero element $g$. Two distinct indices $i,i'$ fall in the same interval of depth $j$ exactly when the first $j$ coordinates of $g(i-i')$ vanish. The element $g(i-i')$ is uniform among the $r-1$ nonzero elements, and $r2^{-j}-1$ of them have that property. The probability is $(r2^{-j}-1)/(r-1)\le 2^{-j}$.</li>
+<li><b>Initial marks.</b> At one position and group, let $x_i\le 1/A$ be the loads divided by $AB$ and $x=\sum_ix_i$. An initially marked interval $I$ has $\xi_I=\sum_{i\in I}x_i\gt 1$, hence
+$$\sum_{i\ne i'\in I}x_ix_{i'}=\xi_I^2-\sum_{i\in I}x_i^2\ge\xi_I^2-\frac{\xi_I}{A}\ge\xi_I\bigl(\xi_I-\tfrac12\bigr)\gt\tfrac12.$$
+The number of initial marks at depth $j$ is therefore at most twice the sum of the cross products of pairs that share a depth-$j$ interval. By step 1 its expectation is at most $2\sum_{i\ne i'}x_ix_{i'}2^{-j}\le 2x^22^{-j}$.</li>
+<li><b>How far a mark travels.</b> By the choice of $s_e$, $2^{-s_e/16}\le(2x_e)^{-4}$. A vertex has at most $\Delta$ core edges and at most $\nabla$ tethers, so $\sum_{e\ni v}2^{-s_e/16}\le\Delta(2\Delta)^{-4}+\nabla(2\nabla)^{-4}\le\tfrac12$. Give a path $\pi$ the weight $2^{-\sum_{e\in\pi}s_e/16}$. The weights of all paths of a given number of edges from one position sum to at most the corresponding power of $\tfrac12$, so the weights of all paths from one position sum to at most $2$. A path of total propagation distance at most $s$ has weight at least $2^{-s/16}$. Hence at most $2\cdot 2^{s/16}$ positions are reachable with total propagation distance at most $s$.</li>
+<li><b>Marks at upward displacement $s$.</b> A propagated mark is determined by its source mark, the position it reaches and its total upward displacement $s$ (steps to a parent count one level, steps across $e$ count $s_e$ levels). At one reachable position, the marks that come from depth-$j$ sources at displacement $s$ are intervals of depth $j-s$ in one group; there are at most $2^{j-s}$ such intervals, and at most as many as there are sources. The expected number, summed over $j\ge s$, is at most
+$$\sum_{j\ge s}\min\bigl\{2^{j-s},\ 2x^22^{-j}\bigr\}=O\bigl(x\,2^{-s/2}\bigr).$$
+(The two terms are equal where $2^j=\sqrt2\,x\,2^{s/2}$; on each side of this value the sum is geometric.)</li>
+<li><b>Summation.</b> For one source position and group, the expected number of marks at displacement $s$ is at most $2\cdot 2^{s/16}\cdot O(x2^{-s/2})$, and $\sum_{s\ge 0}2^{s/16-s/2}$ converges. So one source contributes $O(x)$ marks in expectation. The sum of $x$ over all positions and groups is $\mathcal M/(AB)$.</li>
+<li><b>Derandomization.</b> Some multiplier has a number of marks at most the expectation. The paper chooses a multiplier that minimizes the actual count; <a class="secref" href="#s26-2">§26.2</a> computes it by trying all $r-1$ multipliers.</li>
+</ol>
+The same multiplier is used at all positions, because a block index is shared by all positions of the block.</div>
+
+<p><b>A wire-saving subround</b> (pp. 91–92). The construction has six steps.</p>
+
+<p><b>Step 1: colours and packs.</b> Orient all core edges. Colour each block <em>thick</em> or <em>thin</em> by one affine functional over $\mathbb F_2$ on its within-group index; every position of a block has the colour of the block. At each core colony, all thick tensors form one pack. The thin tensors are packed in order: a thin pack is closed when its load reaches $B$. There are $O(A)$ thin packs per colony, each of load at most $2B$. At a frozen colony the lists are concatenated. Loops created by later mergers are contracted into the local table. Put</p>
+$$P=2^{64\lceil\log_2(2\Delta)\rceil},\qquad K_1=\Delta P.$$
+
+<p><b>Step 2: the thick and thin outgoing widths are nearly balanced.</b> The paper states that pairwise independence of the colours bounds the expected absolute imbalance between thick and thin outgoing widths in a colony by $(B\sum_ia_i)^{1/2}$, where $a_i$ is the outgoing core width of its $i$th occurrence, and that summing gives a colouring of total imbalance at most $\sqrt{BQX}$.</p>
+
+<div class="fill"><b>Gap fill — the imbalance bound.</b> <span class="tag filled">filled here</span>
+For a uniformly random affine functional, the colours of two distinct indices are independent uniform bits. Write $\varepsilon_i=\pm1$ for thick or thin. In one colony the imbalance is $\sum_i\varepsilon_ia_i$. Its mean is zero and its variance is $\sum_ia_i^2$, since the cross terms vanish by pairwise independence. Each $a_i$ is at most the arity of the occurrence, hence at most $B$, so the variance is at most $B\sum_ia_i$, and the expected absolute value is at most $(B\sum_ia_i)^{1/2}$ by the Cauchy–Schwarz inequality. Summing over the $Q$ colonies and applying Cauchy–Schwarz again,
+$$\sum_{\text{colonies}}\Bigl(B\sum_ia_i\Bigr)^{1/2}\le\Bigl(Q\cdot B\sum_{\text{all}}a_i\Bigr)^{1/2}=\sqrt{BQX},$$
+because each core wire is outgoing at exactly one end. Some functional achieves at most the expected total.</div>
+
+<p><b>Step 3: match whole thin packs to thick destinations.</b> In a source colony, group the thick outgoing units by their destination pack; these groups are the <em>bins</em>. A thick wire stays in a thick block, and each destination colony has one thick pack; by the length-ratio property a source colony meets at most $P$ colonies at each of at most $\Delta$ neighbours, so there are at most $K_1$ bins. Treat the outgoing units of each thin pack as one <em>item</em> and place the entire item into any bin with enough remaining capacity. The paper defines $I$ as the resulting one-sided matched width (the matched thin width, equal to the matched thick width) and states</p>
+$$I\ge\tfrac12X-\tfrac12\sqrt{BQX}-2BK_1Q,$$
+<p>and then, with $A$ a sufficiently large dyadic multiple of $1+K_1$, $\ I\ge X/4-O(Z+\sigma)$ with an absolute implicit constant.</p>
+
+<div class="fill"><b>Gap fill — the two bounds on $I$.</b> <span class="tag filled">filled here</span>
+<ul>
+<li><b>One colony.</b> Let $\tau_{\mathrm{k}}$ and $\tau_{\mathrm{n}}$ be the thick and thin outgoing widths of the colony. An item has width at most the load of its pack, less than $2B$. If every item is placed, the matched width is $\tau_{\mathrm{n}}$. If some item fails, every bin has remaining capacity less than $2B$ at that moment, so the unmatched thick width is less than $2BK_1$. In both cases the matched width is at least $\min(\tau_{\mathrm{k}},\tau_{\mathrm{n}})-2BK_1=\tfrac12(\tau_{\mathrm{k}}+\tau_{\mathrm{n}})-\tfrac12|\tau_{\mathrm{k}}-\tau_{\mathrm{n}}|-2BK_1$.</li>
+<li><b>All colonies.</b> The widths $\tau_{\mathrm{k}}+\tau_{\mathrm{n}}$ sum to $X$, the imbalances to at most $\sqrt{BQX}$ (Step 2), and there are $Q$ colonies. This is the first display.</li>
+<li><b>Elimination of $Q$.</b> By (24.1) and the slack condition $c_*HN_bB/r\le\sigma$ with $c_*\ge A$: $\ BQ\le C_1(HN_bB/r+\mathcal M/A)\le C_1(\sigma+2X+2Z)/A\le 2C_1Y_0/A$, where $Y_0=X+Z+\sigma$. Then $\tfrac12\sqrt{BQX}\le\tfrac12\sqrt{2C_1/A}\,\sqrt{XY_0}\le\tfrac12\sqrt{2C_1/A}\,\bigl(X+\tfrac12(Z+\sigma)\bigr)$ and $2BK_1Q\le 4C_1K_1Y_0/A$. With $A\ge 32C_1(1+K_1)$ the coefficient of $X$ in each of the two error terms is at most $\tfrac18$, and the remaining parts are at most $\tfrac18(Z+\sigma)$ each. Hence $I\ge\tfrac12X-\tfrac18X-\tfrac18X-\tfrac14(Z+\sigma)$.</li>
+</ul>
+The condition $c_*\ge A$ is the lower bound on $r$ and on the slack that Lemma 24.1 states for this step.</div>
+
+<p><b>Step 4: apply the wiring identity to each matched pair.</b> Within each bin, pair the matched thin units with distinct thick units. Use Lemma 24.2 with $b_*=b$ and $z=u/b_*$, an integer by the divisibility hypothesis on the unit, so that one unit of width $u$ is one demand of width $b_*z$. In each pair the thick wire plays $AB$, with $A$ at its source, and the thin wire plays $CD$, with $C$ at its source. The parties are packs: $A$ is the thick pack and $C$ a thin pack of the same source colony; $B$ is the thick pack of the destination colony of the thick wire; $D$ is a thin pack (a wire stays in one block and the colour belongs to the block). Fresh auxiliary parties $M,N'$ are introduced for each pair. Across all pairs the two demanded widths total $2I$, and in each product summand the replacement wires have total width at most $2\lambda I$.</p>
+
+<p><b>Step 5: contract the cheaper layout.</b> In one summand, add over all pairs the widths that survive when the rows $\{C,M,A\}$, $\{N',D\}$, $\{B\}$ are each contracted to one station; do the same for the columns $\{C,N',B\}$, $\{M,D\}$, $\{A\}$. The paper performs the cheaper of the two contractions, the same one in every pair, and obtains</p>
+$$X'\le X-(2-\lambda)I\le\rho X+C(Z+\sigma),\qquad\rho=1-(2-\lambda)/4\lt 1.$$
+
+<div class="fill"><b>Gap fill — why the cheaper layout keeps at most half.</b> <span class="tag filled">filled here</span>
+A wire inside a contracted part becomes internal to one station and no longer counts toward $X$. Under the row contraction the surviving replacement wires are those on the column pairs $CN',CB,N'B,MD$. Under the column contraction they are those on the row pairs $CM,CA,MA,N'D$. Each of the eight permitted pairs belongs to exactly one of the two lists. So the two surviving totals add up to the whole replacement width, at most $2\lambda I$, and the smaller one is at most $\lambda I$. The matched demanded wires, of total width $2I$, are removed, and the unmatched core wires, of total width $X-2I$, are unchanged. Hence $X'\le(X-2I)+\lambda I$. Further identifications of parties (one pack plays several roles in several pairs) can only make more wires internal. Substituting $I\ge X/4-O(Z+\sigma)$ gives $X'\le X-(2-\lambda)X/4+O(Z+\sigma)$. Since $0\lt 2-\lambda\le 2$, $\ \tfrac12\le\rho\lt 1$.</div>
+
+<div class="aha"><b>AHA.</b> The saving of a subround comes from two facts. A geometric one: no price geometry can make both demanded pairs as far apart as two permitted steps, so the replacement costs strictly less than twice the demand ($\lambda\lt 2$). A combinatorial one: each permitted pair lies in a row or in a column but not both, so one of the two contractions removes at least half of the replacement. Together: demand $2I$ is replaced by at most $\lambda I\lt 2I$.</div>
+
+<p><b>Step 6: loads, unit, degree, positions.</b> The paper explains that matching each thin item as a whole controls the growth. The merged packs form stars: in its source role a thin pack joins its own thick pack (row layout) or its one chosen thick destination (column layout); in its destination role it joins only an auxiliary party. One thick centre absorbs $O((1+K_1)A)$ thin packs. Each auxiliary party is absorbed into a demand endpoint. The paper states the consequences:</p>
+<ul>
+<li>a dyadic load multiplier $g$, polynomial in $\Delta$, bounds the new core loads and the scaled loads of the frozen lists;</li>
+<li>the new unit is $u/b_*$, because the replacement wires are bundles of $z=u/b_*$ bits;</li>
+<li>pack slots are reserved at every potential dyadic interval; possible core contacts run between packs of one colony or of intersecting neighbouring intervals with length ratio at most $P$; a fixed power of this graph gives a common core host of degree at most $C_2\Delta^{C_2}$; the full degree is at most $C_2\nabla^{C_2}$, with $C_2$ absolute;</li>
+<li>there are fewer than $2r$ potential intervals per position, which gives the bound $crH$ on the number of new positions; tethers stay attached to their frozen tensors.</li>
+</ul>
+
+<div class="open"><b>Not verified — the constants of Step 6.</b> <span class="tag unverified">not verified</span>
+The paper asserts on p. 92 the load multiplier "polynomial in $\Delta$", the degree bounds $C_2\Delta^{C_2}$ and $C_2\nabla^{C_2}$ with an absolute $C_2$, and the position bound $crH$. The tutorial reconstructed the reasons given (stars of bounded size; contacts only between intersecting intervals of length ratio at most $P$; a bounded-diameter neighbourhood closed by taking a fixed graph power) but did not verify the exponents, in particular that one constant $C_2$ serves for both the core degree and the full degree and that the charge of each auxiliary party to a demand endpoint is "a constant multiple of the matched width". §24.4 uses the recurrence $\Delta'\le C_2\Delta^{C_2}$ only through the fact that the logarithm of the degree is multiplied by a constant per subround.</div>
+
+<h3 id="s24-3">24.3 Resetting the core degree <span class="pg">pp. 93–95</span></h3>
+
+<p>After $t$ subrounds the core degree $\Delta$ is large. The reset replaces the core by a host of degree three. Throughout this subsection $H,N_b,\Delta,\nabla$ are the parameters immediately before the reset, and $P=2^{64\lceil\log_2(2\Delta)\rceil}$, $K_1=\Delta P$.</p>
+
+<div class="def" id="def-24-rotor"><b>Definition (rotor).</b> <span class="pg">p. 93</span> <span class="tag paper">paper</span>
+Fix a trivalent network of size $c_0Yw_0$ that realizes all permutations of $Y$ rows of width $w_0$ by fixing its tags, where $4K_1\le Y$ and $c_0\ge 1$. This network is the <em>rotor</em>.</div>
+
+<div class="fill"><b>Background — why a permutation network is needed, and the Beneš network.</b> <span class="tag filled">filled here</span>
+In a single tensor network, connecting outputs to inputs by a known permutation costs nothing: one draws the wires. Here the wiring differs from block to block, while the <em>host</em>, the graph of possible adjacencies, is common to all blocks and must have degree three. The reset therefore needs a fixed graph of bounded degree along which every permutation of $Y$ rows can be routed, with the tables at its vertices chosen per block.
+<p>The tagged permutation tensor of <a class="secref" href="#s16">§16</a>, $\operatorname{Tag}(y,w_0)$ with $Y=2^y$, has inputs $(j_i,x_i)$ and outputs $x'_j$ (the paper writes $y_j$), where $j_i$ is the $y$-bit destination (<em>tag</em>) of the $w_0$-bit record $x_i$; it is the indicator that the $j_i$ are distinct and $x'_{j_i}=x_i$ for all $i$. If the tags are pinned to a permutation $\pi$, the tensor becomes the product of the equality wires $x'_{\pi(i)}=x_i$. A trivalent network for $\operatorname{Tag}(y,w_0)$ with pinned tags is thus a fixed graph that routes the rows by $\pi$; its vertex tables depend on $\pi$, its graph does not.</p>
+<p>The classical example is the Beneš network: for $Y=2^y$ rows it has $2y-1$ columns of $Y/2$ two-by-two switches, and every permutation is obtained by some setting of the switches. Each row bit passes $2y-1$ switches, so the size is of order $Y\,y\,w_0$, that is $c_0=\Theta(y)$. Theorem 16.1(2) gives, under $\omega_k\lt 9/4$ and for wide rows $w_0\ge y^{a_\zeta}$, size $O_\zeta(Yw_0y^{\zeta})$, that is $c_0=O_\zeta(y^\zeta)$ for every $\zeta\gt 0$. §24.4 shows where the smaller $c_0$ is used.</p></div>
+
+<p><b>What Figure 10 shows</b> (p. 93). Two boxes labelled "good base" face each other. Each contains a column of <em>input</em> terminals on its outer side, a box labelled "rotor" in the middle, and a column of <em>output</em> terminals on its inner side. Old tensors and their tethers stay at the input terminals. A thick path runs from one input terminal through the rotor to one output terminal, crosses a "reserved link" to an output terminal of the other good base, and continues through that rotor. A dashed path leaves another input terminal and reaches an input terminal in a box labelled "leaf of a bad base", with the annotation "via contact trees". The figure thus shows the two kinds of route of the reset.</p>
+<!-- FIGURE IDEA: two good bases (inputs - rotor - outputs) joined by a reserved link, and a dashed contact-tree route from an input terminal to a leaf of a bad base. -->
+
+<p><b>Bases and capacities</b> (pp. 93–94). Choose a dyadic $F\ge Y^2w_0$, and require $c_*\ge F$ in this step. Let $\mu_v$ be the mean load at position $v$ over the $N_b$ blocks, and define the <em>smoothed mean</em></p>
+$$\nu_v=\max\Bigl\{\frac{FB}{r},\ \max_{\pi:\,y\to v}\mu_y\,2^{-\sum_{e\in\pi}s_e/2}\Bigr\},$$
+<p>where $\pi$ runs over host paths from a position $y$ to $v$, including the path of length zero. (In this formula $y$ is a position; in the definition of the rotor and in §24.4 the same letter is the exponent in $Y=2^y$.) At position $v$ the block indices are partitioned into intervals, called <em>bases</em>, of the largest dyadic length $s_v\le FB/\nu_v$; the paper notes $F\le s_v\le r$. For each pair of intersecting bases at neighbouring core positions $v,w$ a capacity</p>
+$$\overline y_{vw}\min(s_v,s_w)+\frac{FB}{K_1}$$
+<p>is reserved, where $\overline y_{vw}$ is the mean core width of that contact per block. Base lengths and capacities are fixed from the means, before the blocks are permuted, so that the output terminals for a given pair of base positions occupy the same host slots in every group.</p>
+
+<div class="fill"><b>Gap fill — the five properties of bases stated on pp. 93–94.</b> <span class="tag filled">filled here</span>
+<ol>
+<li><b>$\sum_v\nu_v\le HFB/r+C\sum_v\mu_v$.</b> Bound the inner maximum by the sum over all paths. Exchanging the order of summation gives $\sum_y\mu_y$ times the total weight $\sum_\pi 2^{-\sum s_e/2}$ of the paths that start at $y$. This is at most the total weight with exponent $s_e/16$, which is at most $2$ by step 3 of the proof of (24.1).</li>
+<li><b>$F\le s_v\le r$.</b> $\nu_v\ge FB/r$ gives $FB/\nu_v\le r$. Every $\mu_y\le B$, and $r\ge c_*\ge F$, so $\nu_v\le B$ and $FB/\nu_v\ge F$.</li>
+<li><b>Neighbouring base depths differ by at most $s_e/2$.</b> Extending a path by the edge $e=vw$ shows $\nu_w\ge\nu_v2^{-s_e/2}$ and conversely. So $FB/\nu_v$ and $FB/\nu_w$ differ by a factor at most $2^{s_e/2}$, and since $s_e/2$ is an integer, so do their dyadic roundings.</li>
+<li><b>The number of bases is $O((\mathcal M+\sigma)/(FB))$.</b> Position $v$ has $N_b/s_v\le 2N_b\nu_v/(FB)$ bases. By item 1 the total is at most $2HN_b/r+2C\,N_b\sum_v\mu_v/(FB)$. Here $N_b\sum_v\mu_v=\mathcal M$, and the slack condition $c_*HN_bB/r\le\sigma$ with $c_*\ge F$ gives $HN_b/r\le\sigma/(FB)$.</li>
+<li><b>The reserved capacity at a base is at most $2FB$.</b> A base at $v$ of length $s_v$ meets $\max(1,s_v/s_w)$ bases at $w$, and the first terms of these reservations sum to at most $\overline y_{vw}s_v$. Summing over the core neighbours $w$ gives at most $s_v\mu_v\le s_v\nu_v\le FB$. There are at most $\Delta\cdot 2^{s_e/2}\le K_1$ reservations at a base, and each second term is $FB/K_1$.</li>
+</ol></div>
+
+<p><b>Mixing</b> (p. 94). All block indices are permuted by one invertible binary matrix (the indices are vectors over $\mathbb F_2$). Within the bases, every dyadic subinterval of load above $2FB$, possibly a base itself, is marked, and marks propagate with the same edge distances as in §24.2. The leaves have load at most $2FB$ and length at least $F$, and they satisfy the length-ratio bounds. A base is <em>bad</em> if it splits or if one of its core reservations overflows; otherwise it is <em>good</em>. The paper states: for any $\delta_*\gt 0$, choosing $F$ sufficiently large in terms of $\Delta,Y,\delta_*$ gives a permutation with</p>
+$$\sum_{\text{bad bases}}\mathrm{load}\le\delta_*(\mathcal M+\sigma).\tag{24.2}$$
+
+<div class="fill"><b>Gap fill — the proof of (24.2), with the steps of p. 94 separated.</b> <span class="tag filled">filled here</span>
+The proof is a second-moment estimate for a uniformly random invertible matrix. An <em>interval at depth $j$ below the bases</em> at position $v$ is the set of blocks whose permuted index has a given prefix of length $\log_2n_v+j$, where $n_v=N_b/s_v$ is the number of bases at $v$.
+<ol>
+<li><b>Normalization.</b> Divide the loads at $v$ by $FB$: $x_i\le 1/F$. Their sum is $N_b\mu_v/(FB)\le N_b\nu_v/(FB)\le n_v$. Let $a_J$ be the normalized load of interval $J$ at depth $j$ and $\overline a$ the mean of the $a_J$; then $\overline a\le 2^{-j}$. An interval is <em>overloaded</em> if $a_J\gt 2$.</li>
+<li><b>Two estimators.</b> Put $V_j=\sum_J(a_J-\overline a)^2$ and $U_j=\sum_Ja_J^2-\sum_ix_i^2$. Each bounds the number of overloaded intervals and half their total normalized load. For $V_j$: if $a_J\gt 2$ then $a_J-\overline a\ge a_J/2\ge 1$, so $(a_J-\overline a)^2\ge\max(1,a_J/2)$. For $U_j$: the contribution of $J$ is $a_J^2-\sum_{i\in J}x_i^2=\sum_{i\ne i'\in J}x_ix_{i'}$, which is nonnegative; it is at least $a_J(a_J-1/F)$ because $x_i\le 1/F$, and for $a_J\gt 2$ this is at least $\max(1,a_J/2)$.</li>
+<li><b>Expectations.</b> For a uniformly random invertible matrix, two distinct indices have a common prefix of a given length with probability at most the reciprocal of the number of intervals of that length (their difference is mapped to a uniformly random nonzero vector). With $n_v2^j$ intervals,
+$$\mathbb E\sum_Ja_J^2\le\sum_ix_i^2+\frac{(\sum_ix_i)^2}{n_v2^j}.$$
+Since $\sum_J\overline a^{\,2}=(\sum_ix_i)^2/(n_v2^j)$, this gives $\mathbb EV_j\le\sum_ix_i^2\le\frac1F\sum_ix_i\le n_v/F$, and $\mathbb EU_j\le(\sum_ix_i)^2/(n_v2^j)\le n_v2^{-j}$.</li>
+<li><b>How many bases one mark can split.</b> A mark at depth $j$ below the bases at some position that propagates along a path $\pi$ rises by $\sum_{e\in\pi}s_e$ levels, while the base depth changes by at most $\tfrac12\sum s_e$ (property 3 of the previous box). It is still inside a base at the end of $\pi$ only if $\sum s_e\le 2j$. By dyadic nesting it then lies in one base there. By step 3 of the proof of (24.1), at most $2\cdot 2^{2j/16}=2\cdot 2^{j/8}$ positions are reachable. So one mark at depth $j$ splits at most $2\cdot 2^{j/8}$ bases.</li>
+<li><b>The charge for splits.</b> A split base of load at most $2FB$ costs at most $2FB$. A base of load above $2FB$ is itself an overloaded interval at depth $0$, and its load is at most $2FB$ times its contribution to the depth-zero estimator. At depth $j$ use $V_j$ if $2^j\le F$ and $U_j$ otherwise, with weight $4\cdot 2^{\lceil j/8\rceil}$: item 4 gives at most $2\cdot 2^{j/8}$ split bases per overloaded interval, each costing at most $2FB$. The total load of split bases is then at most a constant times $FB$ times the weighted sum, for every matrix. The expected weighted sum at $v$ is at most a constant times
+$$n_v\sum_{j\ge 0}2^{j/8}\min\{F^{-1},2^{-j}\}=O\bigl(n_vF^{-7/8}\bigr):$$
+for $2^j\le F$ the terms $2^{j/8}/F$ sum to $O(F^{1/8}/F)$, and for $2^j\gt F$ the terms $2^{-7j/8}$ sum to $O(F^{-7/8})$. Summing over $v$ with $\sum_vn_v=O((\mathcal M+\sigma)/(FB))$ gives an expected split load $O(F^{-7/8}(\mathcal M+\sigma))$.</li>
+<li><b>The charge for overflows.</b> For a core contact $vw$, apply the estimator $V$ to the contact widths divided by $FB$, on the intersections of the bases at $v$ and $w$. The mean of an intersection is $\overline y_{vw}\min(s_v,s_w)/(FB)$, and an overflow exceeds it by more than $1/K_1$, so it contributes at least $1/K_1^2$ to $V$. As in item 3, $\mathbb EV\le\sum_i\chi_i^2\le\frac1F\sum_i\chi_i=X_{vw}/(F^2B)$, where $\chi_i\le 1/F$ are the normalized widths of the contact in the blocks $i$ and $X_{vw}$ is the total width of the contact. Summing over core edges gives $X/(F^2B)$, so the expected number of overflows is at most $K_1^2X/(F^2B)$. Each overflow affects at most two bases, and each affected base not already charged costs at most $2FB$: expected load $O(K_1^2X/F)$.</li>
+<li><b>Conclusion.</b> Let $\Phi$ be the sum of the weighted interval estimators and $K_1^2$ times the contact variances. The bad load is at most $O(FB\,\Phi)$ for every matrix, and $FB\,\mathbb E\Phi=O(F^{-7/8}(\mathcal M+\sigma)+K_1^2X/F)$. Since $X\le\mathcal M/2$ and $K_1$ depends only on $\Delta$, the right side is at most $\delta_*(\mathcal M+\sigma)$ when $F$ is large in terms of $\Delta$ and $\delta_*$. A matrix with $\Phi$ at most its mean satisfies (24.2).</li>
+</ol>
+The estimate does not involve $\nabla$: tethers enter only through the propagation distances, and the path count of step 3 of (24.1) is uniform in $\nabla$. The matrix is found in <a class="secref" href="#s26-2">§26.2</a> by computing the collision scores.</div>
+
+<p><b>The routes</b> (pp. 94–95). After mixing, the blocks are grouped in consecutive runs of $r$. Every core leaf receives $Y$ <em>input terminals</em>. Its old tensors are assigned whole, one after another, to a currently least-loaded terminal; each terminal receives load at most $2FB/Y+B\le 3FB/Y$. Tethers stay at the terminal of their tensor, with their other ends in the concatenated frozen list.</p>
+<p><em>Between good bases.</em> In every good core base the rotor connects the $Y$ input terminals to $Y$ <em>output terminals</em>. A reservation of capacity $c$ receives $\lceil cY/(8FB)\rceil$ pairs of dedicated output terminals, one terminal of each pair in each of the two bases, joined by a direct link. This uses at most $Y/4+K_1\le Y$ output terminals per base. The units of a good–good contact are divided evenly among its pairs, so an output terminal has load at most $8FB/Y+u\le 9FB/Y$.</p>
+<p>At a good base let $m_{ij}$ be the number of units routed from input $i$ to output $j$. The paper bounds the row and column sums of the matrix $(\lceil m_{ij}/w_0\rceil)$ by</p>
+$$\frac{9FB}{Yuw_0}+Y\le\frac{10FB}{Yuw_0},$$
+<p>brings all row and column sums to the largest one by adding edges, and decomposes the resulting regular bipartite multigraph into perfect matchings by Hall's theorem. Each matching configures one <em>layer</em> of the rotor, with every bit edge of the rotor replaced by a bundle of width $u$. Unused inputs and the corresponding outputs are pinned to zero. The table at a rotor vertex is the tensor product of its layer tables. Balanced binary trees at each rotor row collect its $w_0$ ports, at $O(\log(2w_0))$ hops per unit. Including the direct links, the paper counts a cost $O((c_0+\log(2w_0))FB)$ per good base.</p>
+
+<div class="fill"><b>Background — decomposing a bipartite multigraph into perfect matchings (König, Hall).</b> <span class="tag filled">filled here</span>
+Let $N=(n_{ij})$ be a $Y\times Y$ matrix of nonnegative integers with all row and column sums at most $\Lambda$. Claim: there are $\Lambda$ permutation matrices whose sum dominates $N$ entrywise.
+<ol>
+<li><b>Padding.</b> If some row sum is less than $\Lambda$, then some column sum is too, because the row sums and the column sums have the same total. Add one to the entry in that row and column. Repeat until all row and column sums equal $\Lambda$. The matrix is now the adjacency matrix of a $\Lambda$-regular bipartite multigraph on rows and columns.</li>
+<li><b>Hall's condition.</b> For a set $S$ of rows, the $\Lambda|S|$ edges leaving $S$ end in the neighbour set $N(S)$, which absorbs at most $\Lambda|N(S)|$ edges. So $|N(S)|\ge|S|$, and Hall's theorem gives a perfect matching.</li>
+<li><b>Induction.</b> Removing a perfect matching leaves a $(\Lambda-1)$-regular multigraph. After $\Lambda$ steps the graph is a union of $\Lambda$ perfect matchings. This is König's edge-colouring theorem for bipartite multigraphs.</li>
+</ol>
+Applied with $n_{ij}=\lceil m_{ij}/w_0\rceil$: the pair $(i,j)$ lies in at least $n_{ij}$ matchings, each layer carries $w_0$ units along it, and $n_{ij}w_0\ge m_{ij}$. The number of layers is $\Lambda\le 10FB/(Yuw_0)$.</div>
+
+<div class="fill"><b>Gap fill — the numerical claims of the routing paragraph.</b> <span class="tag filled">filled here</span>
+<ul>
+<li><b>Terminal load $3FB/Y$.</b> A leaf has load at most $2FB$, so a least-loaded terminal has at most $2FB/Y$ before it receives a tensor of load at most $B$. And $B\le FB/Y$ because $F\ge Y^2w_0\ge Y$.</li>
+<li><b>Output terminals.</b> The reservations at a base sum to at most $2FB$ and number at most $K_1$, so $\sum\lceil cY/(8FB)\rceil\le 2FB\cdot Y/(8FB)+K_1=Y/4+K_1$, and $K_1\le Y/4$.</li>
+<li><b>Output load.</b> A good base has no overflow, so a contact of reservation $c$ has width at most $c$; divided among at least $cY/(8FB)$ pairs and rounded up to a unit, each pair carries at most $8FB/Y+u$, and $u\le B\le FB/Y$.</li>
+<li><b>Line sums.</b> A row or column of $(\lceil m_{ij}/w_0\rceil)$ has $Y$ entries, and $\sum_jm_{ij}$ is at most the terminal load divided by $u$. So a line sum is at most $9FB/(Yuw_0)+Y$. The inequality $Y\le FB/(Yuw_0)$ is $F\ge Y^2w_0\,u/B$, which follows from $F\ge Y^2w_0$ and $u\le B$. This is the reason for the lower bound on $F$.</li>
+<li><b>Cost per good base.</b> One layer of the rotor has $c_0Yw_0$ vertices with edges of width $u$, so $\Lambda$ layers have total width $O(c_0Yw_0u\Lambda)=O(c_0FB)$. Every unit passes two row trees of depth $O(\log(2w_0))$, and the units of a base have total width $O(FB)$; the direct links carry at most $2FB$.</li>
+<li><b>Load at a rotor vertex.</b> A vertex has at most three edges of width $u$ per layer, so its load is at most $3u\Lambda=O(FB/(Yw_0))$, within the bound $O(FB)$ stated by the paper.</li>
+</ul></div>
+
+<p><em>With a bad endpoint.</em> A core contact with a bad endpoint uses balanced binary <em>contact trees</em> attached to the input terminals at both ends. The possible neighbouring leaf intervals have length ratios at most $P$, and each leaf has $Y$ terminals, so the trees have depth $O(\log(2\Delta Y))$. Ordered lists are routed through the trees by equality tensors; the assigned lists at both ends determine the transmitted bits uniquely. The total width of the wires that take this route is at most the load of the bad bases, at most $\delta_*(\mathcal M+\sigma)$ by (24.2). The paper chooses $\delta_*$ small enough to pay the depth, that is $\delta_*\cdot O(\log(2\Delta Y))\le 1$, and concludes, for an absolute $A_0$,</p>
+$$X'\le A_0\bigl(1+c_0+\log(2w_0)\bigr)(X+Z+\sigma).$$
+<p>The count includes every core link in the rotors, collecting trees, direct links and contact trees. It follows from the cost per good base times the number $O((\mathcal M+\sigma)/(FB))$ of bases, plus the bad routes, with $\mathcal M\le 2X+2Z$.</p>
+
+<p><b>State after the reset</b> (p. 95). The paper records: the unit remains $u$; the load at every input terminal, output terminal, tree vertex and rotor vertex is $O(FB)$, and the scaled list load of a frozen leaf is at most $2FB$; the core has degree at most three (a rotor vertex has degree three; an input terminal has one edge to a row tree and contact-tree connections; an output terminal has a row-tree connection and a direct link; binary trees have degree three); the common host allows a tether from every input terminal at every possible intersecting core leaf of the prescribed length ratio, so the full degree is bounded by a fixed power of $2\nabla$, with constants depending on this reset; reserving the hardware at all possible interval slots costs at most $crH$ positions.</p>
+
+<div class="open"><b>Not verified — the host after the reset.</b> <span class="tag unverified">not verified</span>
+The tutorial did not re-derive the last two assertions of p. 95: that the full degree after the reset is at most a fixed power of $2\nabla$, and that all hardware fits in $crH$ positions with $c$ depending only on the degree bounds. It also did not check the statement of the degree at an input terminal in detail: the text gives an input terminal "rotor-row (via one edge to a row tree) and contact-tree connections", and the count to at most three core neighbours depends on how the contact trees for the several neighbours of a leaf are attached, which the paper does not spell out.</div>
+
+<h3 id="s24-4">24.4 Paying for the reset <span class="pg">pp. 95–96</span></h3>
+
+<p>Write $\kappa=A_0(1+c_0+\log(2w_0))$ for the width multiplier of the reset, and let $t$ be the least positive integer with $\kappa\rho^t\le\tfrac12$, where $\rho\lt 1$ is the factor of one subround.</p>
+
+<div class="proof">
+<p><b>Step 1: the width recurrence.</b> After $t$ subrounds the core width is at most $\rho^tX+C(Z+\sigma)(1+\rho+\dots+\rho^{t-1})\le\rho^tX+C(Z+\sigma)/(1-\rho)$. The reset multiplies the sum of this width and $Z+\sigma$ by $\kappa$:
+$$X_{\mathrm{out}}\le\kappa\rho^tX+\kappa\Bigl(\frac{C}{1-\rho}+1\Bigr)(Z+\sigma)\le\tfrac12X+\widetilde C(Z+\sigma).$$
+Here $C$ is the constant of the subround estimate and $\widetilde C=\kappa(C/(1-\rho)+1)$ is the constant called $C$ in the statement of Lemma 24.1. The frozen charges are unchanged, so $Z_{\mathrm{out}}=Z$, and the reset gives $\Delta_{\mathrm{out}}\le 3$. This is the conclusion of Lemma 24.1, provided a rotor with $Y\ge 4K_1$ exists for the degree reached after $t$ subrounds.</p>
+<p><b>Step 2: the circular dependence.</b> The rotor size $Y$ must be at least $4K_1$, and $K_1=\Delta P$ is computed from the core degree $\Delta$ after $t$ subrounds. The number $t$ depends on $\kappa$, and $\kappa$ depends on the rotor through $c_0$ and $w_0$. The paper resolves this with the bound
+$$\log_2(4K_1)\le C^{\,t+1}\le C''\bigl(2+c_0+\log(2w_0)\bigr)^{C'},$$
+where $C,C',C''$ are new constants, unrelated to the $C$ of Step 1; they depend only on the incoming core degree and the subround constants (derivation in the next box).</p>
+<p><b>Step 3: the rotor from Theorem 16.1(2).</b> For $Y=2^y$, Theorem 16.1(2) gives, for each $\zeta\gt 0$, a rotor with $w_0=\lceil y^{a_\zeta}\rceil$ and $c_0=O_\zeta(y^\zeta)$. Fix $\zeta\lt 1/(2C')$. Then $c_0+\log(2w_0)=O_\zeta(y^\zeta)$, and the right side of the display is $O_\zeta(y^{\zeta C'})=O_\zeta(y^{1/2})$, which is at most $y$ for large $y$. So $\log_2(4K_1)\le y$, that is $4K_1\le Y$: this rotor covers the required core degree.</p>
+<p><b>Step 4: what depends on what.</b> The number $t$ of subrounds, the rotor, $F$ and $\delta_*$ depend only on the incoming core-degree bound and on the conditional sorting construction. They bound the growth of the maximum load. The full degree $\nabla$ affects only the tether propagation distances and the number of host positions. All subrounds together divide the unit $u$ by $b_*^{\,t}$. The degree bounds of the subrounds, followed by the reset, multiply $\log(2\nabla)$ by at most a fixed factor. This completes the proof of Lemma 24.1.</p>
+<span class="qed">∎</span></div>
+
+<div class="fill"><b>Gap fill — the two inequalities of Step 2, and the role of the conditional rotor.</b> <span class="tag filled">filled here</span>
+<ul>
+<li><b>First inequality.</b> One subround maps $\Delta$ to at most $C_2\Delta^{C_2}$, so $\log_2(2\Delta)$ is multiplied by at most $C_3=C_2+\log_2(2C_2)$. After $t$ subrounds from an incoming degree $\Delta_0$, $\log_2(2\Delta)\le C_3^{\,t}\log_2(2\Delta_0)$. From $K_1=\Delta\cdot 2^{64\lceil\log_2(2\Delta)\rceil}$, $\ \log_2(4K_1)\le 2+\log_2\Delta+64\log_2(2\Delta)+64\le 131\log_2(2\Delta)$. Hence $\log_2(4K_1)\le C^{\,t+1}$ with $C=\max\{C_3,\ 131\log_2(2\Delta_0)\}$.</li>
+<li><b>Second inequality.</b> By minimality of $t$, either $t=1$ or $\kappa\rho^{t-1}\gt\tfrac12$; in both cases $t\le 1+\log(2\kappa)/\log(1/\rho)$. Then $C^{\,t+1}\le C^2(2\kappa)^{C'}$ with $C'=\log C/\log(1/\rho)$. Substituting $\kappa=A_0(1+c_0+\log(2w_0))$ gives the stated form with $C''=C^2(2A_0)^{C'}$. The exponent $C'$ does not depend on the rotor.</li>
+<li><b>Why this derivation needs a rotor with small $c_0$.</b> (Observation of this tutorial.) With the constant $C=\max\{C_3,131\log_2(2\Delta_0)\}$ of the first item, $C\ge 131$. Since $\rho\ge\tfrac12$ (Step 5 of §24.2), $C'=\log C/\log(1/\rho)\ge\log_2C\gt 7$. For a Beneš rotor, $c_0=\Theta(y)$, and the right side of the display is of order $y^{C'}$, which exceeds $y$ for large $y$; the inequality "at most $y$" does not follow from this bound. With $c_0=O_\zeta(y^\zeta)$ and $\zeta\lt 1/(2C')$ it does. The tutorial did not examine whether a different argument could close the dependence with a Beneš rotor. In the paper's argument this is the place where Lemma 24.1 uses the hypothesis of Theorem 16.1, through its part (2).</li>
+</ul></div>
+
+<p><b>Summary of the beat.</b> The following table collects the effect of each component on the quantities that <a class="secref" href="#s25-1">§25.1</a> tracks.</p>
+<table>
+<tr><th>Component</th><th>Core width $X$</th><th>Core degree</th><th>Unit</th><th>Grouping steps</th></tr>
+<tr><td>one subround (§24.2)</td><td>$\le\rho X+C(Z+\sigma)$, $\ \rho=1-(2-\lambda)/4$</td><td>$\Delta\to C_2\Delta^{C_2}$</td><td>$u\to u/b_*$</td><td>one</td></tr>
+<tr><td>the reset (§24.3)</td><td>$\le\kappa(X+Z+\sigma)$</td><td>$\to 3$</td><td>unchanged</td><td>one</td></tr>
+<tr><td>a beat: $t$ subrounds and one reset</td><td>$\le\tfrac12X+\widetilde C(Z+\sigma)$</td><td>$\to 3$</td><td>$u\to u/b_*^{\,t}$</td><td>$t+1$</td></tr>
+</table>
+<p>The count of grouping steps in the last column is this tutorial's reading: the paper says that the beat is "a fixed sequence of grouping and contraction steps" and bounds the positions of each step by $crH$, and it describes one grouping for the colonies of a subround and one for the reset.</p>
+
+</section>
+
+<section id="s25">
+<h2>25. The arity budgets after one round <span class="pg">pp. 96–101</span></h2>
+
+<p class="role"><b>Role in the chain.</b> This section has no numbered statement. It is the middle of the proof of Lemma 23.1. It receives the invariants (23.2) and the starting configuration (23.3) from <a class="secref" href="#s23-1">§23.1</a>, Lemma 19.1 (Local concentration) from <a class="secref" href="#s19">§19</a>, and Lemma 24.1 (Reduction of core width) from <a class="secref" href="#s24">§24</a>. Subsection 25.1 constructs one round and proves that the invariants (23.2) with budgets $(L,T)$ imply the same invariants with budgets $(L/G,\ qT)$; the numbered displays are (25.1)–(25.3). Subsection 25.2 iterates the round $j$ times, chooses the group size $r$ and the number $S$ of blocks, and establishes the terminal bounds (25.4)–(25.6). <a class="secref" href="#s26-2">§26.2</a> uses (25.5) and (25.6) to bound the size of one fixed network for the sum of all summands.</p>
+
+<p>Notation in force: $k$ is a finite field with $\omega_k\lt 9/4$; $h=\lceil\log_2n\rceil$; logarithms are binary; the input network of the macro has size at most $m$, arity at most $h^b$ and $e\le mh^{-2a}$ external bits; $d=T_0S$ is the number of copies. A <em>summand</em> is a product of $N_b$ <em>blocks</em> on a common <em>host</em> graph with $H$ <em>positions</em>; an <em>occurrence</em> is a pair (position, block); the <em>charged arity</em> of a station of arity $s_v$ is $z_v=\max(s_v,\theta T)$. The invariants at the start of a round are</p>
+$$\sum_vz_v\le L,\qquad\sum_vz_v^2\le LT,\qquad\max_vz_v\le DT/2.\tag{23.2}$$
+<p>In this section $J$ is the number of beats in one round and $j$ is the number of rounds in one macro. In <a class="secref" href="#s27">§27</a> the letter $J$ counts macros.</p>
+
+<div class="lem"><b>Lemma 19.1 (Local concentration), recalled from <a class="secref" href="#s19">§19</a> in the form used here.</b> <span class="pg">pp. 73–74</span> <span class="tag paper">paper</span>
+Fix $k$ with $\omega_k\lt 9/4$, a degree bound $g$ for a host graph of <em>cells</em>, and an integer $\ell\ge 1$. For each sufficiently large fixed integer $D$ and all sufficiently large integers $T$, over an extension $K/k$ with $|K|$ at least a sufficiently large polynomial in $T$ and $[K:k]=O_D(\log T)$: suppose there are at most $W/(DT)$ occupied cells and at most $W/(DT)$ immobile stations in total; in any one network each cell has at most $100D$ stations of total arity at most $100DT$; all external bits belong to immobile stations; and over all stations of all networks $\sum_it_i^2\le WT$. Then the tensor of each network is a sum over $K$ of networks with the same exposed bits, and every choice of one term per network satisfies:
+<ol>
+<li>there are $O(W/(DT))$ <em>frozen stations</em>, including the holders of the original external bits; their maximum arity is $O(DT)$, their squared arities sum to $O(WT)$, and their arities sum to $O(W/\sqrt D)$;</li>
+<li>all other stations, the <em>core</em>, have arity at most $D^{-\ell}T$ and total arity $O(W(1+\log D)^2)$;</li>
+<li>a common host replaces each cell by $D^{O(1)}$ positions, with possible contacts only within and between neighbouring cells; the induced host on the core positions has absolute bounded degree; no two frozen stations touch by a wire; for some $c=c(g,\ell,k)$ all active internal bundles can have width at least $\lceil T/D^c\rceil$, and conclusions 1–2 continue to hold when every station is charged at least that arity;</li>
+<li>the outer summation uses $O_D(\log(T+1))$ control bits per occupied cell; with input labels of at most $A$ bits, the work and communication per occupied cell are $O_D(A+(1+\log T)^{O(1)})$ bit operations and bits, and each output table has a label of length $O_D(A+\log(T+1))$.</li>
+</ol>
+The implicit constants in conclusions 1–3 depend on $k,g,\ell$ and not on $D,T,W$.</div>
+
+<p>The paper's introduction to the section (p. 96) states what remains after concentration. The frozen stations have total arity $O(L/\sqrt D)$, which is below the budget $L$ by the factor $\sqrt D$. The core stations are small individually, but their total arity is $O(L(\log D)^{O(1)})$, which can exceed $L$. Repeated beats reduce the width of the wires inside the core until the total charge fits the smaller budget $L/G$. To start the next round, the construction must also bound the squared charges and give the full host a degree bounded by an absolute constant.</p>
+
+<h3 id="s25-1">25.1 From concentration to bounded degree <span class="pg">pp. 96–99</span></h3>
+
+<p><b>The constants of a round and their order.</b> The paper fixes them as follows.</p>
+<ol>
+<li>Lemma 19.1 is applied with arity exponent $\ell=10$. Its conclusion 3 gives an absolute bound on the core degree. This bound is the "incoming core degree" of Lemma 24.1 and therefore fixes all constants of a beat: the number $t$ of subrounds, the rotor, $F$, $\delta_*$, and the three per-beat growth factors (of the maximum load, of the reciprocal bundle unit, and of $\log(2\nabla)$, where $\nabla$ bounds the full host degree).</li>
+<li>$\epsilon\in(0,1/100]$ is chosen so small that over
+$$J=\lceil 2\epsilon\log D\rceil$$
+beats, the products of these three per-beat factors are each at most $D^{0.03}$ when $D$ is sufficiently large.</li>
+<li>$D$ is then taken sufficiently large in terms of $k,\delta,\epsilon$; the paper increases it several times in the course of the section.</li>
+</ol>
+
+<div class="fill"><b>Gap fill — why a suitable $\epsilon$ exists.</b> <span class="tag filled">filled here</span>
+Let $c_1\ge 1$ be the largest of the three per-beat factors. By Lemma 24.1 it does not depend on $D$. Over $J\le 2\epsilon\log_2D+1$ beats the product is at most $c_1^{J}\le c_1\cdot D^{2\epsilon\log_2c_1}$. If $2\epsilon\log_2c_1\le 0.02$, this is at most $c_1D^{0.02}\le D^{0.03}$ as soon as $D^{0.01}\ge c_1$. The independence of the per-beat factors from $D$ is what makes the choice of $\epsilon$ possible before $D$.</div>
+
+<p><b>Two requirements on the budgets.</b> The round requires</p>
+$$ed\le L/D,$$
+<p>and, for each grouping in the round,</p>
+$$H\,N_b\,T/r\le c_D\,L\tag{25.1}$$
+<p>with a sufficiently small constant $c_D\gt 0$, where $H,N_b$ are the current host counts and $L,T$ the budgets at the start of the round. The left side of (25.1) is the total charge that would be present if every group at every position held one station of arity $T$; the condition says that this "one partially filled pack per position and group" overhead is a small fraction of $L$. Both requirements are met in <a class="secref" href="#s25-2">§25.2</a> by the choice of $r$ and by the hypothesis $e\le mh^{-2a}$.</p>
+
+<p><b>Phase 1: concentrating the squared arities.</b> Group the blocks $r$ at a time. Within a group the $r$ block indices have dyadic intervals. The paper applies the dyadic partition estimate (24.1) of <a class="secref" href="#s24-2">§24.2</a> to the charged arities, with maximum load $DT/2$ and capacity $DT$: at each position the $r$ indices are partitioned into dyadic intervals whose total charge is at most $DT$, and intersecting intervals at adjacent positions have lengths within an absolute ratio. Each interval is one <em>cell</em> for Lemma 19.1; the stations of the blocks in the interval, at that position, are the stations of the cell. All candidate intervals are positions of a new host; two intervals at adjacent old positions are joined when they intersect and satisfy the length-ratio bound. Dyadic nesting bounds the degree of this host by an absolute constant.</p>
+
+<p>Inside each occupied interval the stations are prepared as follows.</p>
+<ul>
+<li>Every station of charged arity greater than $T$ is retained.</li>
+<li>The other stations are packed in order: a pack is closed when its total charged arity reaches $T$. The table of a pack is the product of its members with internal indices contracted.</li>
+<li>The external bits of the interval, if any, are moved to one additional identity station that keeps their order and is joined to the original incidences by duplicate ports. These exterior identities are the <em>immobile</em> stations.</li>
+</ul>
+
+<div class="fill"><b>Gap fill — the hypotheses of Lemma 19.1 hold with $W=C_1L$.</b> <span class="tag filled">filled here</span>
+The paper states that the bounds are "precisely the occupation, immobility, and square bounds of Lemma 19.1". The verification, item by item:
+<ol>
+<li><b>Number of cells.</b> Estimate (24.1) with $B=DT/2$ and $A=2$ gives at most $C_1(HN_b/r+\mathcal M/(DT))$ intervals, where $\mathcal M=\sum_vz_v\le L$. If $c_D\le 1/D$, then (25.1) gives $HN_b/r\le L/(DT)$. The number of intervals is $O(L/(DT))$.</li>
+<li><b>Stations per cell.</b> An interval has charge at most $DT$. A retained station has charge greater than $T$, so there are at most $D$ of them. A closed pack has charge at least $T$, and one pack may be unfinished, so there are at most $D+1$ packs. With the exterior identity the count is at most $2D+2\le 100D$.</li>
+<li><b>Arity per cell.</b> A pack has charged arity less than $2T$ (it was below $T$ before its last member, and that member has charge at most $T$). The stations and packs of an interval have total arity at most $DT$. The exterior identity on $f_i$ external bits has arity $2f_i\le 2DT$. The total is at most $3DT\le 100DT$.</li>
+<li><b>Immobile stations.</b> There is at most one per occupied interval, so $O(L/(DT))$ in total.</li>
+<li><b>Squares.</b> The retained stations contribute at most $\sum_vz_v^2\le LT$. The packs contribute at most $2T\cdot\sum(\text{arity})\le 2TL$. The identities contribute $\sum_i(2f_i)^2=4\sum_if_i^2\le 4\max_if_i\sum_if_i\le 4\,DT\cdot ed\le 4LT$, where the last step is the requirement $ed\le L/D$. The sum is at most $7LT$.</li>
+</ol>
+All five hold with $W=C_1L$ for an absolute $C_1\ge 7$ that also covers the constants in items 1 and 4. The third invariant $\max z_v\le DT/2$ is what allows capacity $DT$ with $A=2$ in item 1. The requirement $ed\le L/D$ is used only in item 5.</div>
+
+<p><b>Result of the expansion.</b> Apply Lemma 19.1. Write $Z$ for the total charged arity of the frozen stations and $X$ for the total width of the internal wires between core stations, each wire counted once. In every summand:</p>
+<ul>
+<li>the frozen charges have total $Z=O(L/\sqrt D)$, square sum $O(LT)$ and maximum $O(DT)$;</li>
+<li>each core station has arity at most $D^{-10}T$, and the core has total arity $O(L(\log D)^{O(1)})$, so $X=O(L(\log D)^{O(1)})$;</li>
+<li>every positive internal bundle has width at least $T/D^{O(1)}$;</li>
+<li>the constants are uniform in $D$.</li>
+</ul>
+
+<p><b>Units and loads for packing.</b> Lemma 24.1 needs every internal width to be a multiple of an integer unit $u$, and it needs $u$ to be divisible by the product of the subdivision factors of all later steps (each subround divides the unit by the constant $b_*$ of Lemma 24.2). The paper takes $u$ below the minimum guaranteed internal width, with $u\ge T/D^{O(1)}$ and $u$ a multiple of the required product; this is possible for fixed $D$ once $T$ is large. Each positive internal bundle is padded to the next multiple of $u$ with bits pinned to zero.</p>
+
+<div class="fill"><b>Gap fill — the cost of padding and the scaled frozen loads.</b> <span class="tag filled">filled here</span>
+A bundle of width $w\ge u$ is padded to width less than $w+u\le 2w$. The arity of each station at most doubles and its square at most quadruples. Each frozen charge is raised to the larger of its old value and its padded arity, so it at most doubles; $Z$ and the frozen square sum keep their orders $O(L/\sqrt D)$ and $O(LT)$. The paper then chooses a dyadic load bound $B$ of order $D^{-10}T$ that covers every core station. A frozen station has charge up to $O(DT)$, which exceeds $B$ by a factor of order $D^{11}$. For the packing arguments of <a class="secref" href="#s24">§24</a> only, each frozen charge is multiplied by one fixed dyadic factor of order $B/(DT)$, so that the scaled charge is at most $B$. This factor is the "fixed dyadic factor in $(0,1]$" in the definition of the load of a frozen occurrence (<a class="secref" href="#s24">§24</a>). It changes no width and no entry of (23.2). Finally $u\le B$ is arranged by taking $u$ smaller if necessary.</div>
+
+<p><b>Phase 2: removing the core wires.</b> Apply Lemma 24.1 $J$ times, each time with slack $\sigma=L/\sqrt D$. Each application gives $X_{\mathrm{out}}\le\tfrac12X+C(Z+\sigma)$, keeps $Z$, and returns a core of degree at most three.</p>
+
+<div class="fill"><b>Gap fill — the width after $J$ beats, and the slack condition.</b> <span class="tag filled">filled here</span>
+Let $X_i$ be the core width after $i$ beats. From $X_{i+1}\le\tfrac12X_i+C(Z+\sigma)$,
+$$X_J\le 2^{-J}X_0+C(Z+\sigma)\sum_{i\lt J}2^{-i}\lt 2^{-J}X_0+2C(Z+\sigma).$$
+Here $2^{-J}\le 2^{-2\epsilon\log_2D}=D^{-2\epsilon}$, $X_0=O(L(\log D)^{O(1)})$, and $Z+\sigma=O(L/\sqrt D)$. Since $\epsilon\le 1/100$, $D^{-1/2}\le D^{-2\epsilon}$. Therefore
+$$X_{\mathrm{end}}\le 2^{-J}X_{\mathrm{start}}+O(Z+\sigma)=O\bigl(L\,D^{-2\epsilon}(\log D)^{O(1)}\bigr),$$
+the display on p. 97.
+<p>Lemma 24.1 requires $c_*HN_bB'/r\le\sigma$ at each of its grouping steps, where $B'$ is the load bound at that step. The paper notes that $B'$ is a fixed multiple of $T$ depending only on $D$, say $B'\le g_DT$. Then (25.1) gives $c_*HN_bB'/r\le c_*g_D\,c_D\,L$, which is at most $L/\sqrt D=\sigma$ when $c_D\le 1/(c_*g_D\sqrt D)$. This is the meaning of "$c_D$ sufficiently small": a positive constant that depends on $D$ only.</p></div>
+
+<p>After the $J$ beats the paper records the following state (p. 97). The verification of each item uses only the three products bounded by $D^{0.03}$.</p>
+<ul>
+<li>Frozen stations keep their charges. One occurrence can now hold a list of frozen stations. Each list has $D^{O(1)}$ members: its total scaled load is at most the final load bound $D^{0.03}B$, and each member has scaled load at least (floor $T/D^{O(1)}$) $\times$ (multiplier of order $B/(DT)$) $=B/D^{O(1)}$.</li>
+<li>Each core station has arity at most $D^{0.03}\cdot O(D^{-10}T)\le D^{-9}T$.</li>
+<li>The bundle unit is at least $D^{-0.03}\,T/D^{O(1)}=T/D^{O(1)}$.</li>
+<li>The core degree is at most three.</li>
+<li>The full host degree $\nabla$ satisfies $\log(2\nabla)\le D^{0.03}\cdot O(\log D)\le D^{0.04}$. The factor $O(\log D)$ is the logarithm of the initial full degree, which is polynomial in $D$ by conclusion 3 of Lemma 19.1.</li>
+</ul>
+
+<p><b>Phase 3: restoring bounded degree.</b> The next round needs a host of absolute bounded degree with one station per occurrence. Two features of the current state violate this. A frozen position holds a list of up to $D^{O(1)}$ stations. And a core station, although it has at most three core neighbours, may be joined by a <em>tether</em> (a core-to-frozen wire) to different frozen stations in different blocks, so its number of <em>possible</em> neighbours in the common host can be as large as $\nabla$. The paper routes the tethers through three stages of trees (Figure 11, p. 98).</p>
+<ol>
+<li><b>Split into units.</b> At a frozen position a slot is reserved for each member of its list. From each frozen station a binary tree splits its active tether units, in order, into separate <em>outlets</em>, one per unit. There are $D^{O(1)}$ outlets, because the frozen arity is $O(DT)$ and the unit is at least $T/D^{O(1)}$. These trees have depth $O(\log D)$.</li>
+<li><b>Select destinations.</b> From each outlet a binary tree has one leaf for each potential core endpoint of that outlet.</li>
+<li><b>Collect at endpoints.</b> At each core endpoint a binary tree has one leaf for each potential incoming outlet. Corresponding leaves of the trees of stages 2 and 3 are linked.</li>
+</ol>
+<p>An internal branching table is the identity on the concatenated strings of its active children. Inactive branches carry no station. The trees and slots are fixed on the common host; each block uses them with its own tether assignment. The trees of stages 2 and 3 have depth $O(\log(2\nabla)+\log D)=O(D^{0.04})$. The host grows by a factor depending only on $D$. A core endpoint keeps at most three core contacts and receives one tree contact, so the overall degree is at most four.</p>
+
+<p><b>What Figure 11 shows.</b> One frozen station on the left is joined by a thick line to a branch vertex under the heading "Split into units". Two lines leave it to two outlet vertices. Under "Select destinations", each outlet has a solid route to one of two collecting vertices and a dashed route that crosses to the other one. Under "Collect at endpoints", each collecting vertex is joined to one core station. The solid routes are the ones active in the block shown; the dashed routes exist in the host so that, in a different block, either outlet can reach the other endpoint. The caption states the three width regimes: the splitting tree may carry the full frozen arity for $O(\log D)$ levels; in the middle each active branch carries a single unit; at the right the width is bounded by the tether width at the receiving core station.</p>
+<!-- FIGURE IDEA: redraw Figure 11: frozen station -> splitting tree -> outlets -> crossing solid/dashed routes -> collecting trees -> two core stations, with the three width regimes labelled. -->
+
+<div class="fill"><b>Gap fill — the two budgets of the tether trees.</b> <span class="tag filled">filled here</span>
+<ul>
+<li><b>Linear budget.</b> The tethers have total width at most $Z$. Each tether bit travels along one route of $O(\log D)+O(D^{0.04})$ tree vertices and adds a bounded amount to the arity of each. The extra arity is $O(Z\,D^{0.04})=O(L\,D^{-1/2+0.04})=O(L\,D^{-0.46})$.</li>
+<li><b>Square budget, splitting trees.</b> On one level of the splitting tree of a frozen station of arity $t_f$, the bundles are disjoint sets of its tether bits, of widths $w_1,w_2,\dots$ with $\sum w_i\le t_f$. A vertex that splits a bundle of width $w_i$ has arity $2w_i$. The squares on that level sum to $\sum(2w_i)^2\le 4(\sum w_i)^2\le 4t_f^2$. Summing over the frozen stations gives $4\sum_ft_f^2=O(LT)$ per level, and over $O(\log D)$ levels $O(LT\log D)$.</li>
+<li><b>Square budget, all other vertices.</b> Every other new vertex carries one unit or all tether bits of one core station, so its arity is at most $2D^{-9}T$. A set of stations with arities at most $y$ and total arity $Y_{\mathrm{tot}}$ has square sum at most $y\,Y_{\mathrm{tot}}$. For these vertices that is $2D^{-9}T\cdot O(L\,D^{-0.46})$. The old core stations have total arity at most $2X_{\mathrm{end}}+Z$ and arity at most $D^{-9}T$ each, so their square sum is at most $D^{-9}T\,(2X_{\mathrm{end}}+Z)$. Both are below $LT$.</li>
+</ul></div>
+
+<p><b>The state at the end of a round.</b> Collecting the frozen stations ($Z$), the old core ($2X_{\mathrm{end}}+Z$) and the trees ($O(ZD^{0.04})$), the charged arities $z_v$ at the end of the round satisfy</p>
+$$\begin{aligned}\sum_vz_v&=O\bigl(L\,D^{-2\epsilon}(\log D)^{O(1)}\bigr),\\ \sum_vz_v^2&=O\bigl(L\,T\,(\log D)^{O(1)}\bigr),\qquad\max_vz_v=O(DT).\end{aligned}\tag{25.2}$$
+<p>The constants and the powers of $\log D$ are independent of $D$. All charges respect a positive floor of order $T/D^{O(1)}$: the frozen stations keep the floor from conclusion 3 of Lemma 19.1, and every other remaining station meets a positive internal bundle of width at least $T/D^{O(1)}$.</p>
+
+<p><b>The restart.</b> Set $G=2^{\lfloor\epsilon\log D\rfloor}$ and choose a dyadic $q$ with $G^{1+\delta/4}\le q\le G^{1+\delta/3}$. The next round starts with</p>
+$$L'=L/G,\qquad T'=qT.\tag{25.3}$$
+
+<div class="fill"><b>Gap fill — the invariants (23.2) hold with $(L',T')$.</b> <span class="tag filled">filled here</span>
+Note $D^{\epsilon}/2\lt G\le D^{\epsilon}$. Let $C$ and $c$ be the constant and the exponent of $\log D$ in (25.2).
+<ol>
+<li><b>A dyadic $q$ exists.</b> The interval $[G^{1+\delta/4},G^{1+\delta/3}]$ has ratio $G^{\delta/12}$, which is at least $2$ when $G\ge 2^{12/\delta}$, that is, when $D$ is large in terms of $\delta,\epsilon$.</li>
+<li><b>First bound.</b> $\sum z_v\le C\,L\,D^{-2\epsilon}(\log D)^c\le L/G$ holds when $C\,D^{-\epsilon}(\log D)^c\le 1$, because $1/G\ge D^{-\epsilon}$.</li>
+<li><b>Second bound.</b> $L'T'=(q/G)\,LT\ge G^{\delta/4}\,LT$. The bound $\sum z_v^2\le C\,LT(\log D)^c\le L'T'$ holds when $(D^{\epsilon}/2)^{\delta/4}\ge C(\log D)^c$. A fixed positive power of $D$ exceeds a fixed power of $\log D$ for large $D$.</li>
+<li><b>Third bound.</b> $\max z_v\le C\,DT\le D\,qT/2=DT'/2$ holds when $q\ge 2C$.</li>
+<li><b>The floor.</b> The new charged arity is $\max(s_v,\theta T')$. Choose the dyadic constant $\theta$ so small that $\theta\,qT$ is at most the floor $T/D^{O(1)}$ already respected by all charges. Then replacing each charge by $\max(s_v,\theta T')$ does not increase it beyond the value used in items 2–4. The paper notes that no estimate used in choosing $G,q,D$ needs a lower bound on $\theta$, so this choice is not circular.</li>
+<li><b>The host.</b> Its degree is at most four, each occurrence holds one station, and the external bits sit at the exterior identities.</li>
+</ol>
+Each condition is of the form "$D$ sufficiently large in terms of $k,\delta,\epsilon$". No explicit value of $D$ is available: the constants of Lemma 19.1 and of the beat come from compactness arguments in Parts I–III and in <a class="secref" href="#s24-1">§24.1</a>.</div>
+
+<div class="aha"><b>AHA.</b> One round divides the total-arity budget $L$ by $G$ and multiplies the arity scale $T$ by $q\le G^{1+\delta/3}$. The square budget $LT$ grows only by $q/G\le G^{\delta/3}$. A reduction of the total arity by a factor $x$ therefore costs an increase of the largest arity by about $x^{1+\delta/3}$, for any $x$ that is a power of $G$. The final lookup charges the largest arity only to the power $p-1\lt 1$ (<a class="secref" href="#s27">§27</a>), so the exchange lowers the cost.</div>
+
+<h3 id="s25-2">25.2 Iteration and the description of the final tables <span class="pg">pp. 99–101</span></h3>
+
+<p>Fix the round just constructed: the constants $D$, $G$, $q$, and its number $s$ of grouping steps. To reduce the total charge by a factor $h^a$, the paper takes</p>
+$$j=\Bigl\lceil\frac{a\log h}{\log G}\Bigr\rceil,\qquad L_i=L_0G^{-i},\qquad T_i=T_0q^i\qquad(0\le i\le j),$$
+<p>where $L_i,T_i$ are the budgets after $i$ completed rounds. From the definition of $j$, $\ h^a\le G^j\lt G\,h^a$. Two parameters remain free: the group size $r$ and the initial number $S$ of blocks. A large $r$ makes the partially occupied packs inexpensive (requirement (25.1)). A large $S$ supplies enough blocks for all $sj$ grouping steps and leaves many blocks at the end, over which the fixed cost of the host is divided in <a class="secref" href="#s26-2">§26.2</a>.</p>
+
+<p><b>Packing slack.</b> By (23.1), a grouping step divides $N_b$ by $r$ and multiplies $H$ by at most $cr$, so the number $HN_b$ of allocated occurrences grows by at most $c$. The fixed expansions of the host inside a round are included in $c$. Starting from $H_0N_b=O(m\log(2+h))\cdot S$, at every stage</p>
+$$H\,N_b\le C^{\,j+1}\,m\,S\log h,\tag{25.4}$$
+<p>where $C$ depends only on the design of one round. With $L_0=C_0mT_0S\log(2+h)$ from (23.3), the ratio of (25.1) during the round that starts from $(L_i,T_i)$ satisfies</p>
+$$\frac{H\,N_b\,T_i}{r\,L_i}\le\frac{C_1\,C^{\,j+1}(qG)^i}{r}.$$
+<p>The paper chooses $r$ as the least power of two with $r\ge C_2(CqG)^{j+1}$, where the constant $C_2$ of the round design is large enough that the ratio is at most $c_D$ in every round and $r$ satisfies the lower bounds $r\ge c_*$ of Lemma 24.1 at every step.</p>
+
+<div class="fill"><b>Gap fill — the ratio, and the size of $r$.</b> <span class="tag filled">filled here</span>
+Substituting (25.4), $T_i=T_0q^i$ and $L_i=L_0G^{-i}$:
+$$\frac{HN_bT_i}{rL_i}\le\frac{C^{j+1}mS\log h\cdot T_0q^i\,G^i}{r\,C_0\,m\,T_0\,S\log(2+h)}\le\frac{C^{j+1}(qG)^i}{C_0\,r}.$$
+With $r\ge C_2(CqG)^{j+1}$ and $i\le j$ this is at most $1/(C_0C_2)$, which is at most $c_D$ for $C_2$ large.
+<p>Size of $r$: $j+1\le a\log h/\log G+2$, so
+$$\log_2r\le 1+\log_2C_2+\Bigl(\frac{a\log h}{\log G}+2\Bigr)\log_2(CqG)=a\,\frac{\log(CqG)}{\log G}\,\log_2h+O_D(1).$$
+The ratio $\log(CqG)/\log G$ depends only on the round design. Hence $r=h^{O_D(a)+o(1)}$, and $r$ does not depend on $S$. The same computation gives $C^{j+1}=h^{O_D(a)+o(1)}$.</p></div>
+
+<p><b>Exterior width.</b> The $ed$ exposed bits are present in every round, and the round requires $ed\le L_i/D$. For $i\le j$,</p>
+$$\frac{ed}{L_i}=\frac{e\,G^i}{C_0\,m\log(2+h)}=O_D\Bigl(\frac{h^{-a}}{\log h}\Bigr).$$
+<div class="fill"><b>Gap fill — this is the first use of the hypothesis $e\le mh^{-2a}$.</b> <span class="tag filled">filled here</span>
+With $d=T_0S$ and $L_i=C_0mT_0S\log(2+h)\,G^{-i}$, the factors $T_0S$ cancel and the first equality follows. Then $e/m\le h^{-2a}$ and $G^i\le G^j\lt G\,h^a$ give $ed/L_i\lt G\,h^{-a}/(C_0\log(2+h))$. Since $G$ depends only on $D$, this is $O_D(h^{-a}/\log h)$, and it is at most $1/D$ for large $h$. Of the factor $h^{-2a}$ in the hypothesis, one factor $h^{-a}$ is cancelled because $L_i$ falls by up to $G^j\lt Gh^a$ during the macro; the remaining factor $h^{-a}$ tends to zero and is therefore below $1/(DG)$ for large $h$.</div>
+
+<p><b>Copies.</b> Let $R$ be the least power of two with $R\ge h^M$, for a fixed $M\gt 0$ chosen in <a class="secref" href="#s26-2">§26.2</a>. Take $S=R\,r^{sj}$. Each of the $sj$ grouping steps divides the number of blocks by $r$, so exactly $R$ blocks remain after $j$ rounds. Each initial block contains $T_0$ copies, so $d=T_0S$.</p>
+
+<div class="fill"><b>Gap fill — $\log d=O((\log h)^2)$.</b> <span class="tag filled">filled here</span>
+$\log_2d=\log_2T_0+\log_2R+sj\log_2r$. The first two terms are $O(\log h)$. In the third, $s$ is a constant of the round design, $j=O(a\log h/\log G)$ and $\log_2r=O_D(a\log h)$. Hence $\log_2d=O_D((\log h)^2)$. Since $h=\lceil\log_2n\rceil$, this is $O((\log\log n)^2)=o(\log n)$, so $d=n^{o(1)}$. This is the bound $\log_2r_j=O((\log h)^2)$ on the copy factor of one macro that <a class="secref" href="#s27">§27</a> quotes.</div>
+
+<p><b>Terminal budgets.</b> From $h^a\le G^j\lt Gh^a$, $q\le G^{1+\delta/3}$, $T_0=\Theta(h^b)$, (23.3) and (25.4):</p>
+$$\begin{aligned}L_j&=O\bigl(m\,d\,\log h\cdot h^{-a}\bigr),\qquad T_j=O\bigl(h^{\,b+(1+\delta/3)a}\bigr),\\ H\,N_b&\le m\,S\,h^{O_D(a)+o(1)}.\end{aligned}\tag{25.5}$$
+<div class="fill"><b>Gap fill — the three bounds of (25.5).</b> <span class="tag filled">filled here</span>
+<ul>
+<li>$L_j=L_0G^{-j}\le C\,mT_0S\log(2+h)\,h^{-a}=O(md\log h\cdot h^{-a})$, using $G^j\ge h^a$ and $d=T_0S$.</li>
+<li>$T_j=T_0q^j\le 8h^b\,G^{(1+\delta/3)j}\lt 8h^b\,(G\,h^a)^{1+\delta/3}=O_D\bigl(h^{b+(1+\delta/3)a}\bigr)$. The constant depends on $D$ through $G^{1+\delta/3}$.</li>
+<li>$HN_b\le C^{j+1}mS\log h=mS\,h^{O_D(a)+o(1)}$ by (25.4) and the previous box. The paper states that the coefficient in $O_D(a)$ is independent of $M,a,b,\beta$.</li>
+</ul>
+The exponent $(1+\delta/3)a$ of $T_j$ is below the exponent $(1+\delta)a$ allowed by Lemma 23.1. The difference $2\delta a/3$ absorbs the constant depending on $D$ and the additional fields of a dictionary call in <a class="secref" href="#s26-2">§26.2</a>.</div>
+
+<p><b>One working field.</b> The scales $T_i$ range from $T_0\ge 4h^\beta$ to a fixed power of $h$. The paper chooses one extension $K/k$ whose degree is divisible by the degree of the fixed extension required by Lemma 19.1 and large enough for the cardinality requirement at the largest scale $T_j$. Its degree is $O(\log h)$, which is $O(\log T_i)$ for every $i$ because $\log T_i\ge\beta\log h$.</p>
+
+<p><b>Descriptions of tables.</b> Each occurrence carries a label for its table, the widths of its bundles, and their positions in its port order. An incident host edge is named by its place in the local neighbour list, which costs a number of bits bounded in terms of $D$. The paper bounds the total length of these local data per occurrence by</p>
+$$C_3^{\,j+1}(\log h)^{O(1)}=h^{O_D(a)+o(1)}.\tag{25.6}$$
+<p>The argument is a recursion on label length. At initialization a stacked station is specified by its original table label, its stack length and the locations of its ordered sublists, in $(\log h)^{O(1)}$ bits. Within a round, two facts bound the number of old labels that enter one new label.</p>
+<ul>
+<li><b>Concentration.</b> A colony of capacity $DT_i$ contains at most $D/\theta$ live entering stations, since each is charged at least $\theta T_i$. By conclusion 4 of Lemma 19.1, each output description uses a bounded number of old labels, discrete choices and field elements; the additional description length is $O_D(\log h)$.</li>
+<li><b>Subrounds and resets.</b> The load per leaf is at most a fixed multiple (depending on $D$) of $T_i$, and the number of leaves contributing to one resulting pack is bounded in terms of $D$. Each live core station contributes at least one internal unit of width $u\ge T_i/\mathrm{poly}(D)$, and each frozen station has a charged load with a lower bound of the same kind. Scalar stations are withdrawn when they form. Hence a contributing pack has a bounded number of old labels and of units, and the lists of unit pairings, rotor layers and ordered sublists at a port have a bounded number of entries, each of $O_D(\log h+\log r)$ bits. The same holds for the routing on the tether trees.</li>
+</ul>
+<p>So if $A$ bounds the label length before one step, the bound after the step is $C_4A+C_4(\log h)^{C_5}$. The multiplicative constant $C_4$ counts old labels; it does not depend on the field degree or on the length of the input labels. Over the $sj$ steps the bound is multiplied by $C_4^{sj}=C_3^{\,j}$ with $C_3=C_4^{\,s}$, which gives (25.6); the second expression follows as for $C^{j+1}$ above. Global host addresses are used only for the control of a whole position and are not appended to table descriptions.</p>
+
+<div class="fill"><b>Gap fill — why the floor $\theta T$ is needed for (25.6).</b> <span class="tag filled">filled here</span>
+Without a lower bound on the charge of a station, a cell of capacity $DT_i$ could contain an unbounded number of stations of arbitrarily small arity. Each has its own label, and the label of a pack lists the labels of its members. The floor in $z_v=\max(s_v,\theta T)$ bounds the number of members by $D/\theta$, so one step multiplies label length by a constant. A constant factor per step, over $sj=O(\log h)$ steps, is a factor $h^{O_D(a)}$: small when $a$ is small. This is one of the reasons why Lemma 23.1 holds only for small $a$.</div>
+
+<div class="open"><b>Not verified — the constants behind (25.4) and (25.6).</b> <span class="tag unverified">not verified</span>
+Displays (25.4) and (25.6) on pp. 99–100 rest on two assertions that the tutorial reports and did not re-derive. First, that every step of a round (the concentration of Lemma 19.1, each subround, each reset, the tether trees) enlarges the host by a factor at most $cr$ with $c$ depending only on the round design; the parts of this claim that belong to <a class="secref" href="#s24">§24</a> are marked there. Second, that one step multiplies the label length by a constant $C_4$ that depends only on $D$: the paper's two bullet points give the reason (a bounded number of old labels per new label), but the bound on the number of contributing leaves and units per pack is stated, not computed. The paper also states without computation that the coefficient in the exponent $O_D(a)$ of (25.5) is independent of $M,a,b,\beta$; <a class="secref" href="#s26-2">§26.2</a> needs this independence when it chooses $a$.</div>
+
+<p><b>The tensor represented by the sum.</b> After $j$ rounds each term of the expansion consists of $R$ surviving blocks and the scalar factors withdrawn along its history. The paper records why the sum of all terms is the $d$th power of the input tensor on its $ed$ named exterior bits (p. 100): regrouping permutes the exterior lists along with their stations and preserves each product entry by entry; each local tensor identity replaces a product by a sum with the same entries on the named ports; colourings, packings and routings follow fixed tie-breaking rules and so do not index the expansion. Only the choices in local tensor identities index the terms. The internal wires of the final $R$ blocks are summed when the blocks are contracted.</p>
+
+<p><b>One dictionary.</b> For the evaluation the paper uses a single dictionary. A <em>key</em> records the type, stage, description and arity of a table, followed by its incident bits; length fields or fixed padding make the encoding unique. The input dictionary and the rules of the construction assign a value in $K$ to each valid key; values at unused keys are arbitrary. A key for a withdrawn scalar has no incident bits. By the maximum-arity invariant and (25.6), a longest key has length</p>
+$$O_D(T_j)+h^{O_D(a)+o(1)}.$$
+<p>A derived table description can be longer than the $(\log h)^{O(1)}$ bits that Lemma 23.1 allows for a label. The paper resolves this in <a class="secref" href="#s26">§26</a>: the description is placed in the <em>argument</em> of a dictionary call, and the label of the installed table names only the key format and length. The description then counts toward the arity of the lookup (which Lemma 23.1 bounds by $h^{b+(1+\delta)a}$), and the label stays short for the next macro.</p>
+
+</section>
+
+<section id="s26">
+<h2>26. Realizing the expansion on a fixed network <span class="pg">pp. 101–106</span></h2>
+
+<p class="role"><b>Role in the chain.</b> Sections <a class="secref" href="#s23">23</a>–<a class="secref" href="#s25">25</a> bound each summand of the expansion separately: after $j$ rounds a summand consists of $R$ blocks with total charged arity $L_j$ and arity scale $T_j$ (display (25.5)), and each table has a description of length $h^{O_D(a)+o(1)}$ (display (25.6)). Different summands have different wires and different tables. This section represents the <em>sum of all summands</em> by one network that does not depend on the summand. Subsection 26.1 proves Lemma 26.1 (Realizing a transcript), a general statement about distributed checkable computations; it uses the wide-record bound of Theorem 16.1(2) (<a class="secref" href="#s16">§16</a>) and a construction imported from [42]. Subsection 26.2 describes the rounds as such a computation, bounds its cost in display (26.2), and completes the proof of Lemma 23.1 on p. 106. Lemma 23.1 is then used in <a class="secref" href="#s27">§27</a>.</p>
+
+<p>Notation in force: $k$ is a finite field with $\omega_k\lt 9/4$, $K\supseteq k$ the working extension of degree $O(\log h)$, $h=\lceil\log_2n\rceil$, and logarithms are binary. The input network of the macro has size at most $m$ (with $n\le m\le n^{1.1}$), arity at most $h^b$, and $e\le mh^{-2a}$ external bits. From <a class="secref" href="#s25-2">§25.2</a>: $T_0\in[4h^b,8h^b]$ copies per initial block, $S=Rr^{sj}$ initial blocks, $d=T_0S$ copies in total, $R\ge h^M$ blocks at the end, $H$ host positions and $N_b$ blocks at the current stage.</p>
+
+<div class="aha"><b>AHA.</b> A tensor network already contains a summation: the sum over the values of its internal wires. If the <em>choice of summand</em> is written on internal wires, and $0/1$ gates check that the written data are a valid encoding with exactly one encoding per summand, then the network's own contraction performs the sum over summands. The remaining task is to make the checking gates cheap.</div>
+
+<h3 id="s26-1">26.1 From a transcript to a tensor <span class="pg">pp. 101–103</span></h3>
+
+<div class="def" id="def-26-transcript"><b>Definition (processors, records, messages, transcript tensor, charge).</b> <span class="pg">p. 101</span> <span class="tag paper">paper</span>
+Fix $P\le n^{O(1)}$ numbered <em>processors</em>. Each processor has binary <em>advice</em> of at most $h^c$ bits and a fixed ordered list of exterior ports. Its <em>local record</em> includes guesses and at most $h^c$ incoming and outgoing <em>messages</em>. A message consists of an $O(h)$-bit <em>key</em> identifying source, destination and port, together with a bit string. Communication is <em>valid</em> if every used key occurs exactly once at each end with the same string.
+<p>One fixed finite bit-RAM program checks the local record against the advice and the exterior bits. The program may emit strings of length at most $U$ as arguments to a common <em>dictionary</em> $W$ with values in $K$. Its decisions depend only on the strings, not on the values of $W$. A <em>transcript</em> is the collection of all local records. It is <em>accepted</em> if every local check passes and communication is valid. For fixed exterior bits, the <em>transcript tensor</em> is the sum, over accepted transcripts, of the product of all values returned by $W$. The record format, including length fields and padding, is fixed; all size-dependent program data enter through the advice.</p>
+<p>The <em>charge</em> at a processor counts its deterministic running time, advice, exterior bits, guesses, messages with headers, and emitted strings, with at least one unit per record or item. The charge is determined by the record. A local address or time uses $(\log h)^{O(1)}$ bits; bit arithmetic on words of that length adds at most a factor $(\log h)^{O(1)}$ to the bounds.</p></div>
+
+<div class="lem" id="lem-26-1"><b>Lemma 26.1 (Realizing a transcript).</b> <span class="pg">pp. 101–102</span> <span class="tag paper">paper</span>
+Suppose the charge of each local record is at most $V_{\max}=2^{(\log h)^{O(1)}}$. Let $V\le n^{O(1)}$ bound the total charge of every accepted transcript and the volume of the fixed advice and exterior interface, including one unit per processor. If $U\le h$ and the wide-record bound of Theorem 16.1 holds, then for every fixed $\tau\gt 0$ the transcript tensor has a fixed network of size at most
+$$h^{\tau}\,V+P\,h^{C_0}.$$
+The gates are trivalent or are dictionary tables of arity $O(1+U+\log h)$. Their labels use $(\log h)^{O(1)}$ bits. The constant $C_0$ depends only on $\tau,c$, the polynomial bounds in $n$ and the wide-record estimate. The exponent in $V_{\max}$ occurs only in factors $(\log h)^{O(1)}$ before absorption.</div>
+
+<p>The bound has two terms with different roles. The term $h^\tau V$ is nearly linear in the total charge: work that is proportional to the data costs only the factor $h^\tau$. The term $Ph^{C_0}$ is a fixed overhead per processor with a possibly large exponent. Subsection 26.2 makes the second term small by having few processors relative to the data.</p>
+
+<div class="fill"><b>Background — a checked computation with guesses as a tensor network.</b> <span class="tag filled">filled here</span>
+A Boolean circuit becomes a tensor network when each gate is replaced by its $0/1$ truth table (value $1$ exactly when the output wire equals the gate function of the input wires) and each fan-out by an equality tensor. For fixed inputs there is exactly one assignment of the internal wires with weight $1$; all others have weight $0$. If the output is pinned to "accept", the contraction is $1$ on accepted inputs and $0$ otherwise.
+<p>Now leave some input wires unpaired with the exterior and sum over them: these are <em>guesses</em>. The contraction counts the guesses that the circuit accepts. If, in addition, one-bit or table gates with values in $K$ are attached to some wires, the contraction is the sum over accepted guesses of the product of those values. This is the form of the transcript tensor: guesses are the records, the $0/1$ gates are the checks, and the $K$-valued gates are the dictionary calls. Exactness requires that each accepted transcript corresponds to <em>exactly one</em> assignment of all internal wires. Every step of the proof below includes a uniqueness clause for this reason. The $0/1$ tables are tensors over the prime field, hence over $k$ and over $K$.</p></div>
+
+<div class="imp"><b>Imported — [42, Section 16.2].</b> <span class="tag imported">imported</span>
+The paper states (p. 102) that the check of a memory trace used in the proof is "the trace construction of OpenAI [42, Section 16.2]". As the paper uses it: a guessed execution of a RAM program is verified by (i) time-ordered checks of instructions, registers, counter, addresses and halt flag, and (ii) a check of memory consistency in which the reads, writes and initial contents are sorted by address and execution order, and a scan of each address verifies that a read returns the most recent value, starting at zero for unused cells. The tutorial does not reproduce [42, Section 16.2].</div>
+
+<div class="fill"><b>Background — sorting by a comparison network.</b> <span class="tag filled">filled here</span>
+A <em>comparison network</em> on $N$ records is a fixed sequence of compare-exchange operations on fixed pairs of positions. The positions do not depend on the data, so the network is a fixed circuit. Batcher's network sorts $N$ records with $O(N\log^2N)$ comparators (the paper cites it in Proposition 2.3 and uses the count $O(t\log^2(2t))$ here). A comparator on words of $\omega$ bits is $O(\omega)$ Boolean gates. To use an unstable sorting network where the order of equal keys matters, one appends a distinguishing field (here the execution time) to the key. The cost per record is the factor $\log^2N$ times the word length. This is affordable when $\log N$ is $(\log h)^{O(1)}$, as inside one slot below, and not affordable when $\log N$ is of order $h$, as for the global matching of messages.</div>
+
+<div class="proof">
+<p><b>Step 1: allocate space by record length</b> (p. 102). The network is fixed before the transcript is known, so it cannot give each processor exactly the space its record needs. The paper reserves <em>slots</em> in dyadic size classes. For each dyadic capacity $t$, from $1$ to the least power of two at least $\min(V,V_{\max})$, it reserves $N_t=\min(P,\lfloor 2V/t\rfloor)$ slots. A processor with charge $s$ uses the least $t\ge s$. The network guesses, for each slot, a processor identifier and a record; it checks the identifier range and the charge, requires the occupied slots to form an increasing prefix in identifier order (within each capacity class, in this tutorial's reading), and pins all unused entries and padding. The two capacity bounds are</p>
+$$\sum_tt\,N_t=O\bigl(V(1+\log V_{\max})\bigr),\qquad\sum_tN_t=O\bigl(P(1+\log V_{\max})\bigr).\tag{26.1}$$
+
+<p><b>Step 2: check the computation and its dictionary arguments</b> (p. 102). In a slot of capacity $t$ the network guesses the deterministic execution of the checking program for at most $t$ steps and verifies it by the trace construction of [42, Section 16.2]: time-ordered checks of the processor state, and a memory check by sorting the accesses. A comparison network on $O(t)$ accesses uses $O(t\log^2(2t))$ comparisons of $(\log h)^{O(1)}$-bit words. Long inputs, advice, messages and emitted strings occupy addressed arrays and are processed in pieces. The local cost is $t(\log h)^{O(1)}$ plus $h^{O(1)}$ per slot for long identifiers and framing.</p>
+<p>The dictionary calls are installed as follows. Within the slot, the emitted strings are grouped by least dyadic padded length $u$ (an empty string counts as length one). The slot reserves $\lfloor 2t/u\rfloor$ <em>seats</em> in that class and fills them in order of issuance. The checker writes each emitted bit at the address given by its length class, ordinal and bit offset; the same memory-trace test compares these arrays with the inputs of the installed seats, including active flags, actual lengths and zero padding. Each address has $O(1+\log t+\log h)$ bits. A seat returns the value of $W$ on its string when active and returns $1$ when inactive. Its table is named by the padded length. The arity of a seat is $O(1+U+\log h)$, and the total table size per slot is $O(t\log(2+U)\log(2+h))$.</p>
+
+<p><b>Step 3: match the messages</b> (pp. 102–103). Fix $w=\lceil h^{C_1}\rceil$ with $C_1\gt 1$ chosen below. Each message is split into $w$-bit <em>chunks</em>; the last chunk is padded, and an empty message gets one chunk. A chunk record contains an active flag, the key, the direction (send or receive), the total length, the chunk number and the payload. For each processor a fixed <em>sender</em> with a key in a reserved namespace supplies that processor's advice and exterior bits with their component lengths; an occupied slot must receive the whole supply for its claimed identifier, even when the supply is empty.</p>
+<p>Local checks compare each outgoing source and incoming destination with the slot identifier and verify the splitting, piece order, lengths and padding. Then all chunk records of all slots are sorted by active flag, key, chunk number and direction. In the active part every key and chunk number must occur as one send and one receive with equal length and payload; a scan of adjacent records checks this. A duplicate message on one side produces a collision at chunk zero. In particular each private supply is matched to exactly one slot, so every processor occurs exactly once among the slots.</p>
+<p>The sort is the stable-sort tensor of Theorem 16.1(2). For a given input the stable-sort relation has exactly one output, so the sorted list can be an internal (summed) set of wires without creating multiplicity. Its $0/1$ tensor over $k$ is the same relation over $K$.</p>
+
+<p><b>Step 4: count</b> (p. 103). A slot of capacity $t$ reserves $O(t/w+h^c+1)$ chunk records. The $O(h)$-bit header is copied once per chunk, so constructing the records costs $(t+h^{O(1)})(\log h)^{O(1)}$. A fixed sender is charged for its actual supply and one partial chunk. By (26.1) the reserved bit volume, including padding at message boundaries, is</p>
+$$V(\log h)^{O(1)}+P\,h^{O(1)}.$$
+<p>The list is padded to a power of two. Its length is polynomial in $n$, so the logarithm of its length is $O(h)$. Theorem 16.1(2) with tolerance $\tau/3$ gives an exponent $a_{\tau/3}$; a fixed $C_1$ large enough makes $w$ at least the required power of the logarithm of the list length, and then sorting costs at most $O(h^{\tau/3})$ times the volume. The scan after the sort has linear size. By (26.1) the local computations and the dictionary tables have the same volume bound. The powers of $\log h$ are absorbed into $h^\tau$ and the per-processor costs into $Ph^{C_0}$.</p>
+
+<p><b>Step 5: exactness.</b> The checking and sorting gates are trivalent over $k$. Each dictionary gate is named by its length class, in $(\log h)^{O(1)}$ bits. For each accepted transcript, the slot capacities, identifiers, order, traces, calls and chunks are uniquely determined; conversely the local and communication checks recover an accepted transcript from any assignment of nonzero weight. Contracting the network therefore gives the weighted sum over accepted transcripts, exactly, over $K$.</p>
+<span class="qed">∎</span></div>
+
+<div class="fill"><b>Gap fill — the slot counts and (26.1).</b> <span class="tag filled">filled here</span>
+<ul>
+<li><b>$N_t$ slots suffice.</b> In an accepted transcript the processors of class $t\ge 2$ have charge greater than $t/2$, and those of class $1$ have charge $1$. The total charge is at most $V$, so class $t$ contains fewer than $2V/t$ processors when $t\ge 2$ and at most $V$ when $t=1$; in both cases at most $\lfloor 2V/t\rfloor$. It also contains at most $P$.</li>
+<li><b>First bound.</b> $tN_t\le 2V$ for each class, and the number of classes is at most $2+\log_2\min(V,V_{\max})\le 2+\log_2V_{\max}$.</li>
+<li><b>Second bound.</b> $N_t\le P$ for each class.</li>
+<li><b>Why dyadic classes.</b> Reserving the maximum $V_{\max}$ for each of $P$ processors would cost $PV_{\max}$. The dyadic scheme costs $O(V\log V_{\max})$ in capacity, which is $V(\log h)^{O(1)}$ because $\log V_{\max}=(\log h)^{O(1)}$. The bound $V_{\max}$ enters the proof in two places, each time as a factor $(\log h)^{O(1)}$: the number of capacity classes here, and the factor $\log^2(2t)$ of the comparison network inside a slot of capacity $t\le 2V_{\max}$ in Step 2. This is the content of the last sentence of the lemma.</li>
+<li><b>Why the increasing prefix.</b> Without an ordering rule, permuting the processors among the slots of one class would give several internal assignments for the same transcript, and the contraction would count the transcript several times. The rule "occupied slots form an increasing prefix in identifier order" leaves one assignment.</li>
+</ul></div>
+
+<div class="fill"><b>Gap fill — why messages are cut into chunks of $h^{C_1}$ bits.</b> <span class="tag filled">filled here</span>
+Matching sends with receives is a global operation on a list of $N=n^{O(1)}$ records, so $\log_2N=O(h)$. A comparison network would cost a factor $\log^2N=O(h^2)$ per record bit, which exceeds the allowed factor $h^\tau$. Theorem 16.1(2) states: for every $\zeta\gt 0$ there is $a_\zeta\gt 1$ such that stable sorting of $N=2^{h'}$ records of $w\ge h'^{\,a_\zeta}$ bits has an exact trivalent network of size $O_\zeta(N\,w\,h'^{\,\zeta})$. The cost per record bit is then $h'^{\,\zeta}$, but only for <em>wide</em> records. With $h'=O(h)$ and $\zeta=\tau/3$, the choice $w=\lceil h^{C_1}\rceil$ with $C_1\gt a_{\tau/3}$ makes the records wide enough for large $h$. The key, flag, direction, length and chunk number add $O(h)$ bits to a chunk of $w\ge h$ bits, a constant factor. The price of chunking is padding: at most $w=h^{O(1)}$ bits per message, and a slot has at most $h^c$ messages. That is the term $h^{O(1)}$ per slot, which enters $Ph^{C_0}$ through the second bound of (26.1).</div>
+
+<div class="fill"><b>Gap fill — why $U\le h$ and why inactive seats return $1$.</b> <span class="tag filled">filled here</span>
+A dictionary gate is the only non-trivalent gate. Its arity $O(1+U+\log h)$ is the quantity that Lemma 23.1 must bound by $h^{b+(1+\delta)a}$ for the next macro, so the lemma keeps $U$ explicit; the hypothesis $U\le h$ keeps addresses and length fields within $O(\log h)$ bits. The number of calls issued by a record is not known in advance, so seats are reserved by the same dyadic rule as slots: strings of padded length $u$ have length greater than $u/2$ (or $u=1$), and their total length is at most the charge $t$, so there are at most $\lfloor 2t/u\rfloor$ of them. An unused seat must not change the product of dictionary values; returning $1$ achieves this.</div>
+
+<h3 id="s26-2">26.2 The transcript of the rounds <span class="pg">pp. 103–106</span></h3>
+
+<p>The paper now describes the construction of <a class="secref" href="#s23">§23</a>–<a class="secref" href="#s25">§25</a> as a transcript. Initially there are $S$ blocks of $T_0$ copies. At every stage of the $j$ rounds there are $N_b\ge R$ blocks on a host with $H$ allocated positions. Each position gets one processor at each stage, including the terminal stage, and each step gets $O(H)$ additional processors for balanced aggregation trees. An <em>occurrence</em> is one position in one block.</p>
+
+<p>The cost analysis separates three kinds of data, with three different unit costs. The paper states the principle in the introduction of the section (p. 101): "All blocks at one host position use the same address. The bits carried on a wire vary independently across blocks."</p>
+
+<p><b>One address for all blocks</b> (p. 103). A position holds the ordered list of its host neighbours and an array of occurrence records in block order. Its advice specifies the parent and child naming conventions, integer parameters, the presentation of the field $K$, and the initial convention for ordering exterior ports; at an initial position it also gives the input table label. Exterior bits enter through fixed ports in stack order.</p>
+<p>In one step every host degree is bounded in terms of the round design, so a ball of radius $O_D(1+\log r)$ contains $r^{O_D(1)}$ positions. Positions exchange neighbour lists to that radius, remove repetitions by identifier, and order the names. After this, each possible child and contact is located by an index in a local list; the cost is $h^{O(1)}$ common operations per position. A message to a contact can then carry the entire array of occurrence records, for all blocks, under one $O(h)$-bit header, and inside the array only local indices are needed. There are $h^{O(1)}$ phases and declarations per position. By (25.6) the handling of the arrays costs</p>
+$$N_b\,r^{O_D(1)}(\log h)^{O(1)}h^{O_D(a)}=N_b\,h^{O_D(a)+o(1)}$$
+<p>per position. The paper states that the coefficients in $O_D(a)$ are independent of $a,b,\beta$.</p>
+
+<p><b>Decisions shared by the host</b> (pp. 103–104). Several choices in a round are common to all blocks and are made by minimizing a score that is a sum of local contributions: the multiplier of the colony count (24.1), the affine colouring, the layout of a subround, the mixing matrix of a reset. Each position computes its local contributions to the scores of all candidates. The integer arrays are added along a balanced tree, and the first minimizing candidate is broadcast. At height $i$ of the tree a sum of entries that initially had $z$ bits has at most $z+i$ bits, while the number of tree vertices falls by a factor of order $2^i$; since $\sum_{i\ge 0}2^{-i}(z+i)^{O(1)}=O((1+z)^{O(1)})$, the aggregation costs no more than the leaves, up to a constant. At the root the paper allows $2^{(\log h)^{O(1)}}$ additional operations to choose the minimizer. A greedy colouring of a host (needed by conclusion 4 of Lemma 19.1) is checked locally: in fixed identifier order, each colour must be the least one absent from the lower-numbered neighbours; induction on identifiers shows that exactly one assignment passes the check.</p>
+
+<p><b>Checking the changes of host</b> (pp. 104–105). The paper lists how each operation of a round obtains its contacts from the neighbour lists and its common parameters from additive scores.</p>
+<ol>
+<li><b>Colony packing</b> (<a class="secref" href="#s24-2">§24.2</a>). Try the multipliers of the $r$ slots, propagate the overloaded marks to ancestors and neighbours, and sum the candidate colony counts. A propagation moves upward by at least one dyadic level, so the radius is $O_D(1+\log r)$. Relative interval endpoints, loads and dyadically scaled charges have short encodings. Summing local scores also chooses the affine colouring for the whole-item pairing.</li>
+<li><b>Local concentration</b> (<a class="secref" href="#s25-1">§25.1</a>). The colony interval and its old contacts give the possible neighbours of each sphere (the sphere forms of <a class="secref" href="#s19">§19</a>, one family per cell, are the objects on which the proof of Lemma 19.1 operates). In the checked colour order, the movement and interpolation choices of Lemma 19.1 specify the new tables, withdrawn scalars and ordered bundles. The description bounds of Lemma 19.1 (its conclusion 4) pay for the choices and labels. The port orders identify the exposed sublists.</li>
+<li><b>Wire-saving subround</b> (<a class="secref" href="#s24-2">§24.2</a>). The source colony and bin determine the seats of its matched units. One summand choice is recorded for each actual gadget. The surviving replacement widths under each of the two contractions are summed, and the same minimizer is taken for all blocks. Bounded neighbourhoods of the colonies determine the new contacts, port orders and table labels.</li>
+<li><b>Reset</b> (<a class="secref" href="#s24-3">§24.3</a>). Each position computes its mean load over the blocks. The smoothed mean has floor $FB/r$, and a propagated contribution decays by at least a factor of two per edge; since the starting load is at most $B$, a neighbourhood of radius $O(1+\log r)$ determines the bases and their capacities. The common mixing matrix is chosen as described in the next box. Positions permute their block arrays accordingly. Bounded length ratios of intersecting leaves and the bounded number of units per leaf allow the terminal assignments, rotor settings and new labels to be determined from neighbouring records.</li>
+<li><b>Tether trees</b> (<a class="secref" href="#s25-1">§25.1</a>). The final splitting trees have bounded size, depending on $D$, per possible station and contact. Adjacent positions determine the active sublists. An edge between new children is supported by a bounded path between their parents, so every neighbourhood that is collected is local to its current step.</li>
+</ol>
+<p>Messages are declared in a fixed order of phases, ports and blocks. Each successive array and host is enforced from the preceding data and the local summand choices. Each term of a local identity, including a term of weight zero, has one prescribed encoding, so the intermediate arrays introduce no further multiplicities.</p>
+
+<div class="fill"><b>Gap fill — choosing the mixing matrix with integer arithmetic.</b> <span class="tag filled">filled here</span>
+In <a class="secref" href="#s24-3">§24.3</a> the existence of a good invertible matrix over $\mathbb F_2$ is shown by averaging an estimator $\Phi$. The fixed network must compute a matrix that is at least as good as the average. The paper's method (pp. 104–105):
+<ol>
+<li>Index the blocks by $i\in\mathbb F_2^{\ell}$, $\ell=\log_2N_b$. Let $x_i$ be the normalized load at a position, or the normalized width at an edge, in block $i$. Two indices $i,i'$ have the same output prefix of length $s$ under a matrix $A$ exactly when $z=i+i'$ satisfies $(Az)_{1:s}=0$. So the part of the collision estimator at prefix length $s$ that depends on $A$ is a multiple of
+$$\sum_{z\ne 0}\mathbf 1_{(Az)_{1:s}=0}\ \sum_ix_ix_{i+z}.$$
+The diagonal and centering terms do not depend on $A$ and are omitted.</li>
+<li>The autocorrelations $c(z)=\sum_ix_ix_{i+z}$ are computed for all $z$ at once by the Walsh transform $\hat x(\xi)=\sum_i(-1)^{\langle\xi,i\rangle}x_i$. Indeed $\sum_z(-1)^{\langle\xi,z\rangle}c(z)=\sum_{i,i'}(-1)^{\langle\xi,i+i'\rangle}x_ix_{i'}=\hat x(\xi)^2$, so $c$ is the inverse transform of $\hat x^{\,2}$. The fast transform uses $O(N_b\log N_b)$ additions.</li>
+<li>The $x_i$ have denominators $FB$ times a fixed dyadic load denominator, and the weights of the estimator are integers after fixed scaling. After clearing denominators, all arithmetic is on integers of $(\log h)^{O(1)}$ bits. The paper notes that the choice therefore "uses integer arithmetic in every characteristic": the scores are computed by Boolean circuits, not in the field $K$.</li>
+<li>The coefficients are aggregated over positions by difference $z$ and prefix length. At the root all invertible matrices in dimension $\ell$ are enumerated. Since $N_b\le S$ and $\log_2S=O((\log h)^2)$, there are at most $2^{\ell^2}=2^{O((\log h)^4)}$ matrices, within the allowance $2^{(\log h)^{O(1)}}$ for the root. The first minimizer has score at most the mean, which is the bound (24.2).</li>
+</ol></div>
+
+<p><b>Independent bits and tensor entries</b> (p. 105). The exterior bits are transferred in the order specified by the splits and concatenations. Source and destination share one processor header for all pieces sent along one contact; array positions and bit offsets have $(\log h)^{O(1)}$ bits. A station that collects exterior bits is frozen during the following steps, and when blocks are reordered its lists are permuted with them. Each of the $ed$ exterior bits travels only along its specified route, at most once per transfer, and there are $O(\log h)$ steps, so the exterior payload costs $ed\,(\log h)^{O(1)}$.</p>
+<p>At the terminal stage the network guesses one bit per internal wire at its designated endpoint and sends it to the other endpoint in contact and bundle order. A table call consists of the station description followed by its ordered port bits. By (25.5) the terminal payload costs $L_j(\log h)^{O(1)}$. A scalar withdrawn earlier issues its call at withdrawal, with only its short description. The scalar stations of the input are fixed: if their product is $c$, one nullary table of value $c^{\,d}$ supplies their contribution; naming this element of $K$ costs $O(\log h)$ bits.</p>
+<p>The paper then states the correctness of the whole: for fixed summand choices, the free payload guesses range exactly over the assignments of the terminal wires, and the product of the call values is the contraction weight of that assignment. Summing over these assignments and then over summands gives the $d$th tensor power of the input on its ordered $ed$ exterior bits.</p>
+
+<p><b>Size of the fixed network</b> (pp. 105–106). By (25.5), $HN_b\le mS\,h^{O_D(a)+o(1)}$ at each stage. There are $O(\log h)$ steps and $N_b\ge R$. The number of processors and the total charge satisfy</p>
+$$\begin{aligned}P&\le m\,S\,h^{O_D(a)+o(1)}/R,\\ V&\le P\,h^{C_2}+m\,S\,h^{O_D(a)+o(1)}+(L_j+ed)\,h^{o(1)}+2^{(\log h)^{O(1)}}.\end{aligned}\tag{26.2}$$
+<p>The paper explains the four terms of $V$: the first pays for the common work per position, the second for the short records per occurrence, the third for the independent wire bits, the fourth for the computations at the roots. Every local record has charge at most $2^{(\log h)^{O(1)}}$, because $N_b\le S$, $\log S=O((\log h)^2)$, and one occurrence has polynomially many bits in $h$; so the hypothesis on $V_{\max}$ in Lemma 26.1 holds. The paper states that $C_2$ and the exponent bounding the number of declarations can be fixed independently of the exponent $M$ in $R=h^{M+o(1)}$; the dependence on $M$ is confined to factors polynomial in $\log S$ and to the additive root cost.</p>
+
+<p><b>The final choice of constants and the end of the proof of Lemma 23.1</b> (p. 106). The longest dictionary call has $O_D(T_j)+h^{O_D(a)+o(1)}$ bits. The paper chooses $a$ so small that $Ca+2a\lt\beta$ for each coefficient $C$ in the short-work and label bounds, and $b+(1+\delta)a\lt 1$ for all allowed $b$. It applies Lemma 26.1 with $\tau=a\delta/3$ and then takes $M$ large. The costs per $md$, before the factor $h^\tau$, of the three charges of (26.2) that do not involve $P$ are</p>
+$$\frac{m\,S\,h^{Ca+o(1)}}{md}=h^{-b+Ca+o(1)},\qquad\frac{ed}{md}\le h^{-2a},\qquad\frac{L_j}{md}=O(h^{-a}\log h).$$
+<p>The paper concludes that the fixed network has size at most $md\,h^{-a+\tau+o(1)}\le md\,h^{-(1-\delta)a}$ for large $n$, that its maximum table arity, including activity and length fields, is at most $h^{b+(1+\delta)a}$, and that a dictionary table keeps its short length-class label. This completes the proof of Lemma 23.1.</p>
+
+<div class="fill"><b>Gap fill — the five cost classes and the arithmetic of the last step.</b> <span class="tag filled">filled here</span>
+Lemma 26.1 gives size at most $h^\tau V+Ph^{C_0}$. Divide each term of (26.2) by $md=m\,T_0S$, with $T_0\ge 4h^b$, $b\ge\beta$, and $Ca+2a\lt\beta$.
+<table>
+<tr><th>Cost class</th><th>Term</th><th>Per $md$</th><th>Why it is at most $h^{-a+o(1)}$</th></tr>
+<tr><td>per position</td><td>$Ph^{C_2}$ in $V$, and $Ph^{C_0}$</td><td>$h^{-b+Ca+E-M+o(1)}$, with $E=\max(C_0,C_2+\tau)$ (notation of this tutorial)</td><td>$M$ is chosen larger than $E$; then the exponent is below $-b+Ca\lt -2a$. The cost of a position is divided among $R\ge h^M$ blocks.</td></tr>
+<tr><td>per occurrence</td><td>$mS\,h^{Ca+o(1)}$</td><td>$h^{-b+Ca+o(1)}$</td><td>$-b+Ca\le-\beta+Ca\lt-2a$. The cost of an occurrence is divided among the $T_0\approx h^b$ copies stacked in one block.</td></tr>
+<tr><td>per exterior bit</td><td>$ed\,h^{o(1)}$</td><td>$\le h^{-2a+o(1)}$</td><td>hypothesis $e\le mh^{-2a}$ of Lemma 23.1 (its second use)</td></tr>
+<tr><td>per terminal wire bit</td><td>$L_j\,h^{o(1)}$</td><td>$O(h^{-a+o(1)})$</td><td>(25.5): $j$ rounds reduced the total charge by $h^{a}$</td></tr>
+<tr><td>root computations</td><td>$2^{(\log h)^{O(1)}}$</td><td>$n^{-1+o(1)}$</td><td>$2^{(\log h)^{O(1)}}=n^{o(1)}$ and $md\ge m\ge n$</td></tr>
+</table>
+The largest of the five is the terminal wire bits, $O(h^{-a+o(1)})$. Multiplying by $h^{\tau}$ with $\tau=a\delta/3$:
+$$\text{size}\le md\,h^{-a+a\delta/3+o(1)}\le md\,h^{-(1-\delta)a}$$
+for large $n$, since the exponents differ by $2a\delta/3\gt 0$.
+<p><b>Arity.</b> By (25.5), $T_j=O_D(h^{b+(1+\delta/3)a})$. The description part of a call has $h^{Ca+o(1)}$ bits with $Ca\lt\beta\le b$, which is of smaller order. So the call length is $U=O_D(h^{b+(1+\delta/3)a})$, and the gate arity $O(1+U+\log h)$ is at most $h^{b+(1+\delta)a}$ for large $h$; the margin is again $h^{2a\delta/3}$. The hypothesis $U\le h$ of Lemma 26.1 holds because $b+(1+\delta)a\lt 1$.</p>
+<p><b>Where the smallness of $a$ is used.</b> Two conditions: $Ca+2a\lt\beta$ in the first two rows of the table, and $b+(1+\delta)a\lt 1$ for $U\le h$. The threshold is uniform in $b\in[\beta,1/2]$ because the first condition involves only $\beta$ and the second holds for all $b\le 1/2$ once $(1+\delta)a\lt 1/2$. The coefficients $C$ depend on $D$, and $D$ depends on $k,\delta$ (through $\epsilon$), which matches the statement of Lemma 23.1 that the threshold for $a$ depends only on $k,\delta,\beta$.</p></div>
+
+<div class="open"><b>Not verified — the per-operation bounds behind (26.2).</b> <span class="tag unverified">not verified</span>
+Display (26.2) on p. 105 depends on assertions of pp. 103–105 that the tutorial reports and did not re-derive in detail:
+<ul>
+<li>that every decision of the rounds (items 1–5 above) is computed by one fixed bit-RAM program from data within host distance $O_D(1+\log r)$, with $h^{O(1)}$ common operations per position and $N_bh^{O_D(a)+o(1)}$ operations for the block arrays;</li>
+<li>that the exponent $C_2$ and the number of declarations per position are independent of $M$;</li>
+<li>that the coefficients hidden in $O_D(a)$ are independent of $a,b,\beta$ (the choice "$Ca+2a\lt\beta$" needs this);</li>
+<li>that each summand of the expansion has exactly one accepted transcript for each assignment of its terminal wires (the paper asserts this through its statements about prescribed encodings and fixed tie-breaking rules).</li>
+</ul>
+The paper gives these as statements with short justifications. A complete verification would require the full specification of the checking program, which the paper does not write out. The arithmetic that follows from (26.2) is verified in the box above.</div>
+
+</section>
+
+<section id="s27">
+<h2>27. Trivalent compression and the exponent <span class="pg">pp. 106–107</span></h2>
+
+<p class="role"><b>Role in the chain.</b> This section receives three results: Lemma 23.1 (Compression of a tensor power, p. 86; one application is called a <em>macro</em>; its proof occupies <a class="secref" href="#s23">§23</a>–<a class="secref" href="#s26">§26</a>), Lemma 16.2 (Batched table evaluation, p. 59; <a class="secref" href="#s16">§16</a>), and the sorting exponent $p$ of Theorem 16.1(1) (p. 59). It delivers Lemma 27.1 (Descent of a trivalent network), which removes the field extension, and the proof of Theorem 2.1 (Compression of tensor powers), which <a class="secref" href="#s2">§2</a> states on p. 7 without proof. Proposition 2.3 (p. 8) applies Theorem 2.1 a fixed number of times to a sorting network for list distinctness and contradicts Theorem 2.2 (p. 7). That contradiction is the paper's argument for $\omega_k\ge 9/4$ over every finite field $k$. Lemma 2.5 (p. 9) transfers the bound to every field, and the upper bound of prior work then gives Theorem 1.1.</p>
+
+<p>Throughout, $k$ is a finite field with $\omega_k\lt 9/4$ (the hypothesis that the paper refutes), $n$ is a large integer, $h=\lceil\log_2 n\rceil$, and logarithms are binary. A <em>table network</em> over a field $K$ has stations joined by wires that each carry one bit; a station of arity $s$ carries a table $\{0,1\}^s\to K$; the network represents the tensor obtained by multiplying the selected table entries and summing over all values of the internal wires. Its <em>size</em> is the number of stations plus the sum of their arities. A network is <em>trivalent</em> when every arity is at most three. For a trivalent network the size in Theorem 2.1 counts the vertices and the exterior bits; this count and the table-network size differ by a factor of at most $4$. These definitions and the factor are given in full in <a class="secref" href="#s23">§23</a>.</p>
+
+<p>The section has three parts: the three statements it combines, Lemma 27.1 with its proof, and the proof of Theorem 2.1. The proof of Theorem 2.1 is exponent bookkeeping. It is written out below with every parameter, the constraint on it, and the order of choice.</p>
+
+<h3 id="s27-a">The three statements that are combined</h3>
+
+<div class="thm"><b>Theorem 2.1 (Compression of tensor powers), recalled from §2.</b> <span class="pg">p. 7</span> <span class="tag paper">paper</span>
+Suppose $\omega_k\lt 9/4$. For every $\eta\gt 0$ there is a $\gamma\gt 0$ such that the following holds for all sufficiently large $n$. Write $h=\lceil\log_2 n\rceil$. If a trivalent $k$-network of size $m\le n^{1.05}$ with $e\ge n$ exterior bits represents $V$, then for some integer $d\ge 1$ its power $V^{\otimes d}$ has a trivalent $k$-network with $de$ distinct exterior bits and size at most
+$$d\bigl(m\,h^{-\gamma}+e\,h^{\eta}\bigr).\tag{2.1}$$
+Here $d\le n^{o(1)}$ uniformly in the input network for fixed $k,\eta$.</div>
+
+<div class="lem"><b>Lemma 23.1 (Compression of a tensor power), recalled from <a class="secref" href="#s23">§23</a>.</b> <span class="pg">p. 86</span> <span class="tag paper">paper</span>
+Let $0\lt\delta\le 1/10$ and $0\lt\beta\le b\le 1/2$. For every sufficiently small fixed $a\gt 0$ depending only on $k,\delta,\beta$, and all sufficiently large $n$: work over an extension $K/k$ of degree $O(\log h)$. Suppose an input table network has maximum arity at most $h^{b}$, table labels of $(\log h)^{O(1)}$ bits, size at most $m$ with $n\le m\le n^{1.1}$, and $e\le m\,h^{-2a}$ external bits. Then some $d$ with $1\le d=n^{o(1)}$ admits a table network over $K$ for its $d$th tensor power, with all $de$ external bits separately accessible, such that
+$$\text{size}\le m\,d\,h^{-(1-\delta)a},\qquad \text{maximum arity}\le h^{\,b+(1+\delta)a},$$
+and the output labels again have $(\log h)^{O(1)}$ bits.</div>
+
+<div class="lem"><b>Lemma 16.2 (Batched table evaluation), recalled from <a class="secref" href="#s16">§16</a>.</b> <span class="pg">p. 59</span> <span class="tag paper">paper</span>
+Assume the ordinary-width stable-sort bound of Theorem 16.1 over $k$, with exponent $p\gt 1$. Let a network of binary wires and $K$-valued tables represent a tensor $T$, where $K/k$ is any field extension. (In this statement $T$ is a tensor; elsewhere in Part IV, $T$ is the arity scale.) If $t_v\le u$ is the arity of station $v$ and $s=\sum_v(1+t_v)$, then $T^{\otimes 2^u}$ has an exact trivalent $K$-network of size
+$$O\bigl(2^u\,s\,(1+u)^{p-1}\bigr).$$
+The constant is independent of $K$ and of the entries in the tables.</div>
+
+<div class="fill"><b>Background — table lookup by sorting, in the form used here.</b> <span class="tag filled">filled here</span>
+A trivalent network cannot hold a table of arity $t\gt 3$ at one vertex. The proof of Lemma 16.2 (p. 59) evaluates $2^t$ copies of one table $f:\{0,1\}^t\to K$ together. The steps are as follows.
+<ol>
+<li>The $2^t$ query addresses $x_1,\dots,x_{2^t}$ are the exposed legs. The required value is $\prod_i f(x_i)=\prod_z f(z)^{c_z}$, where $c_z$ is the number of queries with address $z$.</li>
+<li>For each address $z$ there is one <em>dictionary row</em>. The network guesses $c_z$ in $t+1$ bits. On count bit $j$ ($0\le j\le t$) it places a one-bit tensor with the two entries $(1,\ f(z)^{2^j})$. The product of these tensors over the bits of $c_z$ is $f(z)^{c_z}$.</li>
+<li>Each query also gets a row, with zeros in the count field. The $2^{t+1}$ rows (queries and dictionary rows) are sorted by address and then by row type, so that the dictionary row of an address follows all queries to that address. A counter starts at zero and increments on every query row; on a dictionary row it must agree with the guessed count, and it then resets to zero. This forces every guessed count to be the true multiplicity. For fixed exposed addresses there is exactly one consistent assignment of all internal wires, so the contraction equals $\prod_i f(x_i)$.</li>
+<li>The rows have $O(t+1)$ bits. By Theorem 16.1(1), the sort has size $O(2^t(1+t)^p)$; the counter has size $O(2^t(1+t))$.</li>
+</ol>
+A network with stations $v$ of arities $t_v\le u$ is copied $2^u$ times; the copies of station $v$ are grouped into $2^{u-t_v}$ batches of $2^{t_v}$. The total size is at most a constant times
+$$2^u\sum_v(1+t_v)^p\ \le\ 2^u(1+u)^{p-1}\sum_v(1+t_v).$$
+The cost per unit of arity is therefore $(1+u)^{p-1}$, where $u$ is the <em>largest</em> arity. This is the only place in Part IV where the inequality $p\lt 2$ of Theorem 16.1(1) is used. The other uses of Theorem 16.1 in Part IV (the rotor in <a class="secref" href="#s24-3">§24.3</a> and the message sort in <a class="secref" href="#s26-1">§26.1</a>) use part (2), the wide-record bound.</div>
+
+<h3 id="s27-b">Removing the field extension: Lemma 27.1</h3>
+
+<p>The local tensor identities of Part III need a field $K\supseteq k$ with at least a fixed power of $T$ elements, where $T$ is the arity scale. The networks produced by the macros therefore have tables with values in $K$, although the tensor $V^{\otimes d}$ that they represent has entries in $k$. Theorem 2.1 asks for a network over $k$. Lemma 27.1 converts one into the other at a cost of a factor $[K:k]^2$.</p>
+
+<div class="lem" id="lem-27-1"><b>Lemma 27.1 (Descent of a trivalent network).</b> <span class="pg">p. 106</span> <span class="tag paper">paper</span>
+Let $K/k$ have finite degree $D$. If a trivalent $K$-network of size $s$ represents a tensor with entries in $k$, the same tensor has a trivalent $k$-network of size $O(sD^2)$ with the same exterior positions.</div>
+
+<p>In this lemma $D$ denotes the degree $[K:k]$. In <a class="secref" href="#s25">§25</a> the same letter denotes the concentration parameter. The two are unrelated.</p>
+
+<div class="fill"><b>Background — multiplication in $K$ as a $D\times D$ matrix over $k$.</b> <span class="tag filled">filled here</span>
+Choose a $k$-basis $\varepsilon_1=1,\varepsilon_2,\dots,\varepsilon_D$ of $K$. For $\lambda\in K$ define the matrix $M_\lambda\in k^{D\times D}$ by $\lambda\,\varepsilon_j=\sum_i (M_\lambda)_{ij}\,\varepsilon_i$. Three facts follow from the definition.
+<ol>
+<li>$M_{\lambda\mu}=M_\lambda M_\mu$, because multiplication by $\lambda\mu$ is the composition of the two multiplications.</li>
+<li>The first column of $M_\lambda$ is the coordinate vector of $\lambda\cdot\varepsilon_1=\lambda$. Hence $(M_\lambda)_{11}=\pi(\lambda)$, where $\pi:K\to k$ sends an element to its first coordinate.</li>
+<li>The map $\pi$ is $k$-linear, and $\pi(c)=c$ for $c\in k$, because $c=c\,\varepsilon_1$.</li>
+</ol>
+The map $\pi$ is not multiplicative. The proof below applies it once, to a complete product, and uses matrix products for everything before that.</div>
+
+<div class="proof">
+<p><b>Step 1: a chain through all stations.</b> Number the stations $v_1,\dots,v_N$ in an arbitrary order; $N\le s$, because the size $s$ counts the stations. The order need not be related to the wiring. Give station $v_t$ two additional ports: an incoming index $i_{t-1}$ and an outgoing index $i_t$, each in $\{1,\dots,D\}$. Join the outgoing port of $v_t$ to the incoming port of $v_{t+1}$. Fix an assignment $x$ of all original wires and exterior bits. Under $x$, station $v_t$ selects a table entry $\lambda_t\in K$. The enlarged table at $v_t$ returns the entry $(M_{\lambda_t})_{i_t\,i_{t-1}}\in k$. Pin $i_0=1$ and $i_N=1$.</p>
+<p><b>Step 2: the chain computes one coordinate of the product.</b> For the fixed $x$, summing over $i_1,\dots,i_{N-1}$ is a product of matrices:
+$$\sum_{i_1,\dots,i_{N-1}}\ \prod_{t=1}^{N}(M_{\lambda_t})_{i_t i_{t-1}}=\bigl(M_{\lambda_N}\cdots M_{\lambda_1}\bigr)_{11}=\bigl(M_{\lambda_1\cdots\lambda_N}\bigr)_{11}=\pi(\lambda_1\cdots\lambda_N).$$
+The second equality is fact 1 of the background box, and the third is fact 2.</p>
+<p><b>Step 3: linearity moves $\pi$ outside the sum over wires.</b> The entry of the original tensor at given exterior bits is $\sum_x\prod_t\lambda_t(x)$, where $x$ runs over the internal wires. The new network gives $\sum_x\pi\bigl(\prod_t\lambda_t(x)\bigr)=\pi\bigl(\sum_x\prod_t\lambda_t(x)\bigr)$ by fact 3. The argument of $\pi$ is the original entry, which lies in $k$ by hypothesis, so $\pi$ returns it unchanged. The new network has entries in $k$ and represents the same tensor on the same exterior positions.</p>
+<p><b>Step 4: the enlarged tables are made trivalent.</b> Encode each index in $\lceil\log_2 D\rceil$ bits; codes that name no basis element get weight zero. A trivalent station has at most three original ports, so the enlarged table has at most $r=3+2\lceil\log_2 D\rceil$ bits. The paper states that every table on $r$ bits has a trivalent realization of size $O(2^r)$ (construction in the next box). Since $2^{\lceil\log_2 D\rceil}\lt 2D$, this is $2^r\lt 8\,(2D)^2=32D^2$ per original station, and $O(sD^2)$ in total.</p>
+<span class="qed">∎</span></div>
+
+<div class="fill"><b>Gap fill — an arbitrary table on $r$ bits as a trivalent network of size $O(2^r)$.</b> <span class="tag filled">filled here</span>
+Let $g:\{0,1\}^r\to k$ and let $x_1,\dots,x_r$ be the input bits. The paper's construction (p. 106) is a binary prefix tree. Written out:
+<ol>
+<li>For each prefix $w\in\{0,1\}^j$, $0\le j\le r$, there is a wire carrying the indicator $I_w=[x_1\cdots x_j=w]$. The root indicator $I_\varnothing$ is pinned to $1$.</li>
+<li>For a prefix $w$ of length $j\lt r$, two gates with $0/1$ tables compute $I_{w0}=I_w\wedge\neg x_{j+1}$ and $I_{w1}=I_w\wedge x_{j+1}$. Each gate has two inputs and one output, so its arity is three. An equality tensor of arity three copies $I_w$ for the two gates.</li>
+<li>The $2^j$ nodes of depth $j$ need $2^{j+1}$ copies of $x_{j+1}$. A binary tree of arity-three equality tensors makes them with $O(2^j)$ vertices.</li>
+<li>At each leaf $w\in\{0,1\}^r$ a one-bit tensor with entries $(1,\ g(w))$ is attached to $I_w$: it contributes $1$ when $I_w=0$ and $g(w)$ when $I_w=1$.</li>
+</ol>
+For a fixed input $x$ every copy wire and indicator wire has exactly one value consistent with the $0/1$ gates. The sum over internal wires therefore has one nonzero term. Exactly one leaf has $I_w=1$, namely $w=x$, so the term equals $g(x)$. Level $j$ costs $O(2^j)$ vertices and the leaves cost $2^r$, so the size is $O\bigl(\sum_{j\le r}2^j\bigr)=O(2^r)$. The construction is valid in every characteristic and also when some $g(w)=0$.</div>
+
+<h3 id="s27-c">Proof of Theorem 2.1: the parameters</h3>
+
+<p>The proof (pp. 106–107) runs $J$ macros, then one batched lookup, then one descent. Each macro multiplies the size per copy by $h^{-(1-\delta)a}$ and multiplies the bound on the largest arity by $h^{(1+\delta)a}$. The lookup costs a factor $(\text{largest arity})^{p-1}$. The proof stops the macros at a point where the accumulated saving still exceeds this cost.</p>
+
+<p>Several letters in this section have other meanings elsewhere in Part IV. In §27, $J$ is the number of macros and $j$ indexes them (in <a class="secref" href="#s25">§25</a>, $J$ is the number of beats per round and $j$ the number of rounds per macro); $\rho=p-1$ (in <a class="secref" href="#s24-2">§24.2</a>, $\rho$ is a contraction factor); $\Delta$ is the net exponent saved (in <a class="secref" href="#s24">§24</a>, $\Delta$ is a degree bound); $q=h^{-(1-\delta)a}$ (in <a class="secref" href="#s25">§25</a>, $q$ multiplies the arity scale); $u$ is the final largest arity (in <a class="secref" href="#s24">§24</a>, $u$ is the unit of bundle width); $A$ is the total exponent $Ja$.</p>
+
+<div class="def" id="def-27-params"><b>Definition (the parameters of the proof and their order of choice).</b> <span class="pg">pp. 106–107</span> <span class="tag paper">paper</span>
+<table>
+<tr><th>Order</th><th>Symbol</th><th>Meaning</th><th>Constraint when chosen</th></tr>
+<tr><td>0</td><td>$k,\ \eta$</td><td>the finite field; the exterior-bit allowance of Theorem 2.1</td><td>given; $\omega_k\lt 9/4$, $\eta\gt 0$</td></tr>
+<tr><td>1</td><td>$p,\ \rho=p-1$</td><td>exponent of the ordinary-width sort, Theorem 16.1(1)</td><td>$1\lt p\lt 2$, so $0\lt\rho\lt 1$; supplied by the hypothesis</td></tr>
+<tr><td>2</td><td>$\delta$</td><td>loss parameter of Lemma 23.1</td><td>$0\lt\delta\le 1/10$ and $1-\delta\gt\rho(1+\delta)$</td></tr>
+<tr><td>3</td><td>$A$</td><td>total size exponent saved by all macros, before the loss $\delta$</td><td>"sufficiently small" (made explicit below)</td></tr>
+<tr><td>4</td><td>$\beta$</td><td>exponent of the starting arity bound $h^\beta$</td><td>"sufficiently small" after $A$</td></tr>
+<tr><td>5</td><td>$b_*=\beta+(1+\delta)A$</td><td>exponent of the final arity bound $h^{b_*}$</td><td>derived; must satisfy (27.1)</td></tr>
+<tr><td>5</td><td>$\Delta=(1-\delta)A-\rho b_*$</td><td>net exponent saved on the original size</td><td>derived; must satisfy (27.1)</td></tr>
+<tr><td>6</td><td>$J$, $a=A/J$</td><td>number of macros; exponent of one macro</td><td>$a$ below the threshold of Lemma 23.1 for the chosen $k,\delta,\beta$, uniformly for $\beta\le b\le 1/2$; and $2a\lt\eta/2$</td></tr>
+<tr><td>7</td><td>$\gamma=\Delta/2$</td><td>the exponent returned by Theorem 2.1</td><td>derived</td></tr>
+<tr><td>8</td><td>$n$</td><td>size parameter</td><td>larger than a cutoff that depends on all of the above</td></tr>
+</table>
+The paper requires
+$$b_*\lt\tfrac12,\qquad \rho\,b_*\lt\tfrac12\eta,\qquad \Delta=(1-\delta)A-\rho\,b_*\gt 0.\tag{27.1}$$
+</div>
+
+<div class="fill"><b>Gap fill — the constraints (27.1) can be met exactly when $p\lt 2$.</b> <span class="tag filled">filled here</span>
+The paper says "take $A\gt 0$ sufficiently small, and then $\beta\gt 0$ sufficiently small". The explicit conditions are as follows. Put
+$$c_\delta=(1-\delta)-\rho(1+\delta)=(1-\rho)-\delta(1+\rho).$$
+(The symbol $c_\delta$ is notation of this tutorial.) Substituting $b_*=\beta+(1+\delta)A$ gives
+$$\Delta=(1-\delta)A-\rho\beta-\rho(1+\delta)A=c_\delta A-\rho\beta.$$
+<ol>
+<li><b>Necessity of $p\lt 2$.</b> If $\rho\ge 1$, then $c_\delta\le(1-\delta)-(1+\delta)=-2\delta\lt 0$ for every $\delta\gt 0$. Then $\Delta=c_\delta A-\rho\beta\lt 0$ for all $A,\beta\gt 0$, and the third condition of (27.1) fails for every choice.</li>
+<li><b>Choice of $\delta$.</b> If $\rho\lt 1$, the condition $c_\delta\gt 0$ is $\delta\lt(1-\rho)/(1+\rho)=(2-p)/p$. Take $\delta=\min\{1/10,\ (1-\rho)/(2(1+\rho))\}$; then $c_\delta\ge(1-\rho)/2\gt 0$.</li>
+<li><b>Choice of $A$.</b> The first two conditions of (27.1) need $(1+\delta)A\lt\min\{1/2,\ \eta/(2\rho)\}$. Take $A$ with $(1+\delta)A=\tfrac12\min\{1/2,\ \eta/(2\rho)\}$.</li>
+<li><b>Choice of $\beta$.</b> The three conditions become
+$$\beta\lt\min\Bigl\{\frac{c_\delta A}{\rho},\ \ \frac12-(1+\delta)A,\ \ \frac{\eta}{2\rho}-(1+\delta)A\Bigr\}.$$
+Take $\beta=\tfrac12\min\{c_\delta A/\rho,\ 1/4,\ \eta/(4\rho)\}$. Then $b_*\le\tfrac18+\tfrac14\lt\tfrac12$, $\ \rho b_*\le\tfrac{\eta}{8}+\tfrac{\eta}{4}\lt\tfrac{\eta}{2}$, and $\Delta\ge c_\delta A/2\gt 0$.</li>
+</ol>
+So the three conditions hold simultaneously for suitable $\delta,A,\beta$ if and only if $\rho\lt 1$. The reason is the trade made by one macro: it lowers the size exponent by $(1-\delta)a$ and raises the arity exponent by $(1+\delta)a$, and the lookup converts arity exponent into size exponent at the rate $\rho$. The macro is profitable when $(1-\delta)\gt\rho(1+\delta)$.
+<p><b>Illustrative numbers.</b> The paper gives no value of $p$; the exponent comes from Part II and is not effective. Suppose, for illustration only, $p=3/2$ and $\eta=1/10$. Then $\rho=0.5$. Take $\delta=0.1$: $c_\delta=0.9-0.55=0.35$. Take $A=0.05$: $(1+\delta)A=0.055\lt\min\{0.5,\,0.1\}$. Take $\beta=0.02\lt\min\{0.035,\ 0.445,\ 0.045\}$. Then $b_*=0.075$, $\rho b_*=0.0375\lt 0.05$, $\Delta=0.045-0.0375=0.0075$, $\gamma=0.00375$. The condition $2a\lt\eta/2$ needs $a\lt 0.025$, so $J\ge 3$ (and $J$ larger if the threshold of Lemma 23.1 requires it). With $J=3$: $2a+\rho b_*\approx 0.0333+0.0375=0.0708\lt\eta$.</p></div>
+
+<p><b>Why $J$ is separate from $A$.</b> Lemma 23.1 holds only for $a$ below a threshold that depends on $k,\delta,\beta$; the paper does not make the threshold explicit (it comes from the conditions $Ca+2a\lt\beta$ at the end of <a class="secref" href="#s26-2">§26.2</a>, where $C$ depends on the non-effective concentration parameter). The constraints (27.1) involve only the product $A=Ja$. Dividing $A$ into $J$ equal macros makes $a$ as small as required without changing $b_*$ or $\Delta$. This is why $\beta$ is chosen before $J$.</p>
+
+<h3 id="s27-d">Proof of Theorem 2.1: the steps</h3>
+
+<div class="proof">
+<p><b>Step 1: one field for all macros</b> (p. 107). The scales $T$ that occur in the $J$ macros lie between a constant times $h^\beta$ and a fixed power of $h$. The local identities (Lemma 19.1) require a fixed finite extension of $k$ and a field of cardinality at least a fixed power of $T$. Choose $K\supseteq k$ with $[K:k]$ divisible by the degrees of the required fixed extensions and large enough for the largest such power. Because $k$ is finite, $|K|=|k|^{[K:k]}$, so $[K:k]=O(\log h)$ suffices; and $\log T\ge\beta\log h-O(1)$ at every scale, so $[K:k]=O(\log T)$ as Lemma 19.1 requires.</p>
+
+<p><b>Step 2: the induction over macros.</b> Let $s_j$ be the size (stations plus total arity) after $j$ macros, $d_j$ the cumulative number of copies, and $e_j=d_je$ the number of exterior bits. The network after $j$ macros represents $V^{\otimes d_j}$.</p>
+<p><em>Start.</em> $d_0=1$. The given network is trivalent of size $m$, so it has at most $m$ vertices of arity at most $3$; hence $s_0\le 4m$. Its arity is at most $3\le h^{\beta}$ for large $n$. The trivalent $k$-tables form a fixed finite dictionary, so labels have $O(1)$ bits.</p>
+<p><em>Step $j\lt J$.</em> Lemma 23.1 needs an input with at most $m\,h^{-2a}$ exterior bits. The current network may have fewer than $h^{2a}$ units of size per exterior bit. The paper therefore applies the lemma with the size <em>allowance</em>
+$$M_j=\max\bigl\{s_j,\ \lceil e_jh^{2a}\rceil\bigr\}$$
+in the role of the lemma's "$m$". A network of size $s_j$ is also a network of size at most $M_j$. The hypotheses of Lemma 23.1 hold with $m:=M_j$, $e:=e_j$, $b:=\beta+(1+\delta)aj$:</p>
+<ul>
+<li>$e_j\le M_jh^{-2a}$ by the definition of $M_j$;</li>
+<li>$M_j\ge e_jh^{2a}\ge e\ge n$;</li>
+<li>$M_j\le n^{1.1}$ (next box);</li>
+<li>the arity bound is $h^{\beta+(1+\delta)aj}$ with $\beta\le\beta+(1+\delta)aj\le b_*\lt 1/2$, by the first condition of (27.1);</li>
+<li>labels have $(\log h)^{O(1)}$ bits, by the conclusion of the previous macro.</li>
+</ul>
+<p>If this macro makes $r_j$ copies, the lemma gives $d_{j+1}=r_jd_j$, arity bound $h^{\beta+(1+\delta)a(j+1)}$, and
+$$s_{j+1}\le r_j\,M_j\,q,\qquad q=h^{-(1-\delta)a}.$$
+The construction in <a class="secref" href="#s25-2">§25.2</a> has $\log_2r_j=O((\log h)^2)$, uniformly in the input network.</p>
+
+<p><b>Step 3: the recurrence per exterior bit.</b> Put $x_j=s_j/e_j$. Dividing the last display by $e_{j+1}=r_je_j$ cancels the replication factor:
+$$x_{j+1}\le q\,\frac{M_j}{e_j}=q\max\Bigl\{x_j,\ \frac{\lceil e_jh^{2a}\rceil}{e_j}\Bigr\}\le q\max\bigl\{x_j,\ 2h^{2a}\bigr\},$$
+using $\lceil y\rceil\le 2y$ for $y\ge 1$. Iterating (next box),
+$$x_J\le\max\bigl\{q^Jx_0,\ 2q\,h^{2a}\bigr\}.$$</p>
+
+<p><b>Step 4: batched lookup.</b> Let $u$ be the largest arity after $J$ macros; $u\le h^{\beta+(1+\delta)aJ}=h^{b_*}$. Lemma 16.2 with $s=s_J$ gives an exact trivalent $K$-network for the $2^u$th power, of size $O\bigl(2^us_J(1+u)^{\rho}\bigr)$. The represented tensor is $V^{\otimes d}$ with
+$$d=2^u\,d_J,\qquad \log_2d\le h^{b_*}+O\bigl(J(\log h)^2\bigr)=o(h).$$
+The last equality uses $b_*\lt 1$. Hence $d=n^{o(1)}$, uniformly in the input network for fixed $k,\eta$. Each of the $de$ exterior positions remains exterior. The size per exterior bit is now at most $O((1+u)^{\rho})\,x_J=O(h^{\rho b_*})\,x_J$.</p>
+
+<p><b>Step 5: descent.</b> $V^{\otimes d}$ has entries in $k$. Lemma 27.1 with degree $[K:k]=O(\log h)$ gives a trivalent $k$-network on the same exterior positions, larger by a factor $O([K:k]^2)=O((\log h)^2)=h^{o(1)}$.</p>
+
+<p><b>Step 6: combination.</b> With $q^J=h^{-(1-\delta)aJ}=h^{-(1-\delta)A}$, $x_0=s_0/e\le 4m/e$ and $q\le 1$, Steps 3–5 give
+$$\frac{\text{trivalent size over }k}{de}\ \le\ h^{\rho b_*+o(1)}\max\Bigl\{h^{-(1-\delta)A}\,\frac{4m}{e},\ 2h^{2a}\Bigr\}\ \le\ O\Bigl(\frac me\Bigr)h^{-\Delta+o(1)}+h^{2a+\rho b_*+o(1)},$$
+because $-(1-\delta)A+\rho b_*=-\Delta$. This is the display on p. 107. Choose $\gamma=\Delta/2$. Since $\Delta\gt\gamma$, the factor $O(1)\,h^{-\Delta+o(1)}$ is at most $h^{-\gamma}$ for large $n$. Since $2a\lt\eta/2$ and $\rho b_*\lt\eta/2$, the exponent $2a+\rho b_*$ is strictly less than $\eta$, so the second term is at most $h^{\eta}$ for large $n$. Multiplying by $de$ gives the bound $d(mh^{-\gamma}+eh^{\eta})$ of (2.1).</p>
+<span class="qed">∎</span></div>
+
+<div class="fill"><b>Gap fill — the allowance stays in the range $n\le M_j\le n^{1.1}$.</b> <span class="tag filled">filled here</span>
+The paper states that "the original bound $s_0,e_0=O(n^{1.05})$, multiplied by a fixed number of these copy factors and fixed powers of $h$, gives $M_j\le n^{1.05+o(1)}\le n^{1.1}$". The derivation: $q\le 1$ gives $s_{j+1}\le r_jM_j$. Also $\lceil e_{j+1}h^{2a}\rceil=\lceil r_je_jh^{2a}\rceil\le r_j\lceil e_jh^{2a}\rceil\le r_jM_j$. Hence $M_{j+1}\le r_jM_j$ and, by induction, $M_j\le d_jM_0$. In a trivalent network the size counts the exterior bits, so $e\le m\le n^{1.05}$, and $M_0\le\max\{4m,\ 2e\,h^{2a}\}\le 4n^{1.05}h^{2a}$. Finally $\log_2d_j=\sum_{i\lt j}\log_2r_i=O(J(\log h)^2)=o(h)$, so $d_j=n^{o(1)}$. Therefore $M_j\le n^{1.05+o(1)}\le n^{1.1}$ for large $n$. The lower bound $M_j\ge n$ was shown in Step 2 from $e\ge n$. This is the place where the hypotheses $m\le n^{1.05}$ and $e\ge n$ of Theorem 2.1 are used.</div>
+
+<div class="fill"><b>Gap fill — solving the recurrence $x_{j+1}\le q\max\{x_j,2h^{2a}\}$.</b> <span class="tag filled">filled here</span>
+Claim: $x_j\le\max\{q^jx_0,\ 2qh^{2a}\}$ for $1\le j\le J$. For $j=1$ the recurrence gives $x_1\le\max\{qx_0,\ 2qh^{2a}\}$. If the claim holds for $j$, then
+$$x_{j+1}\le q\max\bigl\{q^jx_0,\ 2qh^{2a},\ 2h^{2a}\bigr\}=\max\bigl\{q^{j+1}x_0,\ 2qh^{2a}\bigr\},$$
+because $q\lt 1$ makes $2qh^{2a}\lt 2h^{2a}$. The paper's sentence "every contribution arising from an exterior-bit allowance is bounded by the most recent such allowance" is this computation: an allowance introduced at an early step is multiplied by further factors $q\lt 1$ and is then smaller than the allowance of the last step.</div>
+
+<div class="fill"><b>Gap fill — the origin of the two terms of (2.1).</b> <span class="tag filled">filled here</span>
+<table>
+<tr><th>Stage</th><th>Effect on size per exterior bit</th><th>Exponent of $h$</th><th>Source</th></tr>
+<tr><td>$J$ macros, branch $x_0$</td><td>$x_0\mapsto q^Jx_0$</td><td>$-(1-\delta)A$</td><td>Lemma 23.1, $J$ times</td></tr>
+<tr><td>$J$ macros, branch of the allowance</td><td>at most $2q\,h^{2a}$</td><td>$2a-(1-\delta)a\le 2a$</td><td>hypothesis $e\le m\,h^{-2a}$ of Lemma 23.1</td></tr>
+<tr><td>batched lookup</td><td>factor $O((1+u)^{\rho})$, $u\le h^{b_*}$</td><td>$+\rho\,b_*$</td><td>Lemma 16.2, exponent $p=1+\rho$</td></tr>
+<tr><td>descent to $k$</td><td>factor $O((\log h)^2)$</td><td>$o(1)$</td><td>Lemma 27.1, $[K:k]=O(\log h)$</td></tr>
+</table>
+<ul>
+<li><b>The term $d\,m\,h^{-\gamma}$.</b> It is the first branch: the original size per exterior bit $x_0=O(m/e)$ multiplied by $h^{-(1-\delta)A}\cdot h^{\rho b_*}\cdot h^{o(1)}=h^{-\Delta+o(1)}$, and then by $de$.</li>
+<li><b>The term $d\,e\,h^{\eta}$.</b> It is the second branch. A macro cannot bring the size below about $h^{2a}$ per exterior bit, because Lemma 23.1 requires $e\le m\,h^{-2a}$. Inside the macro this hypothesis is used twice: in <a class="secref" href="#s25-2">§25.2</a> it gives $ed\le L_i/D$, the width allowance for the stations that hold the exterior bits, and in <a class="secref" href="#s26-2">§26.2</a> it bounds the routing cost of the exterior bits by $ed\le md\,h^{-2a}$. The floor $2qh^{2a}$, multiplied by the lookup factor $h^{\rho b_*}$ and by $h^{o(1)}$, is at most $h^{\eta}$ because $2a\lt\eta/2$ and $\rho b_*\lt\eta/2$.</li>
+</ul>
+The two halves of $\eta$ are thus assigned to two different costs: $\eta/2$ to the macro's exterior-bit floor and $\eta/2$ to the lookup.</div>
+
+<div class="aha"><b>AHA.</b> The proof never evaluates a large table until the end. Each macro exchanges total arity for largest arity at a rate close to one for one in the exponent, and the final lookup pays only the power $p-1\lt 1$ of the largest arity. With a sorting bound of the form $O(nh^2)$, that is $p=2$ and $\rho=1$, the gap $\Delta=-2\delta A-\beta$ is negative, and the same construction saves nothing.</div>
+
+<p><b>Result of the check of the bookkeeping.</b> With the conditions made explicit above, every inequality on p. 107 follows from (27.1), $2a\lt\eta/2$, Lemma 23.1, Lemma 16.2 and Lemma 27.1. The tutorial found no step of §27 that fails to close as written. The proof is conditional on Lemma 23.1, whose proof (<a class="secref" href="#s23">§23</a>–<a class="secref" href="#s26">§26</a>) contains items that this tutorial marks as not verified. The constants are not effective: $p$ comes from Part II, the threshold for $a$ comes from the concentration parameter of <a class="secref" href="#s25">§25</a>, and both depend on compactness arguments.</p>
+
+<h3 id="s27-e">How the theorem closes the argument</h3>
+
+<p>The final paragraph of the paper's text (p. 107) connects Theorem 2.1 to the lower bound. The tensor $D_w$ is the $0/1$ tensor of list distinctness: its input is a list of $2^w$ words of $2w$ bits, and its value is $1$ exactly when the words are pairwise distinct. It has $n_w=2w\,2^w$ exterior bits. Theorem 2.2 (p. 7) states that there is $\sigma\gt 0$, depending only on $k$, with $\operatorname{vol}_k(D_w^{\otimes t})\gt t\,n_w\,w^{\sigma}$ for all large $w$ and all $1\le t\le 2^w$; here $\operatorname{vol}_k$ is the minimum trivalent volume over $k$, which agrees with trivalent size up to an absolute factor (<a class="secref" href="#s23">§23</a>).</p>
+
+<p>Proposition 2.3 (p. 8) chooses $0\lt\eta\lt\sigma$, takes $\gamma$ from Theorem 2.1, and fixes an integer greater than $2/\gamma$; the paper calls this integer $J$ as well, and it is a different number from the $J$ of this section. Write it $J'$. The starting network is a Batcher sorting network followed by adjacent comparisons, of size $O(n_ww^2)$; its size per exterior bit is $x_0=O(w^2)$. With $n=n_w$ and $h=w+O(\log w)$, each application of (2.1) gives</p>
+$$x_{j+1}\le h^{-\gamma}x_j+h^{\eta}.$$
+<p>After $J'$ applications, $x_{J'}\le h^{-J'\gamma}x_0+h^{\eta}\sum_{r\ge 0}h^{-r\gamma}=O(w^{2-J'\gamma})+O(w^{\eta})=O(w^{\eta})$, because $J'\gamma\gt 2$. The number of lists is $t_{J'}=n^{o(1)}\le 2^w$. The resulting network for $D_w^{\otimes t_{J'}}$ has volume $O(t_{J'}n_ww^{\eta})$, which is less than $t_{J'}n_ww^{\sigma}$ for large $w$. This contradicts Theorem 2.2. The paper concludes that $\omega_k\lt 9/4$ is false for every finite field $k$.</p>
+
+<p>The independence of the $de$ exterior positions in Theorem 2.1 is used here: the exterior positions of $D_w^{\otimes t}$ are the entries of $t$ separately specified lists, and Theorem 2.2 is uniform in $t$. The uniformity is needed because the replication factor $d$ is chosen by the compression and not by the user of the theorem.</p>
+
+</section>
