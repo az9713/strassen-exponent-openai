@@ -37,8 +37,10 @@ other limits.
 
 ## How to read it
 
-Clone the repository and open `nine-fourths-tutorial.html` in a browser. MathJax loads from a CDN, so the
-formulas need a network connection on first open. There is no build step.
+Read it online: <https://az9713.github.io/strassen-exponent-openai/nine-fourths-tutorial.html>
+
+You can also clone the repository and open `nine-fourths-tutorial.html` in a browser. MathJax loads from a CDN,
+so the formulas need a network connection on first open. There is no build step.
 
 ## References
 
